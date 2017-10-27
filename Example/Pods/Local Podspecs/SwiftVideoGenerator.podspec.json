@@ -1,20 +1,20 @@
 {
   "name": "SwiftVideoGenerator",
   "version": "0.1.0",
-  "summary": "A short description of SwiftVideoGenerator.",
-  "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/teodora.georgieva.92@gmail.com/SwiftVideoGenerator",
+  "summary": "Easy way to combine images and audio into a video or merge multiple videos into one",
+  "homepage": "https://github.com/dev-labs-bg/swift-video-generator",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "teodora.georgieva.92@gmail.com": "teodora.georgieva.92@gmail.com"
+    "Dev Labs BG": "http://devlabs.bg/"
   },
   "source": {
-    "git": "https://github.com/teodora.georgieva.92@gmail.com/SwiftVideoGenerator.git",
+    "git": "https://github.com/dev-labs-bg/swift-video-generator.git",
     "tag": "0.1.0"
   },
+  "social_media_url": "https://twitter.com/devlabsbg",
   "platforms": {
     "ios": "8.0"
   },

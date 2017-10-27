@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  SwiftVideoGenerator: e608483f3da2b5ba822f0428ad42f30dad5800cf
+  SwiftVideoGenerator: d051ee29e43e879e6f8f97809d82c109eff466e8
 
 PODFILE CHECKSUM: 50d258d34e874f7c3410e4743ad4fbaa17fda35d
 
