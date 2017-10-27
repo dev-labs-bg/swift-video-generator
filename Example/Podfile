@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'SwiftVideoGenerator_Example' do
+  pod 'SwiftVideoGenerator', :path => '../'
+
+  target 'SwiftVideoGenerator_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
