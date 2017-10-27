@@ -1,0 +1,22 @@
+{
+  "name": "SwiftVideoGenerator",
+  "version": "0.1.0",
+  "summary": "A short description of SwiftVideoGenerator.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/teodora.georgieva.92@gmail.com/SwiftVideoGenerator",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "teodora.georgieva.92@gmail.com": "teodora.georgieva.92@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/teodora.georgieva.92@gmail.com/SwiftVideoGenerator.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "SwiftVideoGenerator/Classes/**/*"
+}

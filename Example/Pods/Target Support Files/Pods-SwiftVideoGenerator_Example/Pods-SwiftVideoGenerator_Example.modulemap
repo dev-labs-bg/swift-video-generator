@@ -1,0 +1,6 @@
+framework module Pods_SwiftVideoGenerator_Example {
+  umbrella header "Pods-SwiftVideoGenerator_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}
