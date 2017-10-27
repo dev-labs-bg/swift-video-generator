@@ -42,7 +42,7 @@ To use Swift Video Generator in your Xcode project using CocoaPods, add it in th
 platform :ios, '10.0'
 use_frameworks!
 target '<Your Target Name>' do
-pod 'SwiftVideoGenrator'
+  pod 'SwiftVideoGenrator'
 end
 ```
 ### Manually
@@ -71,19 +71,19 @@ For both the **.single** and **.multiple** types of video generation the output 
 
 ```Swift
 if let audioURL = Bundle.main.url(forResource: "audio", withExtension: "mp3"), let _image = UIImage(named: "image") {
-if let videoGenerator = VideoGenerator(withImages: [_image], andAudios: [audioURL], andType: .single) {
-videoGenerator.scaleWidth = 800
-videoGenerator.fileName = "singleMovie"
-videoGenerator.videoBackgroundColor = .black
+  if let videoGenerator = VideoGenerator(withImages: [_image], andAudios: [audioURL], andType: .single) {
+    videoGenerator.scaleWidth = 800
+    videoGenerator.fileName = "singleMovie"
+    videoGenerator.videoBackgroundColor = .black
 
-videoGenerator.generate({ (progress) in
-print(progress)
-}, success: { (url) in
-print(url)
-}) { (error) in
-print(error)
-}
-}
+    videoGenerator.generate({ (progress) in
+      print(progress)
+    }, success: { (url) in
+      print(url)
+    }) { (error) in
+      print(error)
+    }
+  }
 }
 ```
 With the generator type **.single** you can create a video from a single pair of audio and an image.
@@ -100,21 +100,21 @@ The **videoBackgroundColor** property is used when scaling the image. When an im
 
 ```Swift
 if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3"), let audioURL2 = Bundle.main.url(forResource: "audio2", withExtension: "mp3"), let audioURL3 = Bundle.main.url(forResource: "audio3", withExtension: "mp3") {
-if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3") {
+  if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3") {
 
-if let videoGenerator1 = VideoGenerator(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple) {
-videoGenerator1.fileName = "multipleVideo"
-videoGenerator1.videoBackgroundColor = .black
+    if let videoGenerator1 = VideoGenerator(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple) {
+      videoGenerator1.fileName = "multipleVideo"
+      videoGenerator1.videoBackgroundColor = .black
 
-videoGenerator1.generate({ (progress) in
-print(progress)
-}, success: { (videoURL) in
-print(videoURL)
-}, failure: { (error) in
-print(error)
-})
-}
-}
+      videoGenerator1.generate({ (progress) in
+        print(progress)
+      }, success: { (videoURL) in
+        print(videoURL)
+      }, failure: { (error) in
+        print(error)
+      })
+    }
+  }
 }
 ```
 With the type **.multiple** you can create a video that combines multiple image/audio pairs. The finished video will queue up multiple videos created by taking one image from the array and it's corresponding index element from the audio array, creating a video from it and then appending it to the finished video.
@@ -128,11 +128,11 @@ The **fileName** and **videoBackgroundColor** properties are used in the same wa
 
 ```Swift
 if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
-VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
-print(videoURL)
-}) { (error) in
-print(error)
-}
+    VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
+      print(videoURL)
+    }) { (error) in
+      print(error)
+    }
 }
 ```
 You can provide URLs both for local resource files as well as those stored on the device (i.e. in the Documents folder).
