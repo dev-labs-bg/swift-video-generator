@@ -9,8 +9,4 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://twitter.com/devlabsbg'
   s.ios.deployment_target = '8.0'
   s.source_files = 'SwiftVideoGenerator/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'SwiftVideoGenerator' => ['SwiftVideoGenerator/Assets/*.png']
-  # }
 end
