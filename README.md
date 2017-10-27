@@ -145,4 +145,4 @@ SwiftVideoGenerator was created and is maintaned by Dev Labs. You can find us [@
 
 ## License
 
-SwiftVideoGenerator is released under the MIT license. See [LICENSE]() for details.
+SwiftVideoGenerator is released under the MIT license. See [LICENSE](https://github.com/dev-labs-bg/swift-video-generator/blob/master/LICENSE) for details.
