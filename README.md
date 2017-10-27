@@ -1,4 +1,4 @@
-![swift-video-generator-logo]()
+![swift-video-generator-logo](https://github.com/dev-labs-bg/swift-video-generator/blob/master/Example/SwiftVideoGenerator/Resources/swift-video-generator-logo.png)
 
 This library provides an easy way to combine images and audio into a video or merge multiple videos into one.
 
