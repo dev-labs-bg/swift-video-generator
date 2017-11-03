@@ -9,48 +9,6 @@
 import UIKit
 import AVFoundation
 
-let kErrorDomain = "VideoGenerator"
-
-class VideoGeneratorError: NSObject, LocalizedError {
-  public enum CustomError {
-    case kFailedToStartAssetWriterError
-    case kFailedToAppendPixelBufferError
-    case kFailedToFetchDirectory
-    case kFailedToStartAssetExportSession
-    case kMissingVideoURLs
-  }
-  
-  fileprivate var desc = ""
-  fileprivate var error: CustomError
-  
-  init(error: CustomError) {
-    self.error = error
-  }
-  
-  override var description: String {
-    get {
-      switch error {
-      case .kFailedToStartAssetWriterError:
-        return "\(kErrorDomain): AVAssetWriter failed to start writing"
-      case .kFailedToAppendPixelBufferError:
-        return "\(kErrorDomain): AVAssetWriterInputPixelBufferAdapter failed to append pixel buffer"
-      case .kFailedToFetchDirectory:
-        return "\(kErrorDomain): Can't find the Documents directory"
-      case .kFailedToStartAssetExportSession:
-        return "\(kErrorDomain): Can't begin an AVAssetExportSession"
-      case .kMissingVideoURLs:
-        return "\(kErrorDomain): Missing video paths"
-      }
-    }
-  }
-  
-  var errorDescription: String? {
-    get {
-      return self.description
-    }
-  }
-}
-
 public class VideoGenerator: NSObject {
   
   // MARK: - Singleton properties
@@ -625,6 +583,48 @@ public class VideoGenerator: NSObject {
       
       // unlock the buffer memory
       CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
+    }
+  }
+}
+
+fileprivate class VideoGeneratorError: NSObject, LocalizedError {
+  
+  public enum CustomError {
+    case kFailedToStartAssetWriterError
+    case kFailedToAppendPixelBufferError
+    case kFailedToFetchDirectory
+    case kFailedToStartAssetExportSession
+    case kMissingVideoURLs
+  }
+  
+  fileprivate var desc = ""
+  fileprivate var error: CustomError
+  fileprivate let kErrorDomain = "VideoGenerator"
+  
+  init(error: CustomError) {
+    self.error = error
+  }
+  
+  override var description: String {
+    get {
+      switch error {
+      case .kFailedToStartAssetWriterError:
+        return "\(kErrorDomain): AVAssetWriter failed to start writing"
+      case .kFailedToAppendPixelBufferError:
+        return "\(kErrorDomain): AVAssetWriterInputPixelBufferAdapter failed to append pixel buffer"
+      case .kFailedToFetchDirectory:
+        return "\(kErrorDomain): Can't find the Documents directory"
+      case .kFailedToStartAssetExportSession:
+        return "\(kErrorDomain): Can't begin an AVAssetExportSession"
+      case .kMissingVideoURLs:
+        return "\(kErrorDomain): Missing video paths"
+      }
+    }
+  }
+  
+  var errorDescription: String? {
+    get {
+      return self.description
     }
   }
 }
