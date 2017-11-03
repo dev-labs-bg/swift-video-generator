@@ -1,6 +1,6 @@
 ![swift-video-generator-logo](https://github.com/dev-labs-bg/swift-video-generator/blob/master/Example/SwiftVideoGenerator/Resources/swift-video-generator-logo.png)
 
-[![Platform](https://img.shields.io/cocoapods/p/SwiftVideoGenerator.svg?style=flat-square)]()  [![CocoaPods](https://img.shields.io/cocoapods/v/SwiftVideoGenerator.svg?style=flat-square)]()  [![Twitter URL](https://img.shields.io/badge/twitter-@devlabsbg-blue.svg?style=flat-square)](http://twitter.com/devlabsbg)  [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://github.com/dev-labs-bg/swift-video-generator/blob/master/LICENSE)
+[![Platform](https://img.shields.io/cocoapods/p/SwiftVideoGenerator.svg?style=flat-square)]()  [![CocoaPods](https://img.shields.io/cocoapods/v/SwiftVideoGenerator.svg?style=flat-square)]()  [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://github.com/dev-labs-bg/swift-video-generator/blob/master/LICENSE)  [![Twitter URL](https://img.shields.io/badge/twitter-@devlabsbg-blue.svg?style=flat-square)](http://twitter.com/devlabsbg)  [![Website](https://img.shields.io/website-up-down-blue-red/http/shields.io.svg?label=devlabs.bg&style=flat-square)](http://devlabs.bg)
 
 This library provides an easy way to combine images and audio into a video or merge multiple videos into one.
 
