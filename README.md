@@ -17,9 +17,9 @@ This library provides an easy way to combine images and audio into a video or me
 
 ---
 ## Requirements
-- iOS 8.0 or later
+- iOS 9.0 or later
 - Xcode 8.3 or later
-- Swift 3.1 or later
+- Swift 3.2 or later
 
 ---
 ## Communication
