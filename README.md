@@ -74,10 +74,10 @@ For both the **.single** and **.multiple** types of video generation the output 
 #### Create a video from a single audio and image file
 
 ```Swift
-if let audioURL4 = Bundle.main.url(forResource: "audio4", withExtension: "mp3"), let _image1 = UIImage(named: "image4") {
+if let audioURL = Bundle.main.url(forResource: "audio", withExtension: "mp3"), let _image = UIImage(named: "image") {
   VideoGenerator.current.fileName = "singleMovie"
 
-  VideoGenerator.current.generate(withImages: [_image1], andAudios: [audioURL4], andType: .single, { (progress) in
+  VideoGenerator.current.generate(withImages: [_image], andAudios: [audioURL], andType: .single, { (progress) in
     print(progress)
   }, success: { (url) in
     print(url)
