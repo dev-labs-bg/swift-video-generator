@@ -34,9 +34,9 @@
 		06C03C6CAF1D68F7A5F24949C740CB08 /* Pods-SwiftVideoGenerator_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwiftVideoGenerator_Example.release.xcconfig"; sourceTree = "<group>"; };
 		090A87FC237BBF65AEFD468218BBBD56 /* Pods-SwiftVideoGenerator_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SwiftVideoGenerator_Example-frameworks.sh"; sourceTree = "<group>"; };
 		0C2F86EE5A254AF2C1BDE67518E949EA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0D0565DB0158266FFB8EA93A988CF0D9 /* SwiftVideoGenerator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftVideoGenerator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D0565DB0158266FFB8EA93A988CF0D9 /* SwiftVideoGenerator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SwiftVideoGenerator.framework; path = SwiftVideoGenerator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A44BEBD4DC6A6F26158300739C0679F /* Pods-SwiftVideoGenerator_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SwiftVideoGenerator_Example-umbrella.h"; sourceTree = "<group>"; };
-		277115F4E28D8E05D1E16D5273DDCE35 /* Pods_SwiftVideoGenerator_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftVideoGenerator_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		277115F4E28D8E05D1E16D5273DDCE35 /* Pods_SwiftVideoGenerator_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_SwiftVideoGenerator_Tests.framework; path = "Pods-SwiftVideoGenerator_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E230484B86879B9CA839828EE336E2 /* SwiftVideoGenerator.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftVideoGenerator.xcconfig; sourceTree = "<group>"; };
 		3A40222C92299D3CA75D66B809B82C90 /* Pods-SwiftVideoGenerator_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-SwiftVideoGenerator_Example-dummy.m"; sourceTree = "<group>"; };
 		47DC15E034F4041F02985A5471FB8B88 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -50,14 +50,14 @@
 		7E509E604C515CD6FC226029DFA18218 /* SwiftVideoGenerator-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftVideoGenerator-dummy.m"; sourceTree = "<group>"; };
 		878D60AA5695D766F6492152A890A17B /* Pods-SwiftVideoGenerator_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SwiftVideoGenerator_Tests-umbrella.h"; sourceTree = "<group>"; };
 		882B6395228F48B1596030F929AD5E1B /* SwiftVideoGenerator-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftVideoGenerator-umbrella.h"; sourceTree = "<group>"; };
-		8D9F5DCEB7C2C0D069B13ECB5955C08D /* Pods-SwiftVideoGenerator_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-SwiftVideoGenerator_Example.modulemap"; sourceTree = "<group>"; };
-		8DEB975D20A7176EFA0D5313A6C31839 /* SwiftVideoGenerator.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = SwiftVideoGenerator.modulemap; sourceTree = "<group>"; };
+		8D9F5DCEB7C2C0D069B13ECB5955C08D /* Pods-SwiftVideoGenerator_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-SwiftVideoGenerator_Example.modulemap"; sourceTree = "<group>"; };
+		8DEB975D20A7176EFA0D5313A6C31839 /* SwiftVideoGenerator.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = SwiftVideoGenerator.modulemap; sourceTree = "<group>"; };
 		8F28046AADBF5B19BECACFA132413396 /* Pods-SwiftVideoGenerator_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SwiftVideoGenerator_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		AB0B8D15E1A53E836FE04A9E867CC507 /* Pods-SwiftVideoGenerator_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SwiftVideoGenerator_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
-		B26803F25EB3ED5CD471203C301F5135 /* Pods-SwiftVideoGenerator_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-SwiftVideoGenerator_Tests.modulemap"; sourceTree = "<group>"; };
+		B26803F25EB3ED5CD471203C301F5135 /* Pods-SwiftVideoGenerator_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-SwiftVideoGenerator_Tests.modulemap"; sourceTree = "<group>"; };
 		C07EBA1D9B75AC7EEB616A92BDCC9D4D /* SwiftVideoGenerator-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftVideoGenerator-prefix.pch"; sourceTree = "<group>"; };
-		CEA88D5E2F6796AA0C44FD32864611C5 /* Pods_SwiftVideoGenerator_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftVideoGenerator_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEA88D5E2F6796AA0C44FD32864611C5 /* Pods_SwiftVideoGenerator_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_SwiftVideoGenerator_Example.framework; path = "Pods-SwiftVideoGenerator_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEFF9B10D4B29C9193C53386C66F2A9F /* Pods-SwiftVideoGenerator_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SwiftVideoGenerator_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		D1759E6502D1331DE7FBCF22814AFD79 /* Pods-SwiftVideoGenerator_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-SwiftVideoGenerator_Tests-dummy.m"; sourceTree = "<group>"; };
 		EAB8E92CCC67A048FBDC1E2C1382C64F /* Pods-SwiftVideoGenerator_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SwiftVideoGenerator_Example-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -298,7 +298,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -535,7 +535,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Release;

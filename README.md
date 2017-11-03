@@ -77,7 +77,7 @@ For both the **.single** and **.multiple** types of video generation the output 
 if let audioURL4 = Bundle.main.url(forResource: "audio4", withExtension: "mp3"), let _image1 = UIImage(named: "image4") {
   VideoGenerator.current.fileName = "singleMovie"
 
-  VideoGenerator.generate(withImages: [_image1], andAudios: [audioURL4], andType: .single, { (progress) in
+  VideoGenerator.current.generate(withImages: [_image1], andAudios: [audioURL4], andType: .single, { (progress) in
     print(progress)
   }, success: { (url) in
     print(url)
@@ -108,7 +108,7 @@ if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3"),
     VideoGenerator.current.videoBackgroundColor = .red
     VideoGenerator.current.scaleWidth = 700
 
-    VideoGenerator.generate(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
+    VideoGenerator.current.generate(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
       print(progress)
     }, success: { (url) in
       print(url)

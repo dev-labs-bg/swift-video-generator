@@ -59,7 +59,7 @@ public class VideoGenerator: NSObject {
    - parameter success:  A block which will be called after successful generation of video
    - parameter failure:  A blobk which will be called on a failure durring the generation of the video
    */
-  open class func generate(withImages _images: [UIImage], andAudios _audios: [URL], andType _type: VideoGeneratorType, _ progress: @escaping ((Progress) -> Void), success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  open func generate(withImages _images: [UIImage], andAudios _audios: [URL], andType _type: VideoGeneratorType, _ progress: @escaping ((Progress) -> Void), success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
     
     VideoGenerator.current.setup(withImages: _images, andAudios: _audios, andType: _type)
     
