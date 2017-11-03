@@ -51,7 +51,7 @@ class ViewController: UIViewController {
           print(url)
           self.createAlertView(message: "Finished single type video generation")
         }) { (error) in
-          self.createAlertView(message: error.description)
+          self.createAlertView(message: error.localizedDescription)
           print(error)
         }
       }
@@ -72,7 +72,7 @@ class ViewController: UIViewController {
             print(videoURL)
             self.createAlertView(message: "Finished multiple type video generation")
           }, failure: { (error) in
-            self.createAlertView(message: error.description)
+            self.createAlertView(message: error.localizedDescription)
             print(error)
           })
         }
@@ -105,7 +105,7 @@ class ViewController: UIViewController {
         print(videoURL)
       }) { (error) in
         print(error)
-        self.createAlertView(message: error.description)
+        self.createAlertView(message: error.localizedDescription)
       }
     }
   }
