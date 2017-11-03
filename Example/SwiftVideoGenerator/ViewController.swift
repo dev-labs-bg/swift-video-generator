@@ -39,43 +39,37 @@ class ViewController: UIViewController {
   
   @IBAction func generateSingleVideoButtonClickHandler(_ sender: UIButton) {
     if let audioURL4 = Bundle.main.url(forResource: "audio4", withExtension: "mp3"), let _image1 = UIImage(named: "image4") {
-      
-      if let videoGenerator = VideoGenerator(withImages: [_image1], andAudios: [audioURL4], andType: .single) {
-        videoGenerator.scaleWidth = 800
-        videoGenerator.fileName = "singleMovie"
-        videoGenerator.videoBackgroundColor = .black
-        
-        videoGenerator.generate({ (progress) in
-          print(progress)
-        }, success: { (url) in
-          print(url)
-          self.createAlertView(message: "Finished single type video generation")
-        }) { (error) in
-          self.createAlertView(message: error.localizedDescription)
-          print(error)
-        }
-      }
+      VideoGenerator.current.fileName = "singleMovie"
+
+      VideoGenerator.generate(withImages: [_image1], andAudios: [audioURL4], andType: .single, { (progress) in
+        print(progress)
+      }, success: { (url) in
+        print(url)
+        self.createAlertView(message: "Finished single type video generation")
+      }, failure: { (error) in
+        print(error)
+        self.createAlertView(message: error.localizedDescription)
+      })
     }
   }
   
   @IBAction func generateMultipleVideoButtonClickHandler(_ sender: UIButton) {
     if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3"), let audioURL2 = Bundle.main.url(forResource: "audio2", withExtension: "mp3"), let audioURL3 = Bundle.main.url(forResource: "audio3", withExtension: "mp3") {
       if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3") {
+
+        VideoGenerator.current.fileName = "multipleVideo"
+        VideoGenerator.current.videoBackgroundColor = .red
+        VideoGenerator.current.scaleWidth = 700
         
-        if let videoGenerator1 = VideoGenerator(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple) {
-          videoGenerator1.fileName = "multipleVideo"
-          videoGenerator1.videoBackgroundColor = .black
-          
-          videoGenerator1.generate({ (progress) in
-            print(progress)
-          }, success: { (videoURL) in
-            print(videoURL)
-            self.createAlertView(message: "Finished multiple type video generation")
-          }, failure: { (error) in
-            self.createAlertView(message: error.localizedDescription)
-            print(error)
-          })
-        }
+        VideoGenerator.generate(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
+          print(progress)
+        }, success: { (url) in
+          print(url)
+          self.createAlertView(message: "Finished single type video generation")
+        }, failure: { (error) in
+          print(error)
+          self.createAlertView(message: error.localizedDescription)
+        })
       }
     }
   }

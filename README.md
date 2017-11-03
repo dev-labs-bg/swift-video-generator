@@ -74,20 +74,18 @@ For both the **.single** and **.multiple** types of video generation the output 
 #### Create a video from a single audio and image file
 
 ```Swift
-if let audioURL = Bundle.main.url(forResource: "audio", withExtension: "mp3"), let _image = UIImage(named: "image") {
-  if let videoGenerator = VideoGenerator(withImages: [_image], andAudios: [audioURL], andType: .single) {
-    videoGenerator.scaleWidth = 800
-    videoGenerator.fileName = "singleMovie"
-    videoGenerator.videoBackgroundColor = .black
+if let audioURL4 = Bundle.main.url(forResource: "audio4", withExtension: "mp3"), let _image1 = UIImage(named: "image4") {
+  VideoGenerator.current.fileName = "singleMovie"
 
-    videoGenerator.generate({ (progress) in
-      print(progress)
-    }, success: { (url) in
-      print(url)
-    }) { (error) in
-      print(error)
-    }
-  }
+  VideoGenerator.generate(withImages: [_image1], andAudios: [audioURL4], andType: .single, { (progress) in
+    print(progress)
+  }, success: { (url) in
+    print(url)
+    self.createAlertView(message: "Finished single type video generation")
+  }, failure: { (error) in
+    print(error)
+    self.createAlertView(message: error.localizedDescription)
+  })
 }
 ```
 With the generator type **.single** you can create a video from a single pair of audio and an image.
@@ -103,21 +101,22 @@ The **videoBackgroundColor** property is used when scaling the image. When an im
 #### Create a video from multiple image/audio pairs
 
 ```Swift
-if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3"), let audioURL2 = Bundle.main.url(forResource: "audio2", withExtension: "mp3"), let audioURL3 = Bundle.main.url(forResource: "audio3", withExtension: "mp3") {
+if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3"), let audioURL2 = Bundle.main.url(forResource: "audio2", withExtension: "mp3"), let audioURL3 =  Bundle.main.url(forResource: "audio3", withExtension: "mp3") {
   if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3") {
 
-    if let videoGenerator1 = VideoGenerator(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple) {
-      videoGenerator1.fileName = "multipleVideo"
-      videoGenerator1.videoBackgroundColor = .black
+    VideoGenerator.current.fileName = "multipleVideo"
+    VideoGenerator.current.videoBackgroundColor = .red
+    VideoGenerator.current.scaleWidth = 700
 
-      videoGenerator1.generate({ (progress) in
-        print(progress)
-      }, success: { (videoURL) in
-        print(videoURL)
-      }, failure: { (error) in
-        print(error)
-      })
-    }
+    VideoGenerator.generate(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
+      print(progress)
+    }, success: { (url) in
+      print(url)
+      self.createAlertView(message: "Finished single type video generation")
+    }, failure: { (error) in
+      print(error)
+      self.createAlertView(message: error.localizedDescription)
+    })
   }
 }
 ```
@@ -126,7 +125,7 @@ Then the next pair of audio and image will be made into a video and appended aft
 
 The **fileName** and **videoBackgroundColor** properties are used in the same way as in the **.single** type.
 
-[Exmaple video](https://drive.google.com/open?id=0B_VCX_bQMRqPRkFuOWFhSllJbWc)
+[Exmaple video](https://drive.google.com/open?id=0B_VCX_bQMRqPbTdNWlQ3X3E0YUU)
 
 #### Merging multiple videos into one
 
