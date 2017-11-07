@@ -22,8 +22,6 @@
 		FF6739621FA31B5E003872E7 /* video1.mov in Resources */ = {isa = PBXBuildFile; fileRef = FF67395B1FA31B5E003872E7 /* video1.mov */; };
 		FF6739631FA31B5E003872E7 /* audio1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FF67395C1FA31B5E003872E7 /* audio1.mp3 */; };
 		FF6739641FA31B5E003872E7 /* audio2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FF67395D1FA31B5E003872E7 /* audio2.mp3 */; };
-		FFD361F21FB1C72C00C1E359 /* mirror1.mov in Resources */ = {isa = PBXBuildFile; fileRef = FFD361F01FB1C72C00C1E359 /* mirror1.mov */; };
-		FFD361F31FB1C72C00C1E359 /* mirror2.mov in Resources */ = {isa = PBXBuildFile; fileRef = FFD361F11FB1C72C00C1E359 /* mirror2.mov */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,8 +61,6 @@
 		FF67395B1FA31B5E003872E7 /* video1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = video1.mov; path = Resources/video1.mov; sourceTree = "<group>"; };
 		FF67395C1FA31B5E003872E7 /* audio1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = audio1.mp3; path = Resources/audio1.mp3; sourceTree = "<group>"; };
 		FF67395D1FA31B5E003872E7 /* audio2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = audio2.mp3; path = Resources/audio2.mp3; sourceTree = "<group>"; };
-		FFD361F01FB1C72C00C1E359 /* mirror1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = mirror1.mov; path = Resources/mirror1.mov; sourceTree = "<group>"; };
-		FFD361F11FB1C72C00C1E359 /* mirror2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = mirror2.mov; path = Resources/mirror2.mov; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,8 +177,6 @@
 		FF6739561FA31B27003872E7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				FFD361F01FB1C72C00C1E359 /* mirror1.mov */,
-				FFD361F11FB1C72C00C1E359 /* mirror2.mov */,
 				FF67395C1FA31B5E003872E7 /* audio1.mp3 */,
 				FF67395D1FA31B5E003872E7 /* audio2.mp3 */,
 				FF67395A1FA31B5E003872E7 /* audio3.mp3 */,
@@ -283,7 +277,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFD361F31FB1C72C00C1E359 /* mirror2.mov in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				FF6739641FA31B5E003872E7 /* audio2.mp3 in Resources */,
@@ -291,7 +284,6 @@
 				FF6739621FA31B5E003872E7 /* video1.mov in Resources */,
 				FF67395F1FA31B5E003872E7 /* audio4.mp3 in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
-				FFD361F21FB1C72C00C1E359 /* mirror1.mov in Resources */,
 				FF6739611FA31B5E003872E7 /* audio3.mp3 in Resources */,
 				FF6739601FA31B5E003872E7 /* swift-video-generator-logo.png in Resources */,
 				FF67395E1FA31B5E003872E7 /* video2.mov in Resources */,
