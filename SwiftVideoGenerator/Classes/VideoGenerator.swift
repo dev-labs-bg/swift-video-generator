@@ -234,6 +234,7 @@ public class VideoGenerator: NSObject {
     
     /// add audio and video tracks to the composition
     if let trackVideo: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid), let trackAudio: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) {
+      
       var insertTime = CMTime(seconds: 0, preferredTimescale: 1)
       
       /// check if the documents folder is available
@@ -254,6 +255,7 @@ public class VideoGenerator: NSObject {
             do {
               if let videoTrack = sourceAsset.tracks(withMediaType: AVMediaType.video).first, let audioTrack = sourceAsset.tracks(withMediaType: AVMediaType.audio).first {
                 try trackVideo.insertTimeRange(CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: sourceAsset.duration), of: videoTrack, at: insertTime)
+                trackVideo.preferredTransform = videoTrack.preferredTransform
                 try trackAudio.insertTimeRange(CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: sourceAsset.duration), of: audioTrack, at: insertTime)
               }
               
