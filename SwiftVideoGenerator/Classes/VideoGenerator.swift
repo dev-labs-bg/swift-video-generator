@@ -243,12 +243,14 @@ public class VideoGenerator: NSObject {
       /// create a path to the video file
       completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(_fileName).m4v")
       
-      if FileManager.default.fileExists(atPath: completeMoviePath!.absoluteString) {
-        do {
-          /// delete an old duplicate file
-          try FileManager.default.removeItem(at: completeMoviePath!)
-        } catch {
-          failure(error)
+      if let completeMoviePath = completeMoviePath {
+        if FileManager.default.fileExists(atPath: completeMoviePath.absoluteString) {
+          do {
+            /// delete an old duplicate file
+            try FileManager.default.removeItem(at: completeMoviePath)
+          } catch {
+            failure(error)
+          }
         }
       }
     } else {
