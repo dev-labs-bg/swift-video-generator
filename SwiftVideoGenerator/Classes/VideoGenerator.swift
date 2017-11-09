@@ -230,10 +230,18 @@ public class VideoGenerator: NSObject {
       return
     }
     
+    var videoAssets: [AVURLAsset] = []
+    
+    for path in _videoURLs {
+      if let _url = URL(string: path.absoluteString) {
+        videoAssets.append(AVURLAsset(url: _url))
+      }
+    }
+    
     let composition = AVMutableComposition()
     
     /// add audio and video tracks to the composition
-    if let trackVideo: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid), let trackAudio: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) {
+    if let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid), let audioTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) {
       
       var insertTime = CMTime(seconds: 0, preferredTimescale: 1)
       
@@ -248,21 +256,19 @@ public class VideoGenerator: NSObject {
         } catch { }
         
         /// for each URL add the video and audio tracks and their duration to the composition
-        for path in _videoURLs {
-          if let _url = URL(string: path.absoluteString) {
-            let sourceAsset = AVURLAsset(url: _url)
-            
-            do {
-              if let videoTrack = sourceAsset.tracks(withMediaType: AVMediaType.video).first, let audioTrack = sourceAsset.tracks(withMediaType: AVMediaType.audio).first {
-                try trackVideo.insertTimeRange(CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: sourceAsset.duration), of: videoTrack, at: insertTime)
-                trackVideo.preferredTransform = videoTrack.preferredTransform
-                try trackAudio.insertTimeRange(CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: sourceAsset.duration), of: audioTrack, at: insertTime)
-              }
+        for sourceAsset in videoAssets {
+          do {
+            if let assetVideoTrack = sourceAsset.tracks(withMediaType: .video).first, let assetAudioTrack = sourceAsset.tracks(withMediaType: .audio).first {
+              let frameRange = CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: sourceAsset.duration)
+              try videoTrack.insertTimeRange(frameRange, of: assetVideoTrack, at: insertTime)
+              try audioTrack.insertTimeRange(frameRange, of: assetAudioTrack, at: insertTime)
               
-              insertTime = insertTime + sourceAsset.duration
-            } catch {
-              failure(error)
+              videoTrack.preferredTransform = assetVideoTrack.preferredTransform
             }
+            
+            insertTime = insertTime + sourceAsset.duration
+          } catch {
+            failure(error)
           }
         }
         

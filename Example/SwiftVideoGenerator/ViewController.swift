@@ -93,7 +93,7 @@ class ViewController: UIViewController {
     //      }
     //    }
     
-    if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
+    if let videoURL1 = Bundle.main.url(forResource: "video3", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "video4", withExtension: "mov") {
       VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
         self.createAlertView(message: "Finished merging videos")
         print(videoURL)
