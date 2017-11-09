@@ -231,6 +231,7 @@ public class VideoGenerator: NSObject {
     }
     
     var videoAssets: [AVURLAsset] = []
+    var completeMoviePath: URL?
     
     for path in _videoURLs {
       if let _url = URL(string: path.absoluteString) {
@@ -238,22 +239,28 @@ public class VideoGenerator: NSObject {
       }
     }
     
+    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+      /// create a path to the video file
+      completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(_fileName).m4v")
+      
+      do {
+        /// delete an old duplicate file
+        try FileManager.default.removeItem(at: completeMoviePath!)
+      } catch {
+        failure(error)
+      }
+    } else {
+      failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+    }
+    
     let composition = AVMutableComposition()
     
-    /// add audio and video tracks to the composition
-    if let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid), let audioTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) {
+    if let completeMoviePath = completeMoviePath {
       
-      var insertTime = CMTime(seconds: 0, preferredTimescale: 1)
-      
-      /// check if the documents folder is available
-      if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-        /// create a path to the video file
-        let completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(_fileName).m4v")
+      /// add audio and video tracks to the composition
+      if let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid), let audioTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) {
         
-        do {
-          /// delete an old duplicate file
-          try FileManager.default.removeItem(at: completeMoviePath)
-        } catch { }
+        var insertTime = CMTime(seconds: 0, preferredTimescale: 1)
         
         /// for each URL add the video and audio tracks and their duration to the composition
         for sourceAsset in videoAssets {
@@ -299,8 +306,6 @@ public class VideoGenerator: NSObject {
         } else {
           failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
         }
-      } else {
-        failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
       }
     }
   }
