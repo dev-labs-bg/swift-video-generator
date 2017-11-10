@@ -17,23 +17,13 @@ class ViewController: UIViewController {
   
   // MARK: - Public properties
   
-  @IBOutlet weak var generateSingleVideoButton: UIButton! {
-    didSet {
-      generateSingleVideoButton.accessibilityLabel = "single"
-    }
-  }
+  @IBOutlet weak var generateSingleVideoButton: UIButton!
   
-  @IBOutlet weak var generateMultipleVideoButton: UIButton! {
-    didSet {
-      generateMultipleVideoButton.accessibilityLabel = "multiple"
-    }
-  }
+  @IBOutlet weak var generateMultipleVideoButton: UIButton!
   
-  @IBOutlet weak var mergeVideosButton: UIButton! {
-    didSet {
-      mergeVideosButton.accessibilityLabel = "merge"
-    }
-  }
+  @IBOutlet weak var mergeVideosButton: UIButton!
+  
+  @IBOutlet weak var reverseVideoButton: UIButton!
   
   // MARK: - Public methods
   
@@ -65,7 +55,7 @@ class ViewController: UIViewController {
           print(progress)
         }, success: { (url) in
           print(url)
-          self.createAlertView(message: "Finished single type video generation")
+          self.createAlertView(message: "Finished multiple type video generation")
         }, failure: { (error) in
           print(error)
           self.createAlertView(message: error.localizedDescription)
@@ -93,9 +83,21 @@ class ViewController: UIViewController {
     //      }
     //    }
     
-    if let videoURL1 = Bundle.main.url(forResource: "video3", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "video4", withExtension: "mov") {
+    if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
       VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
         self.createAlertView(message: "Finished merging videos")
+        print(videoURL)
+      }) { (error) in
+        print(error)
+        self.createAlertView(message: error.localizedDescription)
+      }
+    }
+  }
+
+  @IBAction func reverseVideoButtonClickHandler(_ sender: UIButton) {
+    if let videoURL1 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
+      VideoGenerator.current.reverseClip(videoURL: videoURL1, andFileName: "reversedMovie", success: { (videoURL) in
+        self.createAlertView(message: "Finished reversing video")
         print(videoURL)
       }) { (error) in
         print(error)
@@ -118,6 +120,7 @@ class ViewController: UIViewController {
     generateSingleVideoButton.layer.cornerRadius = generateSingleVideoButton.frame.height / 2
     generateMultipleVideoButton.layer.cornerRadius = generateMultipleVideoButton.frame.height / 2
     mergeVideosButton.layer.cornerRadius = mergeVideosButton.frame.height / 2
+    reverseVideoButton.layer.cornerRadius = reverseVideoButton.frame.height / 2
   }
   
   override func didReceiveMemoryWarning() {

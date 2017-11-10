@@ -212,6 +212,127 @@ public class VideoGenerator: NSObject {
     }
   }
   
+  /// Method to reverse a video clip
+  ///
+  /// - Parameters:
+  ///   - videoURL: the file's URL
+  ///   - success: success completion block
+  ///   - failure: failure completion block
+  open func reverseClip(videoURL: URL, andFileName fileName: String?, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+    let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
+    
+    if !videoURL.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains(videoURL.pathExtension) {
+      let _fileName = fileName == nil ? "reversedClip" : fileName!
+      
+      var completeMoviePath: URL?
+      let videoAsset: AVAsset! = AVURLAsset(url: videoURL)
+      var videoSize = CGSize.zero
+      
+      if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+        /// create a path to the video file
+        completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(String(describing: _fileName)).m4v")
+        
+        if let completeMoviePath = completeMoviePath {
+          if FileManager.default.fileExists(atPath: completeMoviePath.absoluteString) {
+            do {
+              /// delete an old duplicate file
+              try FileManager.default.removeItem(at: completeMoviePath)
+            } catch {
+              failure(error)
+            }
+          }
+        }
+      } else {
+        failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+      }
+      
+      if let completeMoviePath = completeMoviePath {
+        
+        if let firstAssetTrack = videoAsset.tracks(withMediaType: .video).first {
+          let orientation = videoAsset.videoOrientation()
+          
+          if orientation.orientation == .portrait {
+            videoSize = CGSize(width: firstAssetTrack.naturalSize.height, height: firstAssetTrack.naturalSize.width)
+          } else {
+            videoSize = firstAssetTrack.naturalSize
+          }
+        }
+        
+        /// create the basic video settings
+        let videoSettings: [String : AnyObject] = [
+          AVVideoCodecKey  : AVVideoCodecH264 as AnyObject,
+          AVVideoWidthKey  : videoSize.width as AnyObject,
+          AVVideoHeightKey : videoSize.height as AnyObject,
+          ]
+        
+        /// create setting for the pixel buffer
+        let sourceBufferAttributes: [String : AnyObject] = [
+          (kCVPixelBufferPixelFormatTypeKey as String): Int(kCVPixelFormatType_32ARGB) as AnyObject,
+          (kCVPixelBufferWidthKey as String): Float(videoSize.width) as AnyObject,
+          (kCVPixelBufferHeightKey as String):  Float(videoSize.height) as AnyObject,
+          (kCVPixelBufferCGImageCompatibilityKey as String): NSNumber(value: true),
+          (kCVPixelBufferCGBitmapContextCompatibilityKey as String): NSNumber(value: true)
+        ]
+        
+        var writer: AVAssetWriter!
+        
+        do {
+          let reader = try AVAssetReader(asset: videoAsset)
+          
+          if let assetVideoTrack = videoAsset.tracks(withMediaType: .video).first {
+            
+            let readerOutput = AVAssetReaderTrackOutput(track: assetVideoTrack, outputSettings: sourceBufferAttributes)
+            
+            reader.add(readerOutput)
+            reader.startReading()
+            
+            var samples: [CMSampleBuffer] = []
+            
+            while let _sample = readerOutput.copyNextSampleBuffer() {
+              samples.append(_sample)
+            }
+            
+            if samples.count > 1 {
+              writer = try AVAssetWriter(outputURL: completeMoviePath, fileType: .m4v)
+              let writerInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
+              writerInput.expectsMediaDataInRealTime = false
+              
+              let pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: nil)
+              
+              writer.add(writerInput)
+              writer.startWriting()
+              
+              writer.startSession(atSourceTime: CMSampleBufferGetPresentationTimeStamp(samples[0]))
+              
+              for (index, sample) in samples.enumerated() {
+                let presentationTime = CMSampleBufferGetPresentationTimeStamp(sample)
+                let imageBufferRef: CVPixelBuffer = CMSampleBufferGetImageBuffer(samples[samples.count - index - 1])!
+                
+                while (!writerInput.isReadyForMoreMediaData) {
+                  Thread.sleep(forTimeInterval: 0.1)
+                }
+                
+                pixelBufferAdaptor.append(imageBufferRef, withPresentationTime: presentationTime)
+              }
+            } else {
+              failure(VideoGeneratorError(error: .kFailedToReadProvidedClip))
+            }
+          }
+        } catch {
+          failure(error)
+        }
+        
+        writer.finishWriting(completionHandler: {
+          success(completeMoviePath)
+        })
+      } else {
+        failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+      }
+    } else {
+      failure(VideoGeneratorError(error: .kUnsupportedVideoType))
+    }
+  }
+  
   /// Method to merge multiple videos
   ///
   /// - Parameters:
@@ -620,7 +741,7 @@ public class VideoGenerator: NSObject {
   }
 }
 
-/// Private class to represent a custom video generator error 
+/// Private class to represent a custom video generator error
 private class VideoGeneratorError: NSObject, LocalizedError {
   
   public enum CustomError {
@@ -629,6 +750,8 @@ private class VideoGeneratorError: NSObject, LocalizedError {
     case kFailedToFetchDirectory
     case kFailedToStartAssetExportSession
     case kMissingVideoURLs
+    case kFailedToReadProvidedClip
+    case kUnsupportedVideoType
   }
   
   fileprivate var desc = ""
@@ -652,6 +775,10 @@ private class VideoGeneratorError: NSObject, LocalizedError {
         return "\(kErrorDomain): Can't begin an AVAssetExportSession"
       case .kMissingVideoURLs:
         return "\(kErrorDomain): Missing video paths"
+      case .kFailedToReadProvidedClip:
+        return "\(kErrorDomain): Couldn't read the supplied video's frames."
+      case .kUnsupportedVideoType:
+        return "\(kErrorDomain): Unsupported video type. Supported tyeps: .m4v, mp4, .mov"
       }
     }
   }
@@ -660,5 +787,58 @@ private class VideoGeneratorError: NSObject, LocalizedError {
     get {
       return self.description
     }
+  }
+}
+
+extension AVAsset {
+  
+  func videoOrientation() -> (orientation: UIInterfaceOrientation, device: AVCaptureDevice.Position) {
+    var orientation: UIInterfaceOrientation = .unknown
+    var device: AVCaptureDevice.Position = .unspecified
+    
+    let tracks :[AVAssetTrack] = self.tracks(withMediaType: .video)
+    if let videoTrack = tracks.first {
+      
+      let t = videoTrack.preferredTransform
+      
+      if (t.a == 0 && t.b == 1.0 && t.d == 0) {
+        orientation = .portrait
+        
+        if t.c == 1.0 {
+          device = .front
+        } else if t.c == -1.0 {
+          device = .back
+        }
+      }
+      else if (t.a == 0 && t.b == -1.0 && t.d == 0) {
+        orientation = .portraitUpsideDown
+        
+        if t.c == -1.0 {
+          device = .front
+        } else if t.c == 1.0 {
+          device = .back
+        }
+      }
+      else if (t.a == 1.0 && t.b == 0 && t.c == 0) {
+        orientation = .landscapeRight
+        
+        if t.d == -1.0 {
+          device = .front
+        } else if t.d == 1.0 {
+          device = .back
+        }
+      }
+      else if (t.a == -1.0 && t.b == 0 && t.c == 0) {
+        orientation = .landscapeLeft
+        
+        if t.d == 1.0 {
+          device = .front
+        } else if t.d == -1.0 {
+          device = .back
+        }
+      }
+    }
+    
+    return (orientation, device)
   }
 }
