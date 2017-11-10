@@ -8,6 +8,7 @@ This library provides an easy way to combine images and audio into a video or me
 - create a video from a **single** image and audio file
 - create a video from **multiple** image/audio pairs
 - merge **multiple** videos into one
+- **reverse** a video clip - ***New in version 1.0.4**
 
 ---
 ## Supported video formats
@@ -44,7 +45,7 @@ To use Swift Video Generator in your Xcode project using CocoaPods, add it in th
 platform :ios, '10.0'
 use_frameworks!
 target '<Your Target Name>' do
-  pod 'SwiftVideoGenrator'
+    pod 'SwiftVideoGenrator'
 end
 ```
 ### Manually
@@ -90,7 +91,7 @@ if let audioURL = Bundle.main.url(forResource: "audio", withExtension: "mp3"), l
 ```
 With the generator type **.single** you can create a video from a single pair of audio and an image.
 
-[Exmaple video](https://drive.google.com/open?id=0B_VCX_bQMRqPYVprSnQzdERLTkk)
+[Exmaple video - single type generation](https://drive.google.com/open?id=0B_VCX_bQMRqPYVprSnQzdERLTkk)
 
 The **scaleWidth** property scales the image to a desired size. Only used in a **.single** type of video.
 
@@ -104,20 +105,20 @@ The **videoBackgroundColor** property is used when scaling the image. When an im
 if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3"), let audioURL2 = Bundle.main.url(forResource: "audio2", withExtension: "mp3"), let audioURL3 =  Bundle.main.url(forResource: "audio3", withExtension: "mp3") {
   if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3") {
 
-    VideoGenerator.current.fileName = "multipleVideo"
-    VideoGenerator.current.videoBackgroundColor = .red
-    VideoGenerator.current.scaleWidth = 700
+  VideoGenerator.current.fileName = "multipleVideo"
+  VideoGenerator.current.videoBackgroundColor = .red
+  VideoGenerator.current.scaleWidth = 700
 
-    VideoGenerator.current.generate(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
-      print(progress)
-    }, success: { (url) in
-      print(url)
-      self.createAlertView(message: "Finished single type video generation")
-    }, failure: { (error) in
-      print(error)
-      self.createAlertView(message: error.localizedDescription)
-    })
-  }
+  VideoGenerator.current.generate(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
+    print(progress)
+  }, success: { (url) in
+    print(url)
+    self.createAlertView(message: "Finished single type video generation")
+  }, failure: { (error) in
+    print(error)
+    self.createAlertView(message: error.localizedDescription)
+  })
+ }
 }
 ```
 With the type **.multiple** you can create a video that combines multiple image/audio pairs. The finished video will queue up multiple videos created by taking one image from the array and it's corresponding index element from the audio array, creating a video from it and then appending it to the finished video.
@@ -125,22 +126,39 @@ Then the next pair of audio and image will be made into a video and appended aft
 
 The **fileName** and **videoBackgroundColor** properties are used in the same way as in the **.single** type.
 
-[Exmaple video](https://drive.google.com/open?id=0B_VCX_bQMRqPbTdNWlQ3X3E0YUU)
+[Exmaple video - multiple type generation video](https://drive.google.com/open?id=0B_VCX_bQMRqPbTdNWlQ3X3E0YUU)
 
 #### Merging multiple videos into one
 
 ```Swift
 if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
-    VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
-      print(videoURL)
-    }) { (error) in
-      print(error)
-    }
+  VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
+    print(videoURL)
+  }) { (error) in
+    print(error)
+  }
 }
 ```
 You can provide URLs both for local resource files as well as those stored on the device (i.e. in the Documents folder).
 
-[Exmaple video](https://drive.google.com/open?id=0B_VCX_bQMRqPRWJrMEt2NDA1Mms)
+As of right now the merged video keeps all of the **preferredTransformations** (like mirroring or orientation) of the last provided video asset. More to come in future feature implementations.
+
+[Exmaple video - merged video](https://drive.google.com/open?id=0B_VCX_bQMRqPRWJrMEt2NDA1Mms)
+
+#### Reversing a video clip
+
+```Swift
+if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
+  VideoGenerator.current.reverseClip(videoURL: videoURL, andFileName: "reversedMovie", success: { (videoURL) in
+    print(videoURL)
+  }) { (error) in
+    print(error)
+  }
+}
+```
+You need to provide the file's URL and optionally a new name for the reversed video file.
+
+[Exmaple video - reversed video](https://drive.google.com/open?id=1QXTxEMGJezuPVeuB_fqH8nHVKSG7vH_r)
 
 ## Credits
 
