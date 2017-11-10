@@ -28,22 +28,30 @@ class ViewController: UIViewController {
   // MARK: - Public methods
   
   @IBAction func generateSingleVideoButtonClickHandler(_ sender: UIButton) {
+    LoadingView.lockView()
+    
     if let audioURL4 = Bundle.main.url(forResource: "audio4", withExtension: "mp3"), let _image1 = UIImage(named: "image4") {
       VideoGenerator.current.fileName = "singleMovie"
 
       VideoGenerator.current.generate(withImages: [_image1], andAudios: [audioURL4], andType: .single, { (progress) in
         print(progress)
       }, success: { (url) in
+        LoadingView.unlockView()
         print(url)
         self.createAlertView(message: "Finished single type video generation")
       }, failure: { (error) in
+        LoadingView.unlockView()
         print(error)
         self.createAlertView(message: error.localizedDescription)
       })
+    }  else {
+      self.createAlertView(message: "Missing resource files")
     }
   }
   
   @IBAction func generateMultipleVideoButtonClickHandler(_ sender: UIButton) {
+    LoadingView.lockView()
+    
     if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3"), let audioURL2 = Bundle.main.url(forResource: "audio2", withExtension: "mp3"), let audioURL3 = Bundle.main.url(forResource: "audio3", withExtension: "mp3") {
       if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3") {
 
@@ -54,13 +62,19 @@ class ViewController: UIViewController {
         VideoGenerator.current.generate(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
           print(progress)
         }, success: { (url) in
+          LoadingView.unlockView()
           print(url)
           self.createAlertView(message: "Finished multiple type video generation")
         }, failure: { (error) in
+          LoadingView.unlockView()
           print(error)
           self.createAlertView(message: error.localizedDescription)
         })
+      }  else {
+        self.createAlertView(message: "Missing image files")
       }
+    }  else {
+      self.createAlertView(message: "Missing audio files")
     }
   }
   
@@ -82,27 +96,36 @@ class ViewController: UIViewController {
     //        }
     //      }
     //    }
-    
-    if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
+    LoadingView.lockView()
+    if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "portraitVideo", withExtension: "mp4") {
       VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
+        LoadingView.unlockView()
         self.createAlertView(message: "Finished merging videos")
         print(videoURL)
       }) { (error) in
+        LoadingView.unlockView()
         print(error)
         self.createAlertView(message: error.localizedDescription)
       }
+    }  else {
+      self.createAlertView(message: "Missing video files")
     }
   }
 
   @IBAction func reverseVideoButtonClickHandler(_ sender: UIButton) {
+    LoadingView.lockView()
     if let videoURL1 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
       VideoGenerator.current.reverseClip(videoURL: videoURL1, andFileName: "reversedMovie", success: { (videoURL) in
+        LoadingView.unlockView()
         self.createAlertView(message: "Finished reversing video")
         print(videoURL)
       }) { (error) in
+        LoadingView.unlockView()
         print(error)
         self.createAlertView(message: error.localizedDescription)
       }
+    } else {
+      self.createAlertView(message: "Missing video file")
     }
   }
   

@@ -78,8 +78,11 @@ public class VideoGenerator: NSObject {
       let videoOutputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("test.m4v")
       
       do {
-        /// try to delete the old generated video
-        try FileManager.default.removeItem(at: videoOutputURL)
+        if FileManager.default.fileExists(atPath: videoOutputURL.path) {
+          
+          /// try to delete the old generated video
+          try FileManager.default.removeItem(at: videoOutputURL)
+        }
       } catch { }
       
       do {
@@ -219,117 +222,149 @@ public class VideoGenerator: NSObject {
   ///   - success: success completion block
   ///   - failure: failure completion block
   open func reverseClip(videoURL: URL, andFileName fileName: String?, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
-    let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
-    
-    if !videoURL.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains(videoURL.pathExtension) {
-      let _fileName = fileName == nil ? "reversedClip" : fileName!
+    let media_queue = DispatchQueue(label: "mediaInputQueue", attributes: [])
+
+    media_queue.async {
+      let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
       
-      var completeMoviePath: URL?
-      let videoAsset: AVAsset! = AVURLAsset(url: videoURL)
-      var videoSize = CGSize.zero
-      
-      if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-        /// create a path to the video file
-        completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(String(describing: _fileName)).m4v")
+      if !videoURL.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains(videoURL.pathExtension) {
+        let _fileName = fileName == nil ? "reversedClip" : fileName!
+        
+        var completeMoviePath: URL?
+        let videoAsset: AVAsset! = AVURLAsset(url: videoURL)
+        var videoSize = CGSize.zero
+        
+        if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+          /// create a path to the video file
+          completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(String(describing: _fileName)).m4v")
+          
+          if let completeMoviePath = completeMoviePath {
+            if FileManager.default.fileExists(atPath: completeMoviePath.path) {
+              do {
+                /// delete an old duplicate file
+                try FileManager.default.removeItem(at: completeMoviePath)
+              } catch {
+                failure(error)
+              }
+            }
+          }
+        } else {
+          failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+        }
         
         if let completeMoviePath = completeMoviePath {
-          if FileManager.default.fileExists(atPath: completeMoviePath.absoluteString) {
-            do {
-              /// delete an old duplicate file
-              try FileManager.default.removeItem(at: completeMoviePath)
-            } catch {
+          
+          if let firstAssetTrack = videoAsset.tracks(withMediaType: .video).first {
+            let orientation = videoAsset.videoOrientation()
+            
+            if orientation.orientation == .portrait {
+              videoSize = CGSize(width: firstAssetTrack.naturalSize.height, height: firstAssetTrack.naturalSize.width)
+            } else {
+              videoSize = firstAssetTrack.naturalSize
+            }
+          }
+          
+          /// create the basic video settings
+          let videoSettings: [String : AnyObject] = [
+            AVVideoCodecKey  : AVVideoCodecH264 as AnyObject,
+            AVVideoWidthKey  : videoSize.width as AnyObject,
+            AVVideoHeightKey : videoSize.height as AnyObject,
+            ]
+          
+          /// create setting for the pixel buffer
+          let sourceBufferAttributes: [String : AnyObject] = [
+            (kCVPixelBufferPixelFormatTypeKey as String): Int(kCVPixelFormatType_32ARGB) as AnyObject,
+            (kCVPixelBufferWidthKey as String): Float(videoSize.width) as AnyObject,
+            (kCVPixelBufferHeightKey as String):  Float(videoSize.height) as AnyObject,
+            (kCVPixelBufferCGImageCompatibilityKey as String): NSNumber(value: true),
+            (kCVPixelBufferCGBitmapContextCompatibilityKey as String): NSNumber(value: true)
+          ]
+          
+          var writer: AVAssetWriter!
+          
+          do {
+            let reader = try AVAssetReader(asset: videoAsset)
+            
+            if let assetVideoTrack = videoAsset.tracks(withMediaType: .video).first {
+              
+              let readerOutput = AVAssetReaderTrackOutput(track: assetVideoTrack, outputSettings: sourceBufferAttributes)
+              
+              assert(reader.canAdd(readerOutput))
+              reader.add(readerOutput)
+              
+              if reader.startReading() {
+                
+                var samples: [CMSampleBuffer] = []
+                
+                while let sample = readerOutput.copyNextSampleBuffer() {
+                  samples.append(sample)
+                }
+                
+                reader.cancelReading()
+                
+                if samples.count > 1 {
+                  
+                  writer = try AVAssetWriter(outputURL: completeMoviePath, fileType: .m4v)
+                  let writerInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
+                  writerInput.expectsMediaDataInRealTime = false
+                  
+                  let pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: nil)
+                  
+                  assert(writer.canAdd(writerInput))
+                  
+                  writer.add(writerInput)
+                  
+                  if writer.startWriting() {
+                    
+                    writer.startSession(atSourceTime: CMSampleBufferGetPresentationTimeStamp(samples[0]))
+                    
+                    assert(pixelBufferAdaptor.pixelBufferPool != nil)
+                    
+                    for (index, sample) in samples.enumerated() {
+                      let presentationTime = CMSampleBufferGetPresentationTimeStamp(sample)
+                      let imageBufferRef: CVPixelBuffer = CMSampleBufferGetImageBuffer(samples[samples.count - index - 1])!
+                      
+                      while (!writerInput.isReadyForMoreMediaData) {
+                        Thread.sleep(forTimeInterval: 0.05)
+                      }
+                      
+                      pixelBufferAdaptor.append(imageBufferRef, withPresentationTime: presentationTime)
+                    }
+                    
+                    writerInput.markAsFinished()
+                    
+                    DispatchQueue.main.async {
+                      writer.finishWriting(completionHandler: {
+                        success(completeMoviePath)
+                      })
+                    }
+                  }
+                } else {
+                  DispatchQueue.main.async {
+                    failure(VideoGeneratorError(error: .kFailedToReadProvidedClip))
+                  }
+                }
+              } else {
+                DispatchQueue.main.async {
+                  failure(VideoGeneratorError(error: .kFailedToStartReader))
+                }
+              }
+            }
+          } catch {
+            DispatchQueue.main.async {
               failure(error)
             }
           }
-        }
-      } else {
-        failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
-      }
-      
-      if let completeMoviePath = completeMoviePath {
-        
-        if let firstAssetTrack = videoAsset.tracks(withMediaType: .video).first {
-          let orientation = videoAsset.videoOrientation()
-          
-          if orientation.orientation == .portrait {
-            videoSize = CGSize(width: firstAssetTrack.naturalSize.height, height: firstAssetTrack.naturalSize.width)
-          } else {
-            videoSize = firstAssetTrack.naturalSize
+        } else {
+          DispatchQueue.main.async {
+            failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
           }
         }
-        
-        /// create the basic video settings
-        let videoSettings: [String : AnyObject] = [
-          AVVideoCodecKey  : AVVideoCodecH264 as AnyObject,
-          AVVideoWidthKey  : videoSize.width as AnyObject,
-          AVVideoHeightKey : videoSize.height as AnyObject,
-          ]
-        
-        /// create setting for the pixel buffer
-        let sourceBufferAttributes: [String : AnyObject] = [
-          (kCVPixelBufferPixelFormatTypeKey as String): Int(kCVPixelFormatType_32ARGB) as AnyObject,
-          (kCVPixelBufferWidthKey as String): Float(videoSize.width) as AnyObject,
-          (kCVPixelBufferHeightKey as String):  Float(videoSize.height) as AnyObject,
-          (kCVPixelBufferCGImageCompatibilityKey as String): NSNumber(value: true),
-          (kCVPixelBufferCGBitmapContextCompatibilityKey as String): NSNumber(value: true)
-        ]
-        
-        var writer: AVAssetWriter!
-        
-        do {
-          let reader = try AVAssetReader(asset: videoAsset)
-          
-          if let assetVideoTrack = videoAsset.tracks(withMediaType: .video).first {
-            
-            let readerOutput = AVAssetReaderTrackOutput(track: assetVideoTrack, outputSettings: sourceBufferAttributes)
-            
-            reader.add(readerOutput)
-            reader.startReading()
-            
-            var samples: [CMSampleBuffer] = []
-            
-            while let _sample = readerOutput.copyNextSampleBuffer() {
-              samples.append(_sample)
-            }
-            
-            if samples.count > 1 {
-              writer = try AVAssetWriter(outputURL: completeMoviePath, fileType: .m4v)
-              let writerInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
-              writerInput.expectsMediaDataInRealTime = false
-              
-              let pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: nil)
-              
-              writer.add(writerInput)
-              writer.startWriting()
-              
-              writer.startSession(atSourceTime: CMSampleBufferGetPresentationTimeStamp(samples[0]))
-              
-              for (index, sample) in samples.enumerated() {
-                let presentationTime = CMSampleBufferGetPresentationTimeStamp(sample)
-                let imageBufferRef: CVPixelBuffer = CMSampleBufferGetImageBuffer(samples[samples.count - index - 1])!
-                
-                while (!writerInput.isReadyForMoreMediaData) {
-                  Thread.sleep(forTimeInterval: 0.1)
-                }
-                
-                pixelBufferAdaptor.append(imageBufferRef, withPresentationTime: presentationTime)
-              }
-            } else {
-              failure(VideoGeneratorError(error: .kFailedToReadProvidedClip))
-            }
-          }
-        } catch {
-          failure(error)
-        }
-        
-        writer.finishWriting(completionHandler: {
-          success(completeMoviePath)
-        })
       } else {
-        failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+        DispatchQueue.main.async {
+          failure(VideoGeneratorError(error: .kUnsupportedVideoType))
+        }
       }
-    } else {
-      failure(VideoGeneratorError(error: .kUnsupportedVideoType))
     }
   }
   
@@ -365,7 +400,7 @@ public class VideoGenerator: NSObject {
       completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(_fileName).m4v")
       
       if let completeMoviePath = completeMoviePath {
-        if FileManager.default.fileExists(atPath: completeMoviePath.absoluteString) {
+        if FileManager.default.fileExists(atPath: completeMoviePath.path) {
           do {
             /// delete an old duplicate file
             try FileManager.default.removeItem(at: completeMoviePath)
@@ -752,6 +787,7 @@ private class VideoGeneratorError: NSObject, LocalizedError {
     case kMissingVideoURLs
     case kFailedToReadProvidedClip
     case kUnsupportedVideoType
+    case kFailedToStartReader
   }
   
   fileprivate var desc = ""
@@ -779,6 +815,8 @@ private class VideoGeneratorError: NSObject, LocalizedError {
         return "\(kErrorDomain): Couldn't read the supplied video's frames."
       case .kUnsupportedVideoType:
         return "\(kErrorDomain): Unsupported video type. Supported tyeps: .m4v, mp4, .mov"
+      case .kFailedToStartReader:
+        return "\(kErrorDomain): Failed to start reading video frames"
       }
     }
   }
