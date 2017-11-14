@@ -158,7 +158,7 @@ if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"),
 ```
 You need to provide the file's URL and optionally a new name for the reversed video file.
 
-NB! - As of right now the reverse happens only on the video, not on the sound so the finished video is without sound. I will add this in the future, maybe with the option of choosing whether to reverse or keep the audio as is. 
+**NB!** As of right now the reverse happens only on the video, not on the sound so the finished video is without sound. I will add this in the future, maybe with the option of choosing whether to reverse or keep the audio as is.
 
 [Exmaple video - reversed video](https://drive.google.com/open?id=1QXTxEMGJezuPVeuB_fqH8nHVKSG7vH_r)
 
