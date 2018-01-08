@@ -44,11 +44,7 @@ public class VideoGenerator: NSObject {
   open var videoBackgroundColor: UIColor = UIColor.black
   
   /// public property to set a width to scale the image to before generating a video (used only with .single type video generation; preferred scale: 800/1200)
-  open var scaleWidth: CGFloat! {
-    didSet {
-      images = images.map({ $0.scaleImageToSize(newSize: CGSize(width: scaleWidth, height: scaleWidth)) })
-    }
-  }
+  open var scaleWidth: CGFloat?
   
   // MARK: - Public methods
   
@@ -543,6 +539,10 @@ public class VideoGenerator: NSObject {
     }
     
     duration = max(_duration, Double(CMTime(seconds: minSingleVideoDuration, preferredTimescale: 1).seconds))
+    
+    if let _scaleWidth = scaleWidth {
+      images = images.map({ $0.scaleImageToSize(newSize: CGSize(width: _scaleWidth, height: _scaleWidth)) })
+    }
   }
   
   // MARK: - Override methods

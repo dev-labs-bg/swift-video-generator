@@ -33,6 +33,8 @@ class ViewController: UIViewController {
     if let audioURL4 = Bundle.main.url(forResource: "audio4", withExtension: "mp3"), let _image1 = UIImage(named: "image4") {
       VideoGenerator.current.fileName = "singleMovie"
 
+      VideoGenerator.current.scaleWidth = 700
+      
       VideoGenerator.current.generate(withImages: [_image1], andAudios: [audioURL4], andType: .single, { (progress) in
         print(progress)
       }, success: { (url) in

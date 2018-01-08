@@ -162,6 +162,10 @@ You need to provide the file's URL and optionally a new name for the reversed vi
 
 [Exmaple video - reversed video](https://drive.google.com/open?id=1QXTxEMGJezuPVeuB_fqH8nHVKSG7vH_r)
 
+## Already in use in the following apps:
+
+- [LingoZING!](https://itunes.apple.com/us/app/lingozing/id1180618224)
+
 ## Credits
 
 SwiftVideoGenerator was created and is maintaned by Dev Labs. You can find us [@devlabsbg](https://twitter.com/devlabsbg) or [devlabs.bg](http://devlabs.bg/).
