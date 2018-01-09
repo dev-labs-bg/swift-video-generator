@@ -46,6 +46,9 @@ public class VideoGenerator: NSObject {
   /// public property to set a width to scale the image to before generating a video (used only with .single type video generation; preferred scale: 800/1200)
   open var scaleWidth: CGFloat?
   
+  /// public property to indicate if the images fed into the generator should be resized to appropriate video ratio 1200 x 1920
+  open var shouldOptimiseImageForVideo: Bool = true
+  
   // MARK: - Public methods
   
   /**
@@ -513,13 +516,13 @@ public class VideoGenerator: NSObject {
     /// populate the image array
     if type == .single {
       if let _image = _images.first {
-        if let resizedImage = _image.resizeImageToVideoSize() {
+        if let resizedImage = shouldOptimiseImageForVideo ? _image.resizeImageToVideoSize() : _image {
           images = [UIImage].init(repeating: resizedImage, count: 2)
         }
       }
     } else {
       for _image in _images {
-        if let resizedImage = _image.resizeImageToVideoSize() {
+        if let resizedImage = shouldOptimiseImageForVideo ? _image.resizeImageToVideoSize() : _image {
           images.append(resizedImage.scaleImageToSize(newSize: CGSize(width: 800, height: 800)))
         }
       }

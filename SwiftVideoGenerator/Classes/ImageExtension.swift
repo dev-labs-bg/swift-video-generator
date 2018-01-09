@@ -44,20 +44,20 @@ extension UIImage {
     var imageHeight = 16 * ((size.height / scale) / 16).rounded(.awayFromZero)
     var ratio: CGFloat!
     
-    if imageWidth > 1200 {
-      ratio = 1200 / imageWidth
+    if imageWidth > 1920 {
+      ratio = 1920 / imageWidth
       imageWidth = 16 * (imageWidth / 16).rounded(.towardZero) * ratio
       imageHeight = 16 * (imageHeight / 16).rounded(.towardZero) * ratio
     }
     
-    if imageWidth < 600 {
-      ratio = 600 / imageWidth
+    if imageWidth < 1200 {
+      ratio = 1200 / imageWidth
       imageWidth = 16 * (imageWidth / 16).rounded(.awayFromZero) * ratio
       imageHeight = 16 * (imageHeight / 16).rounded(.awayFromZero) * ratio
     }
     
-    if imageHeight > 1200 {
-      ratio = 1200 / imageHeight
+    if imageHeight > 1920 {
+      ratio = 1920 / imageHeight
       imageWidth = 16 * (imageWidth / 16).rounded(.towardZero) * ratio
       imageHeight = 16 * (imageHeight / 16).rounded(.towardZero) * ratio
     }
