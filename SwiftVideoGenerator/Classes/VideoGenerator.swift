@@ -49,6 +49,9 @@ public class VideoGenerator: NSObject {
   /// public property to indicate if the images fed into the generator should be resized to appropriate video ratio 1200 x 1920
   open var shouldOptimiseImageForVideo: Bool = true
   
+  /// public property to set the maximum length of a video
+  open var maxVideoLengthInSeconds: Double?
+  
   // MARK: - Public methods
   
   /**
@@ -189,6 +192,10 @@ public class VideoGenerator: NSObject {
             
             // after all images are appended the writting shoul be marked as finished
             videoWriterInput.markAsFinished()
+            
+            if let _maxLength = self.maxVideoLengthInSeconds {
+              videoWriter.endSession(atSourceTime: CMTime(seconds: _maxLength, preferredTimescale: 1))
+            }
             
             // the completion is made with a completion handler which will return the url of the generated video or an error
             videoWriter.finishWriting { () -> Void in
@@ -537,8 +544,21 @@ public class VideoGenerator: NSObject {
     
     /// calculate the full video duration
     for audio in audioAssets {
-      audioDurations.append(round(Double(CMTimeGetSeconds(audio.duration))))
-      _duration += round(Double(CMTimeGetSeconds(audio.duration)))
+      if let _maxLength = maxVideoLengthInSeconds {
+        _duration += round(Double(CMTimeGetSeconds(audio.duration)))
+        
+        if _duration < _maxLength {
+          audioDurations.append(round(Double(CMTimeGetSeconds(audio.duration))))
+        } else {
+          _duration -= round(Double(CMTimeGetSeconds(audio.duration)))
+          let diff = _maxLength - _duration
+          _duration = _maxLength
+          audioDurations.append(diff)
+        }
+      } else {
+        audioDurations.append(round(Double(CMTimeGetSeconds(audio.duration))))
+        _duration += round(Double(CMTimeGetSeconds(audio.duration)))
+      }
     }
     
     duration = max(_duration, Double(CMTime(seconds: minSingleVideoDuration, preferredTimescale: 1).seconds))
@@ -593,7 +613,7 @@ public class VideoGenerator: NSObject {
     /// add a video track to the composition
     let videoComposition = mixComposition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
     
-    if let videoTrack = videoAsset.tracks(withMediaType: AVMediaType.video).first {
+    if let videoTrack = videoAsset.tracks(withMediaType: .video).first {
       do {
         /// try to insert the video time range into the composition
         try videoComposition?.insertTimeRange(videoTimeRange, of: videoTrack, at: kCMTimeZero)
@@ -604,22 +624,28 @@ public class VideoGenerator: NSObject {
       var duration = CMTime(seconds: 0, preferredTimescale: 1)
       
       /// add an audio track to the composition
-      let audioCompositon = mixComposition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+      let audioCompositon = mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
       
       /// for all audio files add the audio track and duration to the existing audio composition
-      for audioUrl in audioURLs {
-        let audioAsset = AVURLAsset(url: audioUrl)
-        let audioTimeRange = CMTimeRange(start: kCMTimeZero, duration: audioAsset.duration)
+      for (index, audioUrl) in audioURLs.enumerated() {
+        let audioDuration = CMTime(seconds: audioDurations[index], preferredTimescale: 1)
         
-        if let audioTrack = audioAsset.tracks(withMediaType: AVMediaType.audio).first {
-          do {
-            try audioCompositon?.insertTimeRange(audioTimeRange, of: audioTrack, at: duration)
-          } catch {
-            failure(error)
+        let audioAsset = AVURLAsset(url: audioUrl)
+        let audioTimeRange = CMTimeRange(start: kCMTimeZero, duration: maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
+        
+        let shouldAddAudioTrack = maxVideoLengthInSeconds != nil ? audioDuration.seconds > 0 : true
+        
+        if shouldAddAudioTrack {
+          if let audioTrack = audioAsset.tracks(withMediaType: .audio).first {
+            do {
+              try audioCompositon?.insertTimeRange(audioTimeRange, of: audioTrack, at: duration)
+            } catch {
+              failure(error)
+            }
           }
         }
         
-        duration = duration + audioAsset.duration
+        duration = duration + (maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
       }
       
       /// check if the documents folder is available
@@ -662,8 +688,14 @@ public class VideoGenerator: NSObject {
               success(videoOutputURL)
             }
           })
+        } else {
+          failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
         }
+      } else {
+        failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
       }
+    } else {
+      failure(VideoGeneratorError(error: .kFailedToReadVideoTrack))
     }
   }
   
@@ -682,7 +714,7 @@ public class VideoGenerator: NSObject {
     var appendSucceeded = false
     
     /**
-     *  The proccess of appending new pixels is puted inside a autoreleasepool
+     *  The proccess of appending new pixels is put inside a autoreleasepool
      */
     autoreleasepool {
       
@@ -791,6 +823,7 @@ private class VideoGeneratorError: NSObject, LocalizedError {
     case kFailedToReadProvidedClip
     case kUnsupportedVideoType
     case kFailedToStartReader
+    case kFailedToReadVideoTrack
   }
   
   fileprivate var desc = ""
@@ -820,6 +853,8 @@ private class VideoGeneratorError: NSObject, LocalizedError {
         return "\(kErrorDomain): Unsupported video type. Supported tyeps: .m4v, mp4, .mov"
       case .kFailedToStartReader:
         return "\(kErrorDomain): Failed to start reading video frames"
+      case .kFailedToReadVideoTrack:
+        return "\(kErrorDomain): Failed to read video track in asset"
       }
     }
   }

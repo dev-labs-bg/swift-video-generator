@@ -77,6 +77,8 @@ For both the **.single** and **.multiple** types of video generation the output 
 ```Swift
 if let audioURL = Bundle.main.url(forResource: "audio", withExtension: "mp3"), let _image = UIImage(named: "image") {
   VideoGenerator.current.fileName = "singleMovie"
+  VideoGenerator.current.maxVideoLengthInSeconds = 8
+  VideoGenerator.current.shouldOptimiseImageForVideo = true
 
   VideoGenerator.current.generate(withImages: [_image], andAudios: [audioURL], andType: .single, { (progress) in
     print(progress)
@@ -99,15 +101,20 @@ The **fileName** property sets the output file's name.
 
 The **videoBackgroundColor** property is used when scaling the image. When an image is scaled to a smaller frame then the video's it leaves empty spaces around the image. You can set the background color of that space with the **videoBackgroundColor** property. If you don't specify a **scaleWidth** the image is scaled (keeping the aspect ration) to fill the entire video frame.
 
+The **maxVideoLengthInSeconds** property is used to set the video's maximum length. If the length of the moview exceeds this value, it's cut short at the specified time. (Note that this doesn't scale the audios in order to make them fit into the time.)
+
+The **shouldOptimiseImageForVideo** property is used to optimize the images fed into the generators to a scale best fitted for video based on their orientation.
+
 #### Create a video from multiple image/audio pairs
 
 ```Swift
 if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3"), let audioURL2 = Bundle.main.url(forResource: "audio2", withExtension: "mp3"), let audioURL3 =  Bundle.main.url(forResource: "audio3", withExtension: "mp3") {
   if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3") {
-
+  
   VideoGenerator.current.fileName = "multipleVideo"
   VideoGenerator.current.videoBackgroundColor = .red
-  VideoGenerator.current.scaleWidth = 700
+  VideoGenerator.current.maxVideoLengthInSeconds = 20
+  VideoGenerator.current.shouldOptimiseImageForVideo = true
 
   VideoGenerator.current.generate(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
     print(progress)

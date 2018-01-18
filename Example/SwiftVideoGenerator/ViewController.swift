@@ -33,7 +33,8 @@ class ViewController: UIViewController {
     if let audioURL4 = Bundle.main.url(forResource: "audio4", withExtension: "mp3"), let _image1 = UIImage(named: "image4") {
       VideoGenerator.current.fileName = "singleMovie"
 
-      VideoGenerator.current.scaleWidth = 700
+      VideoGenerator.current.maxVideoLengthInSeconds = 8
+      VideoGenerator.current.shouldOptimiseImageForVideo = true
       
       VideoGenerator.current.generate(withImages: [_image1], andAudios: [audioURL4], andType: .single, { (progress) in
         print(progress)
@@ -59,7 +60,8 @@ class ViewController: UIViewController {
 
         VideoGenerator.current.fileName = "multipleVideo"
         VideoGenerator.current.videoBackgroundColor = .red
-        VideoGenerator.current.scaleWidth = 700
+        VideoGenerator.current.maxVideoLengthInSeconds = 20
+        VideoGenerator.current.shouldOptimiseImageForVideo = true
         
         VideoGenerator.current.generate(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
           print(progress)
@@ -81,6 +83,7 @@ class ViewController: UIViewController {
   }
   
   @IBAction func mergeVideosButtonClickHandler(_ sender: UIButton) {
+    
     //    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
     //      if let paths = try? FileManager.default.contentsOfDirectory(atPath: documentsPath) {
     //
@@ -98,6 +101,7 @@ class ViewController: UIViewController {
     //        }
     //      }
     //    }
+    
     LoadingView.lockView()
     if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "portraitVideo", withExtension: "mp4") {
       VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
