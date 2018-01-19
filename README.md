@@ -7,8 +7,9 @@ This library provides an easy way to combine images and audio into a video or me
 ## Features
 - create a video from a **single** image and audio file
 - create a video from **multiple** image/audio pairs
+- create a video from a single audio and multiple images **singleAudioMultipleImage** - **New in version 1.0.8** (thanks to [ibhavin](https://github.com/ibhavin))
 - merge **multiple** videos into one
-- **reverse** a video clip - ***New in version 1.0.4**
+- **reverse** a video clip
 
 ---
 ## Supported video formats
@@ -134,6 +135,37 @@ Then the next pair of audio and image will be made into a video and appended aft
 The **fileName** and **videoBackgroundColor** properties are used in the same way as in the **.single** type.
 
 [Exmaple video - multiple type generation video](https://drive.google.com/open?id=0B_VCX_bQMRqPbTdNWlQ3X3E0YUU)
+
+#### Create a video from multiple images and a single audio
+
+```Swift
+if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3") {
+  if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3"), let _image4 = UIImage(named: "image4") {
+
+    VideoGenerator.current.fileName = "newVideo"
+    VideoGenerator.current.shouldOptimiseImageForVideo = true
+
+    VideoGenerator.current.generate(withImages: [_image1, _image2, _image3, _image4], andAudios: [audioURL1], andType: .singleAudioMultipleImage, { (progress) in
+      print(progress)
+    }, success: { (url) in
+      LoadingView.unlockView()
+      print(url)
+      self.createAlertView(message: "Finished multiple type video generation")
+    }, failure: { (error) in
+      LoadingView.unlockView()
+      print(error)
+      self.createAlertView(message: error.localizedDescription)
+    })
+  } else {
+      self.createAlertView(message: "Missing image files")
+    }
+} else {
+  self.createAlertView(message: "Missing audio files")
+}
+```
+With the type **.singleAudioMultipleImage** you can create a video that combines multiple images and a single audio. The finished video will space out the multiple images along the timeline of the single audio.
+
+[Exmaple video - multiple images/single audio generated video](https://drive.google.com/open?id=1THpNWw9gZsEUYqrre8JkmOcFZ4IKsHGd)
 
 #### Merging multiple videos into one
 

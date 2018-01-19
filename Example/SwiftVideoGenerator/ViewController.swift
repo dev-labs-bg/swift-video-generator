@@ -17,16 +17,26 @@ class ViewController: UIViewController {
   
   // MARK: - Public properties
   
+  /// public property to represent a button on the UI
   @IBOutlet weak var generateSingleVideoButton: UIButton!
   
+  /// public property to represent a button on the UI
   @IBOutlet weak var generateMultipleVideoButton: UIButton!
   
+  /// public property to represent a button on the UI
   @IBOutlet weak var mergeVideosButton: UIButton!
   
+  /// public property to represent a button on the UI
+  @IBOutlet weak var generateSingleAudioMultipleImageButton: UIButton!
+  
+  /// public property to represent a button on the UI
   @IBOutlet weak var reverseVideoButton: UIButton!
   
   // MARK: - Public methods
   
+  /// Public method to handle the click in the generateSingleVideoButton
+  /// Generates a single type video from oen audio and one image
+  /// - Parameter sender: a sender of type UIButton
   @IBAction func generateSingleVideoButtonClickHandler(_ sender: UIButton) {
     LoadingView.lockView()
     
@@ -52,6 +62,9 @@ class ViewController: UIViewController {
     }
   }
   
+  /// Public method to handle the click in the generateMultipleVideoButton
+  /// Generates a multiple type video from multiple images and audios
+  /// - Parameter sender: a sender of type UIButton
   @IBAction func generateMultipleVideoButtonClickHandler(_ sender: UIButton) {
     LoadingView.lockView()
     
@@ -82,6 +95,40 @@ class ViewController: UIViewController {
     }
   }
   
+  /// Public method to handle the click in the generateSingleAudioMultipleImageButton
+  /// Generates a multiple type video from multiple images and single audio
+  /// - Parameter sender: a sender of type UIButton
+  @IBAction func generateMultipleImageSingleAudioVideo(_ sender: UIButton) {
+    LoadingView.lockView()
+    
+    if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3") {
+      if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3"), let _image4 = UIImage(named: "image4") {
+        
+        VideoGenerator.current.fileName = "newVideo"
+        VideoGenerator.current.shouldOptimiseImageForVideo = true
+        
+        VideoGenerator.current.generate(withImages: [_image1, _image2, _image3, _image4], andAudios: [audioURL1], andType: .singleAudioMultipleImage, { (progress) in
+          print(progress)
+        }, success: { (url) in
+          LoadingView.unlockView()
+          print(url)
+          self.createAlertView(message: "Finished multiple type video generation")
+        }, failure: { (error) in
+          LoadingView.unlockView()
+          print(error)
+          self.createAlertView(message: error.localizedDescription)
+        })
+      }  else {
+        self.createAlertView(message: "Missing image files")
+      }
+    }  else {
+      self.createAlertView(message: "Missing audio files")
+    }
+  }
+  
+  /// Public method to handle the click in the mergeVideosButton
+  /// Merges multiple videos into a single video
+  /// - Parameter sender: a sender of type UIButton
   @IBAction func mergeVideosButtonClickHandler(_ sender: UIButton) {
     
     //    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
@@ -118,8 +165,12 @@ class ViewController: UIViewController {
     }
   }
 
+  /// Public method to handle the click in the reverseVideoButton
+  /// Reverses the given video
+  /// - Parameter sender: a sender of type UIButton
   @IBAction func reverseVideoButtonClickHandler(_ sender: UIButton) {
     LoadingView.lockView()
+    
     if let videoURL1 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
       VideoGenerator.current.reverseClip(videoURL: videoURL1, andFileName: "reversedMovie", success: { (videoURL) in
         LoadingView.unlockView()
@@ -148,6 +199,7 @@ class ViewController: UIViewController {
     
     generateSingleVideoButton.layer.cornerRadius = generateSingleVideoButton.frame.height / 2
     generateMultipleVideoButton.layer.cornerRadius = generateMultipleVideoButton.frame.height / 2
+    generateSingleAudioMultipleImageButton.layer.cornerRadius = generateSingleAudioMultipleImageButton.frame.height / 2
     mergeVideosButton.layer.cornerRadius = mergeVideosButton.frame.height / 2
     reverseVideoButton.layer.cornerRadius = reverseVideoButton.frame.height / 2
   }

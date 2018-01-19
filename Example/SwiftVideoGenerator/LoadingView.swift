@@ -22,37 +22,37 @@ class LoadingView: UIView {
    Class method to lock the screen
    */
   class func lockView() {
-    
-    let loadingView = LoadingView(frame: UIScreen.main.bounds)
-    loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.8)
-    
-    if let _lastWindow = UIApplication.shared.windows.last {
-      if !_lastWindow.subviews.contains(where: { $0 is LoadingView }) {
-        _lastWindow.endEditing(true)
-        _lastWindow.addSubview(loadingView)
+    DispatchQueue.main.async {
+      let loadingView = LoadingView(frame: UIScreen.main.bounds)
+      loadingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.8)
+      
+      if let _lastWindow = UIApplication.shared.windows.last {
+        if !_lastWindow.subviews.contains(where: { $0 is LoadingView }) {
+          _lastWindow.endEditing(true)
+          _lastWindow.addSubview(loadingView)
+        }
       }
+      
+      loadingView.addFadeAnimationWithFadeType(.fadeIn)
+      
+      let indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+      indicator.center = loadingView.center
+      indicator.tintColor = .white
+      
+      if UI_USER_INTERFACE_IDIOM() == .pad {
+        indicator.activityIndicatorViewStyle = .whiteLarge
+      } else {
+        indicator.activityIndicatorViewStyle = .white
+      }
+      indicator.startAnimating()
+      loadingView.addSubview(indicator)
     }
-    
-    loadingView.addFadeAnimationWithFadeType(.fadeIn)
-    
-    let indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-    indicator.center = loadingView.center
-    indicator.tintColor = .white
-    
-    if UI_USER_INTERFACE_IDIOM() == .pad {
-      indicator.activityIndicatorViewStyle = .whiteLarge
-    } else {
-      indicator.activityIndicatorViewStyle = .white
-    }
-    indicator.startAnimating()
-    loadingView.addSubview(indicator)
   }
   
   /**
    Class method to unclock the screen after a request
    */
   class func unlockView() {
-    
     DispatchQueue.main.async {
       if let _lastWindow = UIApplication.shared.windows.last {
         for subview in _lastWindow.subviews {
@@ -101,15 +101,15 @@ extension UIView {
       
     case .fadeOut:
       
-        UIView.animate(withDuration: 1.0, animations: { () -> Void in
-          DispatchQueue.main.async {
+      UIView.animate(withDuration: 1.0, animations: { () -> Void in
+        DispatchQueue.main.async {
           self.alpha = 0.0
-          }
-        }, completion: { (finished) -> Void in
-          if finished {
-            self.removeFromSuperview()
-          }
-        })
+        }
+      }, completion: { (finished) -> Void in
+        if finished {
+          self.removeFromSuperview()
+        }
+      })
     }
   }
 }

@@ -28,7 +28,7 @@ public class VideoGenerator: NSObject {
   /// - single: a single type generates a video from a single image and audio files
   /// - multiple: a multiple type generates a video with multiple image/audio combinations (the first image/audio pair is combined, played then switched for the next image/audio pair)
   public enum VideoGeneratorType: Int {
-    case single, multiple
+    case single, multiple, singleAudioMultipleImage
     
     init() {
       self = .single
@@ -169,11 +169,19 @@ public class VideoGenerator: NSObject {
                 /// get the right photo from the array
                 imageForVideo = VideoGenerator.current.images[frameCount]
                 
-                /// calculate the start of the frame; if the frame is the first, the start time is 0, if not, get the already elapsed time
-                nextStartTimeForFrame = frameCount == 0 ? CMTime(seconds: 0, preferredTimescale: 1) : CMTime(seconds: Double(elapsedTime), preferredTimescale: 1)
-                
-                /// add the max between the audio duration time or a minimum duration to the elapsed time
-                elapsedTime += VideoGenerator.current.audioDurations[frameCount] <= 1 ? VideoGenerator.current.minSingleVideoDuration : VideoGenerator.current.audioDurations[frameCount]
+                if VideoGenerator.current.type == .multiple {
+                  /// calculate the start of the frame; if the frame is the first, the start time is 0, if not, get the already elapsed time
+                  nextStartTimeForFrame = frameCount == 0 ? CMTime(seconds: 0, preferredTimescale: 1) : CMTime(seconds: Double(elapsedTime), preferredTimescale: 1)
+                  
+                  /// add the max between the audio duration time or a minimum duration to the elapsed time
+                  elapsedTime += VideoGenerator.current.audioDurations[frameCount] <= 1 ? VideoGenerator.current.minSingleVideoDuration : VideoGenerator.current.audioDurations[frameCount]
+                } else {
+                  nextStartTimeForFrame = frameCount == 0 ? CMTime(seconds: 0, preferredTimescale: 600) : CMTime(seconds: Double(elapsedTime), preferredTimescale: 600)
+                  
+                  let audio_Time = VideoGenerator.current.audioDurations[0]
+                  let total_Images = VideoGenerator.current.images.count
+                  elapsedTime += audio_Time / Double(total_Images)
+                }
               }
               
               /// append the image to the pixel buffer at the right start time
@@ -506,14 +514,15 @@ public class VideoGenerator: NSObject {
     type = _type
     audioURLs = _audios
     
-    if type == .single {
+    switch type! {
+    case .single, .singleAudioMultipleImage:
       /// guard against multiple audios in single mode
       if _audios.count != 1 {
         if let _audio = _audios.first {
           audioURLs = [_audio]
         }
       }
-    } else {
+    case .multiple:
       /// guard agains more then equal audio and images for multiple
       if _audios.count != _images.count {
         audioURLs = Array(_audios[..._images.count])
