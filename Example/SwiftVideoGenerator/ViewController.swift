@@ -32,6 +32,9 @@ class ViewController: UIViewController {
   /// public property to represent a button on the UI
   @IBOutlet weak var reverseVideoButton: UIButton!
   
+  /// public property to represent a button on the UI
+  @IBOutlet weak var extractAudiobutton: UIButton!
+  
   // MARK: - Public methods
   
   /// Public method to handle the click in the generateSingleVideoButton
@@ -42,7 +45,7 @@ class ViewController: UIViewController {
     
     if let audioURL4 = Bundle.main.url(forResource: "audio4", withExtension: "mp3"), let _image1 = UIImage(named: "image4") {
       VideoGenerator.current.fileName = "singleMovie"
-
+      
       VideoGenerator.current.maxVideoLengthInSeconds = 8
       VideoGenerator.current.shouldOptimiseImageForVideo = true
       
@@ -70,7 +73,7 @@ class ViewController: UIViewController {
     
     if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3"), let audioURL2 = Bundle.main.url(forResource: "audio2", withExtension: "mp3"), let audioURL3 = Bundle.main.url(forResource: "audio3", withExtension: "mp3") {
       if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3") {
-
+        
         VideoGenerator.current.fileName = "multipleVideo"
         VideoGenerator.current.videoBackgroundColor = .red
         VideoGenerator.current.maxVideoLengthInSeconds = 20
@@ -149,40 +152,55 @@ class ViewController: UIViewController {
     //      }
     //    }
     
-    LoadingView.lockView()
-    if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "portraitVideo", withExtension: "mp4") {
-      VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
-        LoadingView.unlockView()
-        self.createAlertView(message: "Finished merging videos")
-        print(videoURL)
-      }) { (error) in
-        LoadingView.unlockView()
-        print(error)
-        self.createAlertView(message: error.localizedDescription)
-      }
-    }  else {
-      self.createAlertView(message: "Missing video files")
-    }
+    //    LoadingView.lockView()
+    //    if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "portraitVideo", withExtension: "mp4") {
+    //      VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
+    //        LoadingView.unlockView()
+    //        self.createAlertView(message: "Finished merging videos")
+    //        print(videoURL)
+    //      }) { (error) in
+    //        LoadingView.unlockView()
+    //        print(error)
+    //        self.createAlertView(message: error.localizedDescription)
+    //      }
+    //    }  else {
+    //      self.createAlertView(message: "Missing video files")
+    //    }
   }
-
+  
   /// Public method to handle the click in the reverseVideoButton
   /// Reverses the given video
   /// - Parameter sender: a sender of type UIButton
   @IBAction func reverseVideoButtonClickHandler(_ sender: UIButton) {
     LoadingView.lockView()
     
+//    if let videoURL1 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
+//      VideoGenerator.current.reverseClip(videoURL: videoURL1, andFileName: "reversedMovie", success: { (videoURL) in
+//        LoadingView.unlockView()
+//        self.createAlertView(message: "Finished reversing video")
+//        print(videoURL)
+//      }) { (error) in
+//        LoadingView.unlockView()
+//        print(error)
+//        self.createAlertView(message: error.localizedDescription)
+//      }
+//    } else {
+//      self.createAlertView(message: "Missing video file")
+//    }
+    
+    
+  }
+  
+  @IBAction func extractAudioButtonClickHandler(_ sender: UIButton) {
     if let videoURL1 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
-      VideoGenerator.current.reverseClip(videoURL: videoURL1, andFileName: "reversedMovie", success: { (videoURL) in
+      LoadingView.lockView()
+      
+      VideoGenerator.current.extractAudio(fromVideo: videoURL1, success: { (audioURL) in
         LoadingView.unlockView()
-        self.createAlertView(message: "Finished reversing video")
-        print(videoURL)
-      }) { (error) in
-        LoadingView.unlockView()
-        print(error)
-        self.createAlertView(message: error.localizedDescription)
-      }
-    } else {
-      self.createAlertView(message: "Missing video file")
+        print(audioURL)
+      }, failure: { (error) in
+        print(error.localizedDescription)
+      })
     }
   }
   
@@ -202,6 +220,7 @@ class ViewController: UIViewController {
     generateSingleAudioMultipleImageButton.layer.cornerRadius = generateSingleAudioMultipleImageButton.frame.height / 2
     mergeVideosButton.layer.cornerRadius = mergeVideosButton.frame.height / 2
     reverseVideoButton.layer.cornerRadius = reverseVideoButton.frame.height / 2
+    extractAudiobutton.layer.cornerRadius = extractAudiobutton.frame.height / 2
   }
   
   override func didReceiveMemoryWarning() {

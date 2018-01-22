@@ -28,7 +28,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="gkb-bH-fwc">
-                                <rect key="frame" x="56" y="203" width="263" height="58"/>
+                                <rect key="frame" x="56" y="157" width="263" height="58"/>
                                 <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                 <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -39,23 +39,8 @@
                                     <action selector="generateMultipleVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SGn-Vd-OEM"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-t7-5YT">
-                                <rect key="frame" x="56" y="97" width="263" height="58"/>
-                                <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="dEz-t7-5YT" secondAttribute="height" multiplier="263:58" id="VwG-Kq-r7d"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
-                                <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Generate single type video">
-                                    <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="generateSingleVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bc5-Wd-CLA"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tMs-ZD-bq8">
-                                <rect key="frame" x="56" y="409" width="263" height="58"/>
+                                <rect key="frame" x="56" y="353" width="263" height="58"/>
                                 <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                 <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -67,7 +52,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pwq-O3-bOB">
-                                <rect key="frame" x="56" y="512" width="263" height="58"/>
+                                <rect key="frame" x="56" y="451" width="263" height="58"/>
                                 <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                 <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -79,7 +64,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Wfj-tT-fA2">
-                                <rect key="frame" x="56" y="306" width="263" height="58"/>
+                                <rect key="frame" x="56" y="255" width="263" height="58"/>
                                 <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                 <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -91,35 +76,68 @@
                                     <action selector="generateMultipleImageSingleAudioVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BgF-YE-dZq"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ho2-G6-fZq">
+                                <rect key="frame" x="56" y="549" width="263" height="58"/>
+                                <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Extract audio">
+                                    <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="extractAudioButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1XS-RP-NTj"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-t7-5YT">
+                                <rect key="frame" x="56" y="59" width="263" height="58"/>
+                                <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="dEz-t7-5YT" secondAttribute="height" multiplier="263:58" id="6rB-aA-lpa"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Generate single type video">
+                                    <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="generateSingleVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bc5-Wd-CLA"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="trailing" secondItem="gkb-bH-fwc" secondAttribute="trailing" id="6eQ-FZ-50K"/>
-                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="leading" secondItem="pwq-O3-bOB" secondAttribute="leading" id="8N0-HH-42L"/>
-                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="leading" secondItem="tMs-ZD-bq8" secondAttribute="leading" id="ICH-e9-X41"/>
-                            <constraint firstItem="gkb-bH-fwc" firstAttribute="top" secondItem="dEz-t7-5YT" secondAttribute="bottom" constant="48" id="JyQ-Ij-DKS"/>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="width" secondItem="gkb-bH-fwc" secondAttribute="width" id="LZC-qK-JDu"/>
-                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="height" secondItem="tMs-ZD-bq8" secondAttribute="height" id="LbH-tM-C5e"/>
-                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="trailing" secondItem="tMs-ZD-bq8" secondAttribute="trailing" id="N8V-Pg-84q"/>
-                            <constraint firstItem="gkb-bH-fwc" firstAttribute="trailing" secondItem="Wfj-tT-fA2" secondAttribute="trailing" id="Pat-kX-uxz"/>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="56" id="RUd-yw-kXv"/>
-                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="width" secondItem="pwq-O3-bOB" secondAttribute="width" id="SOb-el-GxL"/>
-                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="height" secondItem="pwq-O3-bOB" secondAttribute="height" id="SZL-WD-I3a"/>
-                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="width" secondItem="tMs-ZD-bq8" secondAttribute="width" id="WAS-Be-1Jo"/>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="leading" secondItem="gkb-bH-fwc" secondAttribute="leading" id="XOc-Jp-Zxg"/>
-                            <constraint firstAttribute="trailing" secondItem="dEz-t7-5YT" secondAttribute="trailing" constant="56" id="ZEM-wc-FCb"/>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="77" id="clM-gH-GXu"/>
-                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="top" secondItem="gkb-bH-fwc" secondAttribute="bottom" constant="45" id="ejM-cb-OXM"/>
-                            <constraint firstItem="gkb-bH-fwc" firstAttribute="height" secondItem="Wfj-tT-fA2" secondAttribute="height" id="hhr-xI-P0M"/>
-                            <constraint firstItem="gkb-bH-fwc" firstAttribute="width" secondItem="Wfj-tT-fA2" secondAttribute="width" id="j0q-9j-EDe"/>
-                            <constraint firstItem="pwq-O3-bOB" firstAttribute="top" secondItem="tMs-ZD-bq8" secondAttribute="bottom" constant="45" id="q8m-dX-JPY"/>
-                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="top" secondItem="Wfj-tT-fA2" secondAttribute="bottom" constant="45" id="qr9-mf-0C6"/>
-                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="trailing" secondItem="pwq-O3-bOB" secondAttribute="trailing" id="uPP-Aj-Zx7"/>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="height" secondItem="gkb-bH-fwc" secondAttribute="height" id="wcd-j6-Ilh"/>
-                            <constraint firstItem="gkb-bH-fwc" firstAttribute="leading" secondItem="Wfj-tT-fA2" secondAttribute="leading" id="yKH-VD-anh"/>
+                            <constraint firstItem="pwq-O3-bOB" firstAttribute="leading" secondItem="tMs-ZD-bq8" secondAttribute="leading" id="0Xn-oV-GkN"/>
+                            <constraint firstItem="pwq-O3-bOB" firstAttribute="trailing" secondItem="tMs-ZD-bq8" secondAttribute="trailing" id="4p5-b3-cJn"/>
+                            <constraint firstItem="pwq-O3-bOB" firstAttribute="width" secondItem="tMs-ZD-bq8" secondAttribute="width" id="AQq-BH-lnQ"/>
+                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="height" secondItem="Wfj-tT-fA2" secondAttribute="height" id="BeT-bM-ccN"/>
+                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="top" secondItem="Wfj-tT-fA2" secondAttribute="bottom" constant="40" id="FVq-lr-b4y"/>
+                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="leading" secondItem="gkb-bH-fwc" secondAttribute="leading" id="Fzi-7z-rSE"/>
+                            <constraint firstItem="ho2-G6-fZq" firstAttribute="height" secondItem="pwq-O3-bOB" secondAttribute="height" id="IFR-RC-Lgx"/>
+                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="leading" secondItem="Wfj-tT-fA2" secondAttribute="leading" id="KmA-4y-Plc"/>
+                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="trailing" secondItem="gkb-bH-fwc" secondAttribute="trailing" id="Ktk-Op-9Yd"/>
+                            <constraint firstAttribute="trailing" secondItem="dEz-t7-5YT" secondAttribute="trailing" constant="56" id="ODj-FA-1wD"/>
+                            <constraint firstItem="gkb-bH-fwc" firstAttribute="height" secondItem="dEz-t7-5YT" secondAttribute="height" id="QZ2-Qt-zz4"/>
+                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="width" secondItem="gkb-bH-fwc" secondAttribute="width" id="U9r-hs-Mfl"/>
+                            <constraint firstItem="pwq-O3-bOB" firstAttribute="top" secondItem="tMs-ZD-bq8" secondAttribute="bottom" constant="40" id="VtK-kf-nAQ"/>
+                            <constraint firstItem="ho2-G6-fZq" firstAttribute="width" secondItem="pwq-O3-bOB" secondAttribute="width" id="alX-w9-V4R"/>
+                            <constraint firstItem="ho2-G6-fZq" firstAttribute="top" secondItem="pwq-O3-bOB" secondAttribute="bottom" constant="40" id="b0n-xm-9NC"/>
+                            <constraint firstItem="ho2-G6-fZq" firstAttribute="leading" secondItem="pwq-O3-bOB" secondAttribute="leading" id="bXF-x9-9E7"/>
+                            <constraint firstItem="gkb-bH-fwc" firstAttribute="trailing" secondItem="dEz-t7-5YT" secondAttribute="trailing" id="bcO-GR-HGS"/>
+                            <constraint firstItem="pwq-O3-bOB" firstAttribute="height" secondItem="tMs-ZD-bq8" secondAttribute="height" id="cVw-yO-aXb"/>
+                            <constraint firstItem="ho2-G6-fZq" firstAttribute="trailing" secondItem="pwq-O3-bOB" secondAttribute="trailing" id="d0I-t3-9C4"/>
+                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="width" secondItem="Wfj-tT-fA2" secondAttribute="width" id="gCc-4c-qBj"/>
+                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="trailing" secondItem="Wfj-tT-fA2" secondAttribute="trailing" id="jwe-aX-o2U"/>
+                            <constraint firstItem="dEz-t7-5YT" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="56" id="jxj-AY-080"/>
+                            <constraint firstItem="gkb-bH-fwc" firstAttribute="leading" secondItem="dEz-t7-5YT" secondAttribute="leading" id="mWm-Z8-oeJ"/>
+                            <constraint firstItem="dEz-t7-5YT" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="39" id="mxc-cV-u1Z"/>
+                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="height" secondItem="gkb-bH-fwc" secondAttribute="height" id="oaS-9a-OTh"/>
+                            <constraint firstItem="gkb-bH-fwc" firstAttribute="top" secondItem="dEz-t7-5YT" secondAttribute="bottom" constant="40" id="oiO-G8-VzG"/>
+                            <constraint firstItem="gkb-bH-fwc" firstAttribute="width" secondItem="dEz-t7-5YT" secondAttribute="width" id="r7B-iA-sAR"/>
+                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="top" secondItem="gkb-bH-fwc" secondAttribute="bottom" constant="40" id="viJ-v4-brT"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="extractAudiobutton" destination="ho2-G6-fZq" id="aQr-xF-Ztw"/>
                         <outlet property="generateMultipleVideoButton" destination="gkb-bH-fwc" id="2av-4J-9OW"/>
                         <outlet property="generateSingleAudioMultipleImageButton" destination="Wfj-tT-fA2" id="yXf-Bb-jzn"/>
                         <outlet property="generateSingleVideoButton" destination="dEz-t7-5YT" id="7ee-wi-qsP"/>

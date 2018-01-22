@@ -59,4 +59,49 @@ extension AVAsset {
     
     return (orientation, device)
   }
+  
+  func writeAudioTrackToURL(URL: URL, completion: @escaping (Bool, Error?) -> ()) {
+    do {
+      let audioAsset = try self.audioAsset()
+      audioAsset.writeToURL(URL: URL, completion: completion)
+      
+    } catch {
+      completion(false, error)
+    }
+  }
+  
+  func writeToURL(URL: URL, completion: @escaping (Bool, Error?) -> ()) {
+    guard let exportSession = AVAssetExportSession(asset: self, presetName: AVAssetExportPresetAppleM4A) else {
+      completion(false, nil)
+      return
+    }
+    
+    exportSession.outputFileType = AVFileType.m4a
+    exportSession.outputURL      = URL as URL
+    
+    exportSession.exportAsynchronously {
+      switch exportSession.status {
+      case .completed:
+        completion(true, nil)
+      case .unknown, .waiting, .exporting, .failed, .cancelled:
+        completion(false, nil)
+      }
+    }
+  }
+  
+  func audioAsset() throws -> AVAsset {
+    let composition = AVMutableComposition()
+    let audioTracks = tracks(withMediaType: AVMediaType.audio)
+    for track in audioTracks {
+      
+      let compositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+      do {
+        try compositionTrack?.insertTimeRange(track.timeRange, of: track, at: track.timeRange.start)
+      } catch {
+        throw error
+      }
+      compositionTrack?.preferredTransform = track.preferredTransform
+    }
+    return composition
+  }
 }

@@ -341,12 +341,14 @@ public class VideoGenerator: NSObject {
   /// Method to reverse a video clip
   ///
   /// - Parameters:
-  ///   - videoURL: the file's URL
-  ///   - success: success completion block
-  ///   - failure: failure completion block
-  open func reverseClip(videoURL: URL, andFileName fileName: String?, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  ///   - videoURL: the video to reverse's URL
+  ///   - fileName: the name of the generated video
+  ///   - shouldKeepAudio: indicates if the audio should be kept and reversed. If false, the generated video would be muted
+  ///   - success: completion block on success - returns the reversed video URL
+  ///   - failure: completion block on failure - returns the error that caused the failure
+  open func reverseVideo(videoURL: URL, andFileName fileName: String?, andAudio shouldKeepAudio: Bool, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
     let media_queue = DispatchQueue(label: "mediaInputQueue", attributes: [])
-
+    
     media_queue.async {
       let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
       
@@ -488,6 +490,39 @@ public class VideoGenerator: NSObject {
           failure(VideoGeneratorError(error: .kUnsupportedVideoType))
         }
       }
+    }
+  }
+  
+  // MARK: --------------------------------------------------------------- Extracting audio from video -----------------------------------------------------
+
+  /// Method to extract audio from a video
+  ///
+  /// - Parameters:
+  ///   - url: the video URL
+  ///   - success: completion block on success - returns the audio URL
+  ///   - failure: completion block on failure - returns the error that caused the failure
+  open func extractAudio(fromVideo url: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+      let audioPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("audio.m4a")
+      let sourceAsset = AVURLAsset(url: url, options: nil)
+      
+      do {
+        try FileManager.default.removeItem(at: audioPath)
+      } catch {
+        failure(error)
+      }
+      
+      sourceAsset.writeAudioTrackToURL(URL: audioPath, completion: { (extracted, error) in
+        if extracted {
+          success(audioPath)
+        }
+        
+        if error != nil {
+          failure(error!)
+        }
+      })
+    } else {
+      failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
     }
   }
   
