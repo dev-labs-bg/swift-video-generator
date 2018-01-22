@@ -514,21 +514,6 @@ public class VideoGenerator: NSObject {
     type = _type
     audioURLs = _audios
     
-    switch type! {
-    case .single, .singleAudioMultipleImage:
-      /// guard against multiple audios in single mode
-      if _audios.count != 1 {
-        if let _audio = _audios.first {
-          audioURLs = [_audio]
-        }
-      }
-    case .multiple:
-      /// guard agains more then equal audio and images for multiple
-      if _audios.count != _images.count {
-        audioURLs = Array(_audios[..._images.count])
-      }
-    }
-    
     /// populate the image array
     if type == .single {
       if let _image = _images.first {
@@ -541,6 +526,23 @@ public class VideoGenerator: NSObject {
         if let resizedImage = shouldOptimiseImageForVideo ? _image.resizeImageToVideoSize() : _image {
           images.append(resizedImage.scaleImageToSize(newSize: CGSize(width: 800, height: 800)))
         }
+      }
+    }
+    
+    switch type! {
+    case .single, .singleAudioMultipleImage:
+      /// guard against multiple audios in single mode
+      if _audios.count != 1 {
+        if let _audio = _audios.first {
+          audioURLs = [_audio]
+        }
+      }
+    case .multiple:
+      /// guard agains more then equal audio and images for multiple
+      if _audios.count != _images.count {
+        let count = min(_audios.count, _images.count)
+        audioURLs = Array(_audios[...(count - 1)])
+        images = Array(_images[...(count - 1)])
       }
     }
     
