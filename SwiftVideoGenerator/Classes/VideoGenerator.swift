@@ -11,7 +11,7 @@ import AVFoundation
 
 public class VideoGenerator: NSObject {
   
-  // MARK: - Singleton properties
+  // MARK: --------------------------------------------------------------- Singleton properties ------------------------------------------------------------
   
   open class var current: VideoGenerator {
     struct Static {
@@ -21,7 +21,7 @@ public class VideoGenerator: NSObject {
     return Static.instance
   }
   
-  // MARK: - Static properties
+  // MARK: --------------------------------------------------------------- Static properties ---------------------------------------------------------------
   
   /// Public enum type to represent the video generator's available modes
   ///
@@ -35,7 +35,7 @@ public class VideoGenerator: NSObject {
     }
   }
   
-  // MARK: - Public properties
+  // MARK: --------------------------------------------------------------- Public properties ---------------------------------------------------------------
   
   /// public property to set the name of the finished video file
   open var fileName = "movie"
@@ -53,6 +53,8 @@ public class VideoGenerator: NSObject {
   open var maxVideoLengthInSeconds: Double?
   
   // MARK: - Public methods
+  
+  // MARK: --------------------------------------------------------------- Generator -----------------------------------------------------------------------
   
   /**
    Public method to start a video generation
@@ -186,6 +188,7 @@ public class VideoGenerator: NSObject {
               
               /// append the image to the pixel buffer at the right start time
               if !VideoGenerator.current.appendPixelBufferForImage(imageForVideo, pixelBufferAdaptor: pixelBufferAdaptor, presentationTime: nextStartTimeForFrame) {
+                
                 failure(VideoGeneratorError(error: .kFailedToAppendPixelBufferError))
               }
               
@@ -228,6 +231,112 @@ public class VideoGenerator: NSObject {
       failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
     }
   }
+  
+  // MARK: --------------------------------------------------------------- Merger --------------------------------------------------------------------------
+  
+  /// Method to merge multiple videos
+  ///
+  /// - Parameters:
+  ///   - videoURLs: the videos to merge URLs
+  ///   - fileName: the name of the finished merged video file
+  ///   - success: success block - returns the finished video url path
+  ///   - failure: failure block - returns the error that caused the failure
+  open class func mergeMovies(videoURLs: [URL], andFileName fileName: String, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+    let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
+    let _videoURLs = videoURLs.filter({ !$0.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains($0.pathExtension) })
+    let _fileName = fileName == "" ? "mergedMovie" : fileName
+    
+    /// guard against missing URLs
+    guard !_videoURLs.isEmpty else {
+      failure(VideoGeneratorError(error: .kMissingVideoURLs))
+      return
+    }
+    
+    var videoAssets: [AVURLAsset] = []
+    var completeMoviePath: URL?
+    
+    for path in _videoURLs {
+      if let _url = URL(string: path.absoluteString) {
+        videoAssets.append(AVURLAsset(url: _url))
+      }
+    }
+    
+    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+      /// create a path to the video file
+      completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(_fileName).m4v")
+      
+      if let completeMoviePath = completeMoviePath {
+        if FileManager.default.fileExists(atPath: completeMoviePath.path) {
+          do {
+            /// delete an old duplicate file
+            try FileManager.default.removeItem(at: completeMoviePath)
+          } catch {
+            failure(error)
+          }
+        }
+      }
+    } else {
+      failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+    }
+    
+    let composition = AVMutableComposition()
+    
+    if let completeMoviePath = completeMoviePath {
+      
+      /// add audio and video tracks to the composition
+      if let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid), let audioTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) {
+        
+        var insertTime = CMTime(seconds: 0, preferredTimescale: 1)
+        
+        /// for each URL add the video and audio tracks and their duration to the composition
+        for sourceAsset in videoAssets {
+          do {
+            if let assetVideoTrack = sourceAsset.tracks(withMediaType: .video).first, let assetAudioTrack = sourceAsset.tracks(withMediaType: .audio).first {
+              let frameRange = CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: sourceAsset.duration)
+              try videoTrack.insertTimeRange(frameRange, of: assetVideoTrack, at: insertTime)
+              try audioTrack.insertTimeRange(frameRange, of: assetAudioTrack, at: insertTime)
+              
+              videoTrack.preferredTransform = assetVideoTrack.preferredTransform
+            }
+            
+            insertTime = insertTime + sourceAsset.duration
+          } catch {
+            failure(error)
+          }
+        }
+        
+        /// try to start an export session and set the path and file type
+        if let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) {
+          exportSession.outputURL = completeMoviePath
+          exportSession.outputFileType = AVFileType.mp4
+          exportSession.shouldOptimizeForNetworkUse = true
+          
+          /// try to export the file and handle the status cases
+          exportSession.exportAsynchronously(completionHandler: {
+            switch exportSession.status {
+            case .failed:
+              if let _error = exportSession.error {
+                failure(_error)
+              }
+              
+            case .cancelled:
+              if let _error = exportSession.error {
+                failure(_error)
+              }
+              
+            default:
+              print("finished")
+              success(completeMoviePath)
+            }
+          })
+        } else {
+          failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
+        }
+      }
+    }
+  }
+  
+  // MARK: --------------------------------------------------------------- Reverse -------------------------------------------------------------------------
   
   /// Method to reverse a video clip
   ///
@@ -382,109 +491,7 @@ public class VideoGenerator: NSObject {
     }
   }
   
-  /// Method to merge multiple videos
-  ///
-  /// - Parameters:
-  ///   - videoURLs: the videos to merge URLs
-  ///   - fileName: the name of the finished merged video file
-  ///   - success: success block - returns the finished video url path
-  ///   - failure: failure block - returns the error that caused the failure
-  open class func mergeMovies(videoURLs: [URL], andFileName fileName: String, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
-    let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
-    let _videoURLs = videoURLs.filter({ !$0.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains($0.pathExtension) })
-    let _fileName = fileName == "" ? "mergedMovie" : fileName
-    
-    /// guard against missing URLs
-    guard !_videoURLs.isEmpty else {
-      failure(VideoGeneratorError(error: .kMissingVideoURLs))
-      return
-    }
-    
-    var videoAssets: [AVURLAsset] = []
-    var completeMoviePath: URL?
-    
-    for path in _videoURLs {
-      if let _url = URL(string: path.absoluteString) {
-        videoAssets.append(AVURLAsset(url: _url))
-      }
-    }
-    
-    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      /// create a path to the video file
-      completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(_fileName).m4v")
-      
-      if let completeMoviePath = completeMoviePath {
-        if FileManager.default.fileExists(atPath: completeMoviePath.path) {
-          do {
-            /// delete an old duplicate file
-            try FileManager.default.removeItem(at: completeMoviePath)
-          } catch {
-            failure(error)
-          }
-        }
-      }
-    } else {
-      failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
-    }
-    
-    let composition = AVMutableComposition()
-    
-    if let completeMoviePath = completeMoviePath {
-      
-      /// add audio and video tracks to the composition
-      if let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid), let audioTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid) {
-        
-        var insertTime = CMTime(seconds: 0, preferredTimescale: 1)
-        
-        /// for each URL add the video and audio tracks and their duration to the composition
-        for sourceAsset in videoAssets {
-          do {
-            if let assetVideoTrack = sourceAsset.tracks(withMediaType: .video).first, let assetAudioTrack = sourceAsset.tracks(withMediaType: .audio).first {
-              let frameRange = CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: sourceAsset.duration)
-              try videoTrack.insertTimeRange(frameRange, of: assetVideoTrack, at: insertTime)
-              try audioTrack.insertTimeRange(frameRange, of: assetAudioTrack, at: insertTime)
-              
-              videoTrack.preferredTransform = assetVideoTrack.preferredTransform
-            }
-            
-            insertTime = insertTime + sourceAsset.duration
-          } catch {
-            failure(error)
-          }
-        }
-        
-        /// try to start an export session and set the path and file type
-        if let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) {
-          exportSession.outputURL = completeMoviePath
-          exportSession.outputFileType = AVFileType.mp4
-          exportSession.shouldOptimizeForNetworkUse = true
-          
-          /// try to export the file and handle the status cases
-          exportSession.exportAsynchronously(completionHandler: {
-            switch exportSession.status {
-            case .failed:
-              if let _error = exportSession.error {
-                failure(_error)
-              }
-              
-            case .cancelled:
-              if let _error = exportSession.error {
-                failure(_error)
-              }
-              
-            default:
-              print("finished")
-              success(completeMoviePath)
-            }
-          })
-        } else {
-          failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
-        }
-      }
-    }
-  }
-  
-  // MARK: - Initialize/Livecycle methods
+  // MARK: --------------------------------------------------------------- Initialize/Livecycle methods -----------------------------------------------------
   
   public override init() {
     super.init()
@@ -579,9 +586,9 @@ public class VideoGenerator: NSObject {
     }
   }
   
-  // MARK: - Override methods
+  // MARK: --------------------------------------------------------------- Override methods ---------------------------------------------------------------
   
-  // MARK: - Private properties
+  // MARK: --------------------------------------------------------------- Private properties ---------------------------------------------------------------
   
   /// private property to store the images from which a video will be generated
   fileprivate var images: [UIImage] = []
@@ -607,7 +614,7 @@ public class VideoGenerator: NSObject {
   /// private property to store the minimum duration for a single video
   fileprivate var minSingleVideoDuration: Double = 3.0
   
-  // MARK: - Private methods
+  // MARK: --------------------------------------------------------------- Private methods ---------------------------------------------------------------
   
   /// Private method to generate a movie with the selected frame and the given audio
   ///
@@ -819,113 +826,5 @@ public class VideoGenerator: NSObject {
       // unlock the buffer memory
       CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
     }
-  }
-}
-
-/// Private class to represent a custom video generator error
-private class VideoGeneratorError: NSObject, LocalizedError {
-  
-  public enum CustomError {
-    case kFailedToStartAssetWriterError
-    case kFailedToAppendPixelBufferError
-    case kFailedToFetchDirectory
-    case kFailedToStartAssetExportSession
-    case kMissingVideoURLs
-    case kFailedToReadProvidedClip
-    case kUnsupportedVideoType
-    case kFailedToStartReader
-    case kFailedToReadVideoTrack
-  }
-  
-  fileprivate var desc = ""
-  fileprivate var error: CustomError
-  fileprivate let kErrorDomain = "VideoGenerator"
-  
-  init(error: CustomError) {
-    self.error = error
-  }
-  
-  override var description: String {
-    get {
-      switch error {
-      case .kFailedToStartAssetWriterError:
-        return "\(kErrorDomain): AVAssetWriter failed to start writing"
-      case .kFailedToAppendPixelBufferError:
-        return "\(kErrorDomain): AVAssetWriterInputPixelBufferAdapter failed to append pixel buffer"
-      case .kFailedToFetchDirectory:
-        return "\(kErrorDomain): Can't find the Documents directory"
-      case .kFailedToStartAssetExportSession:
-        return "\(kErrorDomain): Can't begin an AVAssetExportSession"
-      case .kMissingVideoURLs:
-        return "\(kErrorDomain): Missing video paths"
-      case .kFailedToReadProvidedClip:
-        return "\(kErrorDomain): Couldn't read the supplied video's frames."
-      case .kUnsupportedVideoType:
-        return "\(kErrorDomain): Unsupported video type. Supported tyeps: .m4v, mp4, .mov"
-      case .kFailedToStartReader:
-        return "\(kErrorDomain): Failed to start reading video frames"
-      case .kFailedToReadVideoTrack:
-        return "\(kErrorDomain): Failed to read video track in asset"
-      }
-    }
-  }
-  
-  var errorDescription: String? {
-    get {
-      return self.description
-    }
-  }
-}
-
-extension AVAsset {
-  
-  func videoOrientation() -> (orientation: UIInterfaceOrientation, device: AVCaptureDevice.Position) {
-    var orientation: UIInterfaceOrientation = .unknown
-    var device: AVCaptureDevice.Position = .unspecified
-    
-    let tracks :[AVAssetTrack] = self.tracks(withMediaType: .video)
-    if let videoTrack = tracks.first {
-      
-      let t = videoTrack.preferredTransform
-      
-      if (t.a == 0 && t.b == 1.0 && t.d == 0) {
-        orientation = .portrait
-        
-        if t.c == 1.0 {
-          device = .front
-        } else if t.c == -1.0 {
-          device = .back
-        }
-      }
-      else if (t.a == 0 && t.b == -1.0 && t.d == 0) {
-        orientation = .portraitUpsideDown
-        
-        if t.c == -1.0 {
-          device = .front
-        } else if t.c == 1.0 {
-          device = .back
-        }
-      }
-      else if (t.a == 1.0 && t.b == 0 && t.c == 0) {
-        orientation = .landscapeRight
-        
-        if t.d == -1.0 {
-          device = .front
-        } else if t.d == 1.0 {
-          device = .back
-        }
-      }
-      else if (t.a == -1.0 && t.b == 0 && t.c == 0) {
-        orientation = .landscapeLeft
-        
-        if t.d == 1.0 {
-          device = .front
-        } else if t.d == -1.0 {
-          device = .back
-        }
-      }
-    }
-    
-    return (orientation, device)
   }
 }
