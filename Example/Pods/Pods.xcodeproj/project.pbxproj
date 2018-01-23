@@ -7,19 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		006E97BA6BCA25DBD3C66BE00CB69602 /* SwiftVideoGenerator-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 882B6395228F48B1596030F929AD5E1B /* SwiftVideoGenerator-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		023684446A8A7025D6C727C5B14B5A3B /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1F324B025C6A000091180DEFAF4B34 /* ImageExtension.swift */; };
+		006E97BA6BCA25DBD3C66BE00CB69602 /* SwiftVideoGenerator-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F98C025F361FA45D3B29EA9A8B3E5611 /* SwiftVideoGenerator-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0920EF074E340813CAB195020565756D /* VideoGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8D4EC036B516CCAD4EBBF0C2188C8B /* VideoGenerator.swift */; };
+		208A5AC371691B6A41D5F3D670D91058 /* AVAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32C6F2E3636CD9B387BF605DF04366F /* AVAssetExtension.swift */; };
 		24E8F41B4C15362D44B87DC38A4DC31E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		5EA5133A21770689338240FF55316FF8 /* SwiftVideoGenerator-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E509E604C515CD6FC226029DFA18218 /* SwiftVideoGenerator-dummy.m */; };
+		4828BEB6C22EB5264AC91E8B9EE9F1D7 /* VideoGeneratorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EFB3FF8DE2539F84E2FBFD66E12CAF /* VideoGeneratorError.swift */; };
 		6D4B026D30AFBE6EA16443C41CB2B98F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		700B390614B033E2A724EEDCABA9C2B6 /* Pods-SwiftVideoGenerator_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A40222C92299D3CA75D66B809B82C90 /* Pods-SwiftVideoGenerator_Example-dummy.m */; };
 		9936400A1489D01A46778019099B7B2B /* Pods-SwiftVideoGenerator_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 878D60AA5695D766F6492152A890A17B /* Pods-SwiftVideoGenerator_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B90D939BBF489C8FD7B32CE8EA76C2B7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		DB79CD115CCC127ABBC555EA49D52EF7 /* Pods-SwiftVideoGenerator_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A44BEBD4DC6A6F26158300739C0679F /* Pods-SwiftVideoGenerator_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E2239E9E14D64F20E104BF01B4020321 /* VideoGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F317C8604AC5BB8EFE8C5FCA58ED664B /* VideoGenerator.swift */; };
+		E4C393A0C0E6E0983FFB035C3B19A62E /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B886B2C27EC228A3A56A4C0146F83980 /* ImageExtension.swift */; };
 		F2780CAED115E4947F2496F3FA44D591 /* Pods-SwiftVideoGenerator_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D1759E6502D1331DE7FBCF22814AFD79 /* Pods-SwiftVideoGenerator_Tests-dummy.m */; };
-		FF52B3AB2016123600E57EA9 /* VideoGeneratorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF52B3A720160E2200E57EA9 /* VideoGeneratorError.swift */; };
-		FF52B3AC2016124900E57EA9 /* AVAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF52B3A920160E5900E57EA9 /* AVAssetExtension.swift */; };
+		FEF34B2DB06D443E670A230CDF6185AA /* SwiftVideoGenerator-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FCBEA8CA916C8DDEBFE3DE63297642 /* SwiftVideoGenerator-dummy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,37 +36,37 @@
 		06C03C6CAF1D68F7A5F24949C740CB08 /* Pods-SwiftVideoGenerator_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwiftVideoGenerator_Example.release.xcconfig"; sourceTree = "<group>"; };
 		090A87FC237BBF65AEFD468218BBBD56 /* Pods-SwiftVideoGenerator_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SwiftVideoGenerator_Example-frameworks.sh"; sourceTree = "<group>"; };
 		0C2F86EE5A254AF2C1BDE67518E949EA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0D0565DB0158266FFB8EA93A988CF0D9 /* SwiftVideoGenerator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftVideoGenerator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D0565DB0158266FFB8EA93A988CF0D9 /* SwiftVideoGenerator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SwiftVideoGenerator.framework; path = SwiftVideoGenerator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A44BEBD4DC6A6F26158300739C0679F /* Pods-SwiftVideoGenerator_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SwiftVideoGenerator_Example-umbrella.h"; sourceTree = "<group>"; };
-		277115F4E28D8E05D1E16D5273DDCE35 /* Pods_SwiftVideoGenerator_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftVideoGenerator_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		28E230484B86879B9CA839828EE336E2 /* SwiftVideoGenerator.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftVideoGenerator.xcconfig; sourceTree = "<group>"; };
+		277115F4E28D8E05D1E16D5273DDCE35 /* Pods_SwiftVideoGenerator_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_SwiftVideoGenerator_Tests.framework; path = "Pods-SwiftVideoGenerator_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		38FCBEA8CA916C8DDEBFE3DE63297642 /* SwiftVideoGenerator-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftVideoGenerator-dummy.m"; sourceTree = "<group>"; };
 		3A40222C92299D3CA75D66B809B82C90 /* Pods-SwiftVideoGenerator_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-SwiftVideoGenerator_Example-dummy.m"; sourceTree = "<group>"; };
-		47DC15E034F4041F02985A5471FB8B88 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4887E66D27937DCDFBBC3D603AC4361E /* Pods-SwiftVideoGenerator_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SwiftVideoGenerator_Example-resources.sh"; sourceTree = "<group>"; };
 		4A6F1E7AB00E72A851CED995E9DFD9A1 /* Pods-SwiftVideoGenerator_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SwiftVideoGenerator_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		4FB0025C5BBB2182B182EBF22444CD51 /* Pods-SwiftVideoGenerator_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SwiftVideoGenerator_Tests-resources.sh"; sourceTree = "<group>"; };
 		5DC4CEA729DB6772E272679E22F2CE65 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		66C22443EBCE087CA560EA658363791B /* Pods-SwiftVideoGenerator_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwiftVideoGenerator_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		7B1F324B025C6A000091180DEFAF4B34 /* ImageExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
-		7E509E604C515CD6FC226029DFA18218 /* SwiftVideoGenerator-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftVideoGenerator-dummy.m"; sourceTree = "<group>"; };
+		6A8D4EC036B516CCAD4EBBF0C2188C8B /* VideoGenerator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoGenerator.swift; path = SwiftVideoGenerator/Classes/VideoGenerator.swift; sourceTree = "<group>"; };
 		878D60AA5695D766F6492152A890A17B /* Pods-SwiftVideoGenerator_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SwiftVideoGenerator_Tests-umbrella.h"; sourceTree = "<group>"; };
-		882B6395228F48B1596030F929AD5E1B /* SwiftVideoGenerator-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftVideoGenerator-umbrella.h"; sourceTree = "<group>"; };
-		8D9F5DCEB7C2C0D069B13ECB5955C08D /* Pods-SwiftVideoGenerator_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-SwiftVideoGenerator_Example.modulemap"; sourceTree = "<group>"; };
-		8DEB975D20A7176EFA0D5313A6C31839 /* SwiftVideoGenerator.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = SwiftVideoGenerator.modulemap; sourceTree = "<group>"; };
+		8D9F5DCEB7C2C0D069B13ECB5955C08D /* Pods-SwiftVideoGenerator_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-SwiftVideoGenerator_Example.modulemap"; sourceTree = "<group>"; };
 		8F28046AADBF5B19BECACFA132413396 /* Pods-SwiftVideoGenerator_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SwiftVideoGenerator_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		95EFB3FF8DE2539F84E2FBFD66E12CAF /* VideoGeneratorError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VideoGeneratorError.swift; sourceTree = "<group>"; };
+		A16D9C1ADCE565671BCB78383806AE06 /* SwiftVideoGenerator.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftVideoGenerator.xcconfig; sourceTree = "<group>"; };
+		A4368F43F1683C2754D5BFCB037DF553 /* SwiftVideoGenerator.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = SwiftVideoGenerator.modulemap; sourceTree = "<group>"; };
 		AB0B8D15E1A53E836FE04A9E867CC507 /* Pods-SwiftVideoGenerator_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SwiftVideoGenerator_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
-		B26803F25EB3ED5CD471203C301F5135 /* Pods-SwiftVideoGenerator_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-SwiftVideoGenerator_Tests.modulemap"; sourceTree = "<group>"; };
-		C07EBA1D9B75AC7EEB616A92BDCC9D4D /* SwiftVideoGenerator-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftVideoGenerator-prefix.pch"; sourceTree = "<group>"; };
-		CEA88D5E2F6796AA0C44FD32864611C5 /* Pods_SwiftVideoGenerator_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftVideoGenerator_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B26803F25EB3ED5CD471203C301F5135 /* Pods-SwiftVideoGenerator_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-SwiftVideoGenerator_Tests.modulemap"; sourceTree = "<group>"; };
+		B886B2C27EC228A3A56A4C0146F83980 /* ImageExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
+		CEA88D5E2F6796AA0C44FD32864611C5 /* Pods_SwiftVideoGenerator_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_SwiftVideoGenerator_Example.framework; path = "Pods-SwiftVideoGenerator_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEFF9B10D4B29C9193C53386C66F2A9F /* Pods-SwiftVideoGenerator_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-SwiftVideoGenerator_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		D1759E6502D1331DE7FBCF22814AFD79 /* Pods-SwiftVideoGenerator_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-SwiftVideoGenerator_Tests-dummy.m"; sourceTree = "<group>"; };
+		E32C6F2E3636CD9B387BF605DF04366F /* AVAssetExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AVAssetExtension.swift; sourceTree = "<group>"; };
 		EAB8E92CCC67A048FBDC1E2C1382C64F /* Pods-SwiftVideoGenerator_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SwiftVideoGenerator_Example-acknowledgements.plist"; sourceTree = "<group>"; };
-		F317C8604AC5BB8EFE8C5FCA58ED664B /* VideoGenerator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VideoGenerator.swift; path = SwiftVideoGenerator/Classes/VideoGenerator.swift; sourceTree = "<group>"; };
+		F77E90EF6E31E7EE7EF1504C52A793FF /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F98C025F361FA45D3B29EA9A8B3E5611 /* SwiftVideoGenerator-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftVideoGenerator-umbrella.h"; sourceTree = "<group>"; };
+		FA3CDF3027033590B1AE02DE6FBD90AA /* SwiftVideoGenerator-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftVideoGenerator-prefix.pch"; sourceTree = "<group>"; };
 		FD0A8DCB2C780C0E9C3EF0EF1BBDB053 /* Pods-SwiftVideoGenerator_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwiftVideoGenerator_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		FF52B3A720160E2200E57EA9 /* VideoGeneratorError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGeneratorError.swift; sourceTree = "<group>"; };
-		FF52B3A920160E5900E57EA9 /* AVAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAssetExtension.swift; sourceTree = "<group>"; };
 		FFE45BF7C07C3726A74C1295F4A983D0 /* Pods-SwiftVideoGenerator_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwiftVideoGenerator_Example.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,22 +98,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		26249B3DE24C998DACFD2ED608BB900F /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				FF52B3B52016171A00E57EA9 /* Error */,
-				FF52B3B4201615C900E57EA9 /* Extensions */,
-				47DC15E034F4041F02985A5471FB8B88 /* Info.plist */,
-				8DEB975D20A7176EFA0D5313A6C31839 /* SwiftVideoGenerator.modulemap */,
-				28E230484B86879B9CA839828EE336E2 /* SwiftVideoGenerator.xcconfig */,
-				7E509E604C515CD6FC226029DFA18218 /* SwiftVideoGenerator-dummy.m */,
-				C07EBA1D9B75AC7EEB616A92BDCC9D4D /* SwiftVideoGenerator-prefix.pch */,
-				882B6395228F48B1596030F929AD5E1B /* SwiftVideoGenerator-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/SwiftVideoGenerator";
-			sourceTree = "<group>";
-		};
 		4F67D71BB82A72C5FAF9695F06797E3B /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -141,11 +125,33 @@
 			path = "Target Support Files/Pods-SwiftVideoGenerator_Example";
 			sourceTree = "<group>";
 		};
+		5AED834F7DE222C293176BD6E7213558 /* SwiftVideoGenerator */ = {
+			isa = PBXGroup;
+			children = (
+				6A8D4EC036B516CCAD4EBBF0C2188C8B /* VideoGenerator.swift */,
+				F510A0F5628146E2EB669A31E932B255 /* Error */,
+				71E966535ABF789A9C1C06CE6C7A9263 /* Extensions */,
+				CA613EDCD7C9BEF5DDFE8F78F4A6AD3E /* Support Files */,
+			);
+			name = SwiftVideoGenerator;
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		71E966535ABF789A9C1C06CE6C7A9263 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E32C6F2E3636CD9B387BF605DF04366F /* AVAssetExtension.swift */,
+				B886B2C27EC228A3A56A4C0146F83980 /* ImageExtension.swift */,
+			);
+			name = Extensions;
+			path = SwiftVideoGenerator/Classes/Extensions;
+			sourceTree = "<group>";
+		};
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
-				B2236D73A190D458080626E949E3FC60 /* Development Pods */,
+				9E3F55A662C2C2C258D4D2F9C5211848 /* Development Pods */,
 				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
 				D6A0FA01CD2FB7D268FD276E70EEE5B2 /* Products */,
 				4F67D71BB82A72C5FAF9695F06797E3B /* Targets Support Files */,
@@ -170,10 +176,10 @@
 			path = "Target Support Files/Pods-SwiftVideoGenerator_Tests";
 			sourceTree = "<group>";
 		};
-		B2236D73A190D458080626E949E3FC60 /* Development Pods */ = {
+		9E3F55A662C2C2C258D4D2F9C5211848 /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C88AAEED1E9CDD6C3A53FA76145DC08B /* SwiftVideoGenerator */,
+				5AED834F7DE222C293176BD6E7213558 /* SwiftVideoGenerator */,
 			);
 			name = "Development Pods";
 			sourceTree = "<group>";
@@ -186,14 +192,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C88AAEED1E9CDD6C3A53FA76145DC08B /* SwiftVideoGenerator */ = {
+		CA613EDCD7C9BEF5DDFE8F78F4A6AD3E /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				F317C8604AC5BB8EFE8C5FCA58ED664B /* VideoGenerator.swift */,
-				26249B3DE24C998DACFD2ED608BB900F /* Support Files */,
+				F77E90EF6E31E7EE7EF1504C52A793FF /* Info.plist */,
+				A4368F43F1683C2754D5BFCB037DF553 /* SwiftVideoGenerator.modulemap */,
+				A16D9C1ADCE565671BCB78383806AE06 /* SwiftVideoGenerator.xcconfig */,
+				38FCBEA8CA916C8DDEBFE3DE63297642 /* SwiftVideoGenerator-dummy.m */,
+				FA3CDF3027033590B1AE02DE6FBD90AA /* SwiftVideoGenerator-prefix.pch */,
+				F98C025F361FA45D3B29EA9A8B3E5611 /* SwiftVideoGenerator-umbrella.h */,
 			);
-			name = SwiftVideoGenerator;
-			path = ../..;
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/SwiftVideoGenerator";
 			sourceTree = "<group>";
 		};
 		D35AF013A5F0BAD4F32504907A52519E /* iOS */ = {
@@ -214,21 +224,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		FF52B3B4201615C900E57EA9 /* Extensions */ = {
+		F510A0F5628146E2EB669A31E932B255 /* Error */ = {
 			isa = PBXGroup;
 			children = (
-				7B1F324B025C6A000091180DEFAF4B34 /* ImageExtension.swift */,
-				FF52B3A920160E5900E57EA9 /* AVAssetExtension.swift */,
+				95EFB3FF8DE2539F84E2FBFD66E12CAF /* VideoGeneratorError.swift */,
 			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		FF52B3B52016171A00E57EA9 /* Error */ = {
-			isa = PBXGroup;
-			children = (
-				FF52B3A720160E2200E57EA9 /* VideoGeneratorError.swift */,
-			);
-			path = Error;
+			name = Error;
+			path = SwiftVideoGenerator/Classes/Error;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,7 +267,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9F9F7C754CD63890FAAC325C0DB979DE /* Build configuration list for PBXNativeTarget "SwiftVideoGenerator" */;
 			buildPhases = (
-				06EFAC7BFEDAF8ADA27ED23DA19A7A05 /* Sources */,
+				193CC217251873D1E0A2327E3AB86F7B /* Sources */,
 				7CCBD5CDE9336E6FD667650CDF789980 /* Frameworks */,
 				649CE2304C9067EB095F13D8D118E110 /* Headers */,
 			);
@@ -320,12 +322,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0910;
-				TargetAttributes = {
-					E890EE92AF900615663416451630199F = {
-						LastSwiftMigration = 0920;
-					};
-				};
+				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -347,15 +344,15 @@
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		06EFAC7BFEDAF8ADA27ED23DA19A7A05 /* Sources */ = {
+		193CC217251873D1E0A2327E3AB86F7B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF52B3AB2016123600E57EA9 /* VideoGeneratorError.swift in Sources */,
-				023684446A8A7025D6C727C5B14B5A3B /* ImageExtension.swift in Sources */,
-				5EA5133A21770689338240FF55316FF8 /* SwiftVideoGenerator-dummy.m in Sources */,
-				FF52B3AC2016124900E57EA9 /* AVAssetExtension.swift in Sources */,
-				E2239E9E14D64F20E104BF01B4020321 /* VideoGenerator.swift in Sources */,
+				208A5AC371691B6A41D5F3D670D91058 /* AVAssetExtension.swift in Sources */,
+				E4C393A0C0E6E0983FFB035C3B19A62E /* ImageExtension.swift in Sources */,
+				FEF34B2DB06D443E670A230CDF6185AA /* SwiftVideoGenerator-dummy.m in Sources */,
+				0920EF074E340813CAB195020565756D /* VideoGenerator.swift in Sources */,
+				4828BEB6C22EB5264AC91E8B9EE9F1D7 /* VideoGeneratorError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,7 +480,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 06C03C6CAF1D68F7A5F24949C740CB08 /* Pods-SwiftVideoGenerator_Example.release.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -507,7 +503,6 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -566,14 +561,13 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Release;
 		};
-		9108040AFF6B92147F53B0DFD363AFB6 /* Debug */ = {
+		A66F735B2D02925827138752C86C6AAA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 28E230484B86879B9CA839828EE336E2 /* SwiftVideoGenerator.xcconfig */;
+			baseConfigurationReference = A16D9C1ADCE565671BCB78383806AE06 /* SwiftVideoGenerator.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -587,7 +581,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/SwiftVideoGenerator/SwiftVideoGenerator-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/SwiftVideoGenerator/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/SwiftVideoGenerator/SwiftVideoGenerator.modulemap";
 				PRODUCT_NAME = SwiftVideoGenerator;
@@ -602,11 +596,42 @@
 			};
 			name = Debug;
 		};
+		B8FD3882768F45B2A9313574F11FE781 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A16D9C1ADCE565671BCB78383806AE06 /* SwiftVideoGenerator.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/SwiftVideoGenerator/SwiftVideoGenerator-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/SwiftVideoGenerator/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/SwiftVideoGenerator/SwiftVideoGenerator.modulemap";
+				PRODUCT_NAME = SwiftVideoGenerator;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		C2024372AC1B51397F35EB66B19207EF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FFE45BF7C07C3726A74C1295F4A983D0 /* Pods-SwiftVideoGenerator_Example.debug.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -631,44 +656,11 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
-		};
-		DAA71B3E54D15DD82EA016B988E46E04 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 28E230484B86879B9CA839828EE336E2 /* SwiftVideoGenerator.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/SwiftVideoGenerator/SwiftVideoGenerator-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/SwiftVideoGenerator/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/SwiftVideoGenerator/SwiftVideoGenerator.modulemap";
-				PRODUCT_NAME = SwiftVideoGenerator;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
 		};
 		E514F66F88F345B15B6E3D7EC151CED6 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -727,8 +719,8 @@
 		9F9F7C754CD63890FAAC325C0DB979DE /* Build configuration list for PBXNativeTarget "SwiftVideoGenerator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9108040AFF6B92147F53B0DFD363AFB6 /* Debug */,
-				DAA71B3E54D15DD82EA016B988E46E04 /* Release */,
+				A66F735B2D02925827138752C86C6AAA /* Debug */,
+				B8FD3882768F45B2A9313574F11FE781 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
