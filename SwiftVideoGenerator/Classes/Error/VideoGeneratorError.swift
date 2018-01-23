@@ -19,6 +19,7 @@ public class VideoGeneratorError: NSObject, LocalizedError {
     case kUnsupportedVideoType
     case kFailedToStartReader
     case kFailedToReadVideoTrack
+    case kFailedToReadStartTime
   }
   
   fileprivate var desc = ""
@@ -50,6 +51,8 @@ public class VideoGeneratorError: NSObject, LocalizedError {
         return "\(kErrorDomain): Failed to start reading video frames"
       case .kFailedToReadVideoTrack:
         return "\(kErrorDomain): Failed to read video track in asset"
+      case .kFailedToReadStartTime:
+        return "\(kErrorDomain): Start time can't be less then 0"
       }
     }
   }

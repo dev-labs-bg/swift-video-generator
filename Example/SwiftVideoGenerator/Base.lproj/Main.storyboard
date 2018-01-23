@@ -28,7 +28,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="gkb-bH-fwc">
-                                <rect key="frame" x="56" y="206" width="263" height="58"/>
+                                <rect key="frame" x="56" y="157" width="263" height="58"/>
                                 <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                 <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -40,7 +40,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tMs-ZD-bq8">
-                                <rect key="frame" x="56" y="402" width="263" height="58"/>
+                                <rect key="frame" x="56" y="353" width="263" height="58"/>
                                 <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                 <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -52,7 +52,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pwq-O3-bOB">
-                                <rect key="frame" x="56" y="500" width="263" height="58"/>
+                                <rect key="frame" x="56" y="451" width="263" height="58"/>
                                 <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                 <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -64,7 +64,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Wfj-tT-fA2">
-                                <rect key="frame" x="56" y="304" width="263" height="58"/>
+                                <rect key="frame" x="56" y="255" width="263" height="58"/>
                                 <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                 <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
@@ -77,7 +77,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-t7-5YT">
-                                <rect key="frame" x="56" y="108" width="263" height="58"/>
+                                <rect key="frame" x="56" y="59" width="263" height="58"/>
                                 <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="dEz-t7-5YT" secondAttribute="height" multiplier="263:58" id="6rB-aA-lpa"/>
@@ -91,18 +91,33 @@
                                     <action selector="generateSingleVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bc5-Wd-CLA"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8bX-4m-05W">
+                                <rect key="frame" x="56" y="549" width="263" height="58"/>
+                                <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Split video">
+                                    <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="splitVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KVq-zA-3GQ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="pwq-O3-bOB" firstAttribute="leading" secondItem="tMs-ZD-bq8" secondAttribute="leading" id="0Xn-oV-GkN"/>
                             <constraint firstItem="pwq-O3-bOB" firstAttribute="trailing" secondItem="tMs-ZD-bq8" secondAttribute="trailing" id="4p5-b3-cJn"/>
+                            <constraint firstItem="8bX-4m-05W" firstAttribute="leading" secondItem="pwq-O3-bOB" secondAttribute="leading" id="9uW-8H-KCe"/>
                             <constraint firstItem="pwq-O3-bOB" firstAttribute="width" secondItem="tMs-ZD-bq8" secondAttribute="width" id="AQq-BH-lnQ"/>
                             <constraint firstItem="tMs-ZD-bq8" firstAttribute="height" secondItem="Wfj-tT-fA2" secondAttribute="height" id="BeT-bM-ccN"/>
+                            <constraint firstItem="8bX-4m-05W" firstAttribute="top" secondItem="pwq-O3-bOB" secondAttribute="bottom" constant="40" id="Cdu-xi-9B3"/>
                             <constraint firstItem="tMs-ZD-bq8" firstAttribute="top" secondItem="Wfj-tT-fA2" secondAttribute="bottom" constant="40" id="FVq-lr-b4y"/>
                             <constraint firstItem="Wfj-tT-fA2" firstAttribute="leading" secondItem="gkb-bH-fwc" secondAttribute="leading" id="Fzi-7z-rSE"/>
                             <constraint firstItem="tMs-ZD-bq8" firstAttribute="leading" secondItem="Wfj-tT-fA2" secondAttribute="leading" id="KmA-4y-Plc"/>
                             <constraint firstItem="Wfj-tT-fA2" firstAttribute="trailing" secondItem="gkb-bH-fwc" secondAttribute="trailing" id="Ktk-Op-9Yd"/>
                             <constraint firstAttribute="trailing" secondItem="dEz-t7-5YT" secondAttribute="trailing" constant="56" id="ODj-FA-1wD"/>
+                            <constraint firstItem="8bX-4m-05W" firstAttribute="width" secondItem="pwq-O3-bOB" secondAttribute="width" id="PEs-LF-ZZW"/>
                             <constraint firstItem="gkb-bH-fwc" firstAttribute="height" secondItem="dEz-t7-5YT" secondAttribute="height" id="QZ2-Qt-zz4"/>
                             <constraint firstItem="Wfj-tT-fA2" firstAttribute="width" secondItem="gkb-bH-fwc" secondAttribute="width" id="U9r-hs-Mfl"/>
                             <constraint firstItem="pwq-O3-bOB" firstAttribute="top" secondItem="tMs-ZD-bq8" secondAttribute="bottom" constant="40" id="VtK-kf-nAQ"/>
@@ -112,10 +127,12 @@
                             <constraint firstItem="tMs-ZD-bq8" firstAttribute="trailing" secondItem="Wfj-tT-fA2" secondAttribute="trailing" id="jwe-aX-o2U"/>
                             <constraint firstItem="dEz-t7-5YT" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="56" id="jxj-AY-080"/>
                             <constraint firstItem="gkb-bH-fwc" firstAttribute="leading" secondItem="dEz-t7-5YT" secondAttribute="leading" id="mWm-Z8-oeJ"/>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="88" id="mxc-cV-u1Z"/>
+                            <constraint firstItem="dEz-t7-5YT" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="39" id="mxc-cV-u1Z"/>
+                            <constraint firstItem="8bX-4m-05W" firstAttribute="trailing" secondItem="pwq-O3-bOB" secondAttribute="trailing" id="ngt-Z6-Wz0"/>
                             <constraint firstItem="Wfj-tT-fA2" firstAttribute="height" secondItem="gkb-bH-fwc" secondAttribute="height" id="oaS-9a-OTh"/>
                             <constraint firstItem="gkb-bH-fwc" firstAttribute="top" secondItem="dEz-t7-5YT" secondAttribute="bottom" constant="40" id="oiO-G8-VzG"/>
                             <constraint firstItem="gkb-bH-fwc" firstAttribute="width" secondItem="dEz-t7-5YT" secondAttribute="width" id="r7B-iA-sAR"/>
+                            <constraint firstItem="8bX-4m-05W" firstAttribute="height" secondItem="pwq-O3-bOB" secondAttribute="height" id="sSM-h5-xZp"/>
                             <constraint firstItem="Wfj-tT-fA2" firstAttribute="top" secondItem="gkb-bH-fwc" secondAttribute="bottom" constant="40" id="viJ-v4-brT"/>
                         </constraints>
                     </view>
@@ -125,6 +142,7 @@
                         <outlet property="generateSingleVideoButton" destination="dEz-t7-5YT" id="7ee-wi-qsP"/>
                         <outlet property="mergeVideosButton" destination="tMs-ZD-bq8" id="WRI-zt-EO3"/>
                         <outlet property="reverseVideoButton" destination="pwq-O3-bOB" id="n49-Cz-rtx"/>
+                        <outlet property="splitVideoButton" destination="8bX-4m-05W" id="BZU-Fv-u0G"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

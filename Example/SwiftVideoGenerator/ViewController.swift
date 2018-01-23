@@ -32,6 +32,8 @@ class ViewController: UIViewController {
   /// public property to represent a button on the UI
   @IBOutlet weak var reverseVideoButton: UIButton!
   
+  @IBOutlet weak var splitVideoButton: UIButton!
+  
   // MARK: - Public methods
   
   /// Public method to handle the click in the generateSingleVideoButton
@@ -183,6 +185,21 @@ class ViewController: UIViewController {
     }
   }
   
+  @IBAction func splitVideoButtonClickHandler(_ sender: UIButton) {
+    if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov") {
+      LoadingView.lockView()
+      VideoGenerator.current.splitVideo(withURL: videoURL1, atStartTime: 10, andEndTime: 40, success: { (url) in
+        LoadingView.unlockView()
+        print(url)
+        self.createAlertView(message: "Finished splitting video")
+      }, failure: { (error) in
+        LoadingView.unlockView()
+        print(error)
+        self.createAlertView(message: error.localizedDescription)
+      })
+    }
+  }
+  
   // MARK: - Initialize/Livecycle methods
   
   override func viewDidLoad() {
@@ -199,6 +216,7 @@ class ViewController: UIViewController {
     generateSingleAudioMultipleImageButton.layer.cornerRadius = generateSingleAudioMultipleImageButton.frame.height / 2
     mergeVideosButton.layer.cornerRadius = mergeVideosButton.frame.height / 2
     reverseVideoButton.layer.cornerRadius = reverseVideoButton.frame.height / 2
+    splitVideoButton.layer.cornerRadius = splitVideoButton.frame.height / 2
   }
   
   override func didReceiveMemoryWarning() {

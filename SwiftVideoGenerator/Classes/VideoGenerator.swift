@@ -54,7 +54,7 @@ public class VideoGenerator: NSObject {
   
   // MARK: - Public methods
   
-  // MARK: --------------------------------------------------------------- Generator -----------------------------------------------------------------------
+  // MARK: --------------------------------------------------------------- Generate video ------------------------------------------------------------------
   
   /**
    Public method to start a video generation
@@ -232,7 +232,7 @@ public class VideoGenerator: NSObject {
     }
   }
   
-  // MARK: --------------------------------------------------------------- Merger --------------------------------------------------------------------------
+  // MARK: --------------------------------------------------------------- Merge video ---------------------------------------------------------------------
   
   /// Method to merge multiple videos
   ///
@@ -336,8 +336,8 @@ public class VideoGenerator: NSObject {
     }
   }
   
-  // MARK: --------------------------------------------------------------- Reverse -------------------------------------------------------------------------
-
+  // MARK: --------------------------------------------------------------- Reverse video -------------------------------------------------------------------
+  
   /// Method to reverse a video
   ///
   /// - Parameters:
@@ -413,6 +413,77 @@ public class VideoGenerator: NSObject {
       })
     } else {
       failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+    }
+  }
+  
+  // MARK: --------------------------------------------------------------- Split video -----------------------------------------------------------------------
+  
+  /// Public method to split a chunk of a video into a separate file
+  ///
+  /// - Parameters:
+  ///   - videoURL: the video-to-split's URL
+  ///   - startTime: the start time of the new chunk of video (in seconds)
+  ///   - endTime: the end time of the new chunk of video (in seconds)
+  ///   - success: completion block on success - returns the audio URL
+  ///   - failure: completion block on failure - returns the error that caused the failure
+  open func splitVideo(withURL videoURL: URL, atStartTime start: Double? = nil, andEndTime end: Double? = nil, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+    
+    if start != nil {
+      guard start! >= 0.0 else {
+        failure(VideoGeneratorError(error: .kFailedToReadStartTime))
+        return
+      }
+    }
+    
+    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+      let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("split.m4v")
+      let sourceAsset = AVURLAsset(url: videoURL, options: nil)
+      let length =  CMTime(seconds: sourceAsset.duration.seconds, preferredTimescale: sourceAsset.duration.timescale)
+      
+      do {
+        if FileManager.default.fileExists(atPath: outputURL.path) {
+          
+          try FileManager.default.removeItem(at: outputURL)
+        }
+      } catch { }
+      
+      if let exportSession = AVAssetExportSession(asset: sourceAsset, presetName: AVAssetExportPresetHighestQuality) {
+        exportSession.outputURL = outputURL
+        exportSession.outputFileType = AVFileType.mp4
+        exportSession.shouldOptimizeForNetworkUse = true
+        
+        let startTime = CMTime(seconds: Double(start ?? 0), preferredTimescale: sourceAsset.duration.timescale)
+        var endTime = CMTime(seconds: Double(end ?? length.seconds), preferredTimescale: sourceAsset.duration.timescale)
+        
+        if endTime > length {
+          endTime = length
+        }
+        
+        let timeRange = CMTimeRange(start: startTime, end: endTime)
+        
+        exportSession.timeRange = timeRange
+        
+        /// try to export the file and handle the status cases
+        exportSession.exportAsynchronously(completionHandler: {
+          switch exportSession.status {
+          case .failed:
+            if let _error = exportSession.error {
+              failure(_error)
+            }
+            
+          case .cancelled:
+            if let _error = exportSession.error {
+              failure(_error)
+            }
+            
+          default:
+            print("finished")
+            success(outputURL)
+          }
+        })
+      } else {
+        failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
+      }
     }
   }
   
