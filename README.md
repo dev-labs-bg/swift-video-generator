@@ -9,7 +9,7 @@ This library provides an easy way to combine images and audio into a video or me
 - create a video from **multiple** image/audio pairs
 - create a video from a single audio and multiple images **singleAudioMultipleImage** - **New in version 1.0.8** (thanks to [ibhavin](https://github.com/ibhavin))
 - merge **multiple** videos into one
-- **reverse** a video clip
+- **reverse** a video clip - including reversing the audio  **New in version 1.0.10** (thanks to [SteliyanH](https://github.com/SteliyanH))
 
 ---
 ## Supported video formats
