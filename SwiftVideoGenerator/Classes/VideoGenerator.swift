@@ -802,7 +802,7 @@ public class VideoGenerator: NSObject {
                 
                 if samples.count > 1 {
                   
-                  writer = try AVAssetWriter(outputURL: completeMoviePath, fileType: .mp4)
+                  writer = try AVAssetWriter(outputURL: completeMoviePath, fileType: .m4v)
                   let writerInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
                   writerInput.expectsMediaDataInRealTime = false
                   
