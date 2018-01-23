@@ -337,16 +337,322 @@ public class VideoGenerator: NSObject {
   }
   
   // MARK: --------------------------------------------------------------- Reverse -------------------------------------------------------------------------
+
+  /// Method to reverse a video
+  ///
+  /// - Parameters:
+  ///   - videoURL: the video to revert URL
+  ///   - fileName: the reverted video's filename
+  ///   - sound: indicates if the sound should be kept and reversed as well
+  ///   - success: completion block on success - returns the audio URL
+  ///   - failure: completion block on failure - returns the error that caused the failure
+  open func reverseVideo(fromVideo videoURL: URL, andFileName fileName: String, withSound sound: Bool, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+      let extractedAudioPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("audio.m4a")
+      let sourceAsset = AVURLAsset(url: videoURL, options: nil)
+      self.fileName = fileName
+      
+      if FileManager.default.fileExists(atPath: extractedAudioPath.absoluteString) {
+        do {
+          try FileManager.default.removeItem(at: extractedAudioPath)
+        } catch {
+          failure(error)
+        }
+      }
+      
+      self.reverseVideoClip(videoURL: videoURL, andFileName: fileName, success: { (reversedVideo) in
+        if sound {
+          sourceAsset.writeAudioTrackToURL(URL: extractedAudioPath, completion: { (extracted, error) in
+            if extracted {
+              let convertedAudioPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("converted.aiff")
+              let reversedAudioPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("reversedAudio.mp3")
+              self.audioURLs = [reversedAudioPath]
+              let audioAsset = AVURLAsset(url: reversedAudioPath)
+              self.audioDurations = [audioAsset.duration.seconds]
+              
+              self.convertAudio(extractedAudioPath, to: convertedAudioPath, success: { (convertedAudio) in
+                self.reverseAudio(inputUrl: convertedAudioPath, outputUrl: reversedAudioPath, success: { (reversedAudio) in
+                  self.mergeAudio(withVideoURL: reversedVideo, success: { (completeMoviePath) in
+                    
+                    var pathString = reversedAudioPath.absoluteString
+                    if pathString.contains("file://") {
+                      pathString.removeSubrange(Range(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7)))
+                    }
+                    
+                    if FileManager.default.fileExists(atPath: pathString) {
+                      do {
+                        try FileManager.default.removeItem(at: reversedAudioPath)
+                      } catch {
+                        failure(error)
+                      }
+                    }
+                    
+                    success(completeMoviePath)
+                  }, failure: { (error) in
+                    failure(error)
+                  })
+                  
+                }, failure: { (error) in
+                  failure(error)
+                })
+                
+              }, failure: { (error) in
+                failure(error)
+              })
+            }
+            
+            if error != nil {
+              failure(error!)
+            }
+          })
+        } else {
+          success(reversedVideo)
+        }
+      }, failure: { (error) in
+        failure(error)
+      })
+    } else {
+      failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+    }
+  }
   
-  /// Method to reverse a video clip
+  // MARK: --------------------------------------------------------------- Initialize/Livecycle methods -----------------------------------------------------
+  
+  public override init() {
+    super.init()
+  }
+  
+  /**
+   setup method of the class
+   
+   - parameter _images:     The images from which a video will be generated
+   - parameter _duration: The duration of the movie which will be generated
+   */
+  fileprivate func setup(withImages _images: [UIImage], andAudios _audios: [URL], andType _type: VideoGeneratorType) {
+    images = []
+    audioURLs = []
+    audioDurations = []
+    duration = 0.0
+    
+    /// guard against missing images or audio
+    guard !_images.isEmpty else {
+      return
+    }
+    
+    guard !_audios.isEmpty else {
+      return
+    }
+    
+    type = _type
+    audioURLs = _audios
+    
+    /// populate the image array
+    if type == .single {
+      if let _image = _images.first {
+        if let resizedImage = shouldOptimiseImageForVideo ? _image.resizeImageToVideoSize() : _image {
+          images = [UIImage].init(repeating: resizedImage, count: 2)
+        }
+      }
+    } else {
+      for _image in _images {
+        if let resizedImage = shouldOptimiseImageForVideo ? _image.resizeImageToVideoSize() : _image {
+          images.append(resizedImage.scaleImageToSize(newSize: CGSize(width: 800, height: 800)))
+        }
+      }
+    }
+    
+    switch type! {
+    case .single, .singleAudioMultipleImage:
+      /// guard against multiple audios in single mode
+      if _audios.count != 1 {
+        if let _audio = _audios.first {
+          audioURLs = [_audio]
+        }
+      }
+    case .multiple:
+      /// guard agains more then equal audio and images for multiple
+      if _audios.count != _images.count {
+        let count = min(_audios.count, _images.count)
+        audioURLs = Array(_audios[...(count - 1)])
+        images = Array(_images[...(count - 1)])
+      }
+    }
+    
+    var _duration: Double = 0
+    
+    var audioAssets: [AVURLAsset] = []
+    for url in _audios {
+      audioAssets.append(AVURLAsset(url: url, options: nil))
+    }
+    
+    /// calculate the full video duration
+    for audio in audioAssets {
+      if let _maxLength = maxVideoLengthInSeconds {
+        _duration += round(Double(CMTimeGetSeconds(audio.duration)))
+        
+        if _duration < _maxLength {
+          audioDurations.append(round(Double(CMTimeGetSeconds(audio.duration))))
+        } else {
+          _duration -= round(Double(CMTimeGetSeconds(audio.duration)))
+          let diff = _maxLength - _duration
+          _duration = _maxLength
+          audioDurations.append(diff)
+        }
+      } else {
+        audioDurations.append(round(Double(CMTimeGetSeconds(audio.duration))))
+        _duration += round(Double(CMTimeGetSeconds(audio.duration)))
+      }
+    }
+    
+    duration = max(_duration, Double(CMTime(seconds: minSingleVideoDuration, preferredTimescale: 1).seconds))
+    
+    if let _scaleWidth = scaleWidth {
+      images = images.map({ $0.scaleImageToSize(newSize: CGSize(width: _scaleWidth, height: _scaleWidth)) })
+    }
+  }
+  
+  // MARK: --------------------------------------------------------------- Override methods ---------------------------------------------------------------
+  
+  // MARK: --------------------------------------------------------------- Private properties ---------------------------------------------------------------
+  
+  /// private property to store the images from which a video will be generated
+  fileprivate var images: [UIImage] = []
+  
+  /// private property to store the different audio durations
+  fileprivate var audioDurations: [Double] = []
+  
+  /// private property to store the audio URLs
+  fileprivate var audioURLs: [URL] = []
+  
+  /// private property to store the duration of the generated video
+  fileprivate var duration: Double! = 1.0
+  
+  /// private property to store a video asset writer (optional because the generation might fail)
+  fileprivate var videoWriter: AVAssetWriter?
+  
+  /// private property video generation's type
+  fileprivate var type: VideoGeneratorType?
+  
+  /// private property to store the minimum size for the video
+  fileprivate var minSize = CGSize.zero
+  
+  /// private property to store the minimum duration for a single video
+  fileprivate var minSingleVideoDuration: Double = 3.0
+  
+  /// private property to store the video resource for reversing
+  fileprivate var reversedVideoURL: URL?
+  
+  // MARK: --------------------------------------------------------------- Private methods ---------------------------------------------------------------
+  
+  /// Private method to generate a movie with the selected frame and the given audio
+  ///
+  /// - parameter audioUrl: the audio url
+  /// - parameter videoUrl: the video url
+  private func mergeAudio(withVideoURL videoUrl: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+    /// create a mutable composition
+    let mixComposition = AVMutableComposition()
+    
+    /// create a video asset from the url and get the video time range
+    let videoAsset = AVURLAsset(url: videoUrl, options: nil)
+    let videoTimeRange = CMTimeRange(start: kCMTimeZero, duration: videoAsset.duration)
+    
+    /// add a video track to the composition
+    let videoComposition = mixComposition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
+    
+    if let videoTrack = videoAsset.tracks(withMediaType: .video).first {
+      do {
+        /// try to insert the video time range into the composition
+        try videoComposition?.insertTimeRange(videoTimeRange, of: videoTrack, at: kCMTimeZero)
+      } catch {
+        failure(error)
+      }
+      
+      var duration = CMTime(seconds: 0, preferredTimescale: 1)
+      
+      /// add an audio track to the composition
+      let audioCompositon = mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+      
+      /// for all audio files add the audio track and duration to the existing audio composition
+      for (index, audioUrl) in audioURLs.enumerated() {
+        let audioDuration = CMTime(seconds: audioDurations[index], preferredTimescale: 1)
+        
+        let audioAsset = AVURLAsset(url: audioUrl)
+        let audioTimeRange = CMTimeRange(start: kCMTimeZero, duration: maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
+        
+        let shouldAddAudioTrack = maxVideoLengthInSeconds != nil ? audioDuration.seconds > 0 : true
+        
+        if shouldAddAudioTrack {
+          if let audioTrack = audioAsset.tracks(withMediaType: .audio).first {
+            do {
+              try audioCompositon?.insertTimeRange(audioTimeRange, of: audioTrack, at: duration)
+            } catch {
+              failure(error)
+            }
+          }
+        }
+        
+        duration = duration + (maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
+      }
+      
+      /// check if the documents folder is available
+      if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+        
+        /// create a path to the video file
+        let videoOutputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(fileName).m4v")
+        
+        do {
+          /// delete an old duplicate file
+          try FileManager.default.removeItem(at: videoOutputURL)
+        } catch { }
+        
+        /// try to start an export session and set the path and file type
+        if let exportSession = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) {
+          exportSession.outputURL = videoOutputURL
+          exportSession.outputFileType = AVFileType.mp4
+          exportSession.shouldOptimizeForNetworkUse = true
+          
+          /// try to export the file and handle the status cases
+          exportSession.exportAsynchronously(completionHandler: {
+            switch exportSession.status {
+            case .failed:
+              if let _error = exportSession.error {
+                failure(_error)
+              }
+              
+            case .cancelled:
+              if let _error = exportSession.error {
+                failure(_error)
+              }
+              
+            default:
+              let testMovieOutPutPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("test.m4v")
+              
+              do {
+                try FileManager.default.removeItem(at: testMovieOutPutPath)
+              } catch { }
+              
+              success(videoOutputURL)
+            }
+          })
+        } else {
+          failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
+        }
+      } else {
+        failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+      }
+    } else {
+      failure(VideoGeneratorError(error: .kFailedToReadVideoTrack))
+    }
+  }
+  
+  /// Private method to reverse a video clip
   ///
   /// - Parameters:
   ///   - videoURL: the video to reverse's URL
   ///   - fileName: the name of the generated video
-  ///   - shouldKeepAudio: indicates if the audio should be kept and reversed. If false, the generated video would be muted
   ///   - success: completion block on success - returns the reversed video URL
   ///   - failure: completion block on failure - returns the error that caused the failure
-  open func reverseVideo(videoURL: URL, andFileName fileName: String?, andAudio shouldKeepAudio: Bool, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  private func reverseVideoClip(videoURL: URL, andFileName fileName: String?, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
     let media_queue = DispatchQueue(label: "mediaInputQueue", attributes: [])
     
     media_queue.async {
@@ -493,262 +799,156 @@ public class VideoGenerator: NSObject {
     }
   }
   
-  // MARK: --------------------------------------------------------------- Extracting audio from video -----------------------------------------------------
-
-  /// Method to extract audio from a video
+  /// Private method to convert an audio file on a given URL to linear PMC format
   ///
   /// - Parameters:
-  ///   - url: the video URL
-  ///   - success: completion block on success - returns the audio URL
-  ///   - failure: completion block on failure - returns the error that caused the failure
-  open func extractAudio(fromVideo url: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
-    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      let audioPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("audio.m4a")
-      let sourceAsset = AVURLAsset(url: url, options: nil)
+  ///   - url: The source audio url
+  ///   - outputURL: Converted audio url
+  private func convertAudio(_ url: URL, to outputURL: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+    var error: OSStatus = noErr
+    var destinationFile: ExtAudioFileRef? = nil
+    var sourceFile: ExtAudioFileRef? = nil
+    
+    var srcFormat = AudioStreamBasicDescription()
+    var dstFormat = AudioStreamBasicDescription()
+    
+    ExtAudioFileOpenURL(url as CFURL, &sourceFile)
+    
+    var thePropertySize: UInt32 = UInt32(MemoryLayout.stride(ofValue: srcFormat))
+    ExtAudioFileGetProperty(sourceFile!, kExtAudioFileProperty_FileDataFormat, &thePropertySize, &srcFormat)
+    
+    dstFormat.mSampleRate = 44100
+    dstFormat.mFormatID = kAudioFormatLinearPCM
+    dstFormat.mChannelsPerFrame = 1
+    dstFormat.mBitsPerChannel = 16
+    dstFormat.mBytesPerPacket = 2 * dstFormat.mChannelsPerFrame
+    dstFormat.mBytesPerFrame = 2 * dstFormat.mChannelsPerFrame
+    dstFormat.mFramesPerPacket = 1
+    dstFormat.mFormatFlags = kAudioFormatFlagIsBigEndian | kAudioFormatFlagIsSignedInteger
+    
+    error = ExtAudioFileCreateWithURL(outputURL as CFURL, kAudioFileAIFFType, &dstFormat, nil, AudioFileFlags.eraseFile.rawValue, &destinationFile)
+    
+    error = ExtAudioFileSetProperty(sourceFile!, kExtAudioFileProperty_ClientDataFormat, thePropertySize, &dstFormat)
+    
+    error = ExtAudioFileSetProperty(destinationFile!, kExtAudioFileProperty_ClientDataFormat, thePropertySize, &dstFormat)
+    
+    let bufferByteSize: UInt32 = 32768
+    var srcBuffer = [UInt8](repeating: 0, count: Int(bufferByteSize))
+    var sourceFrameOffset: ULONG = 0
+    
+    while true {
+      var fillBufList = AudioBufferList(mNumberBuffers: 1, mBuffers: AudioBuffer(mNumberChannels: 2, mDataByteSize: UInt32(srcBuffer.count), mData: &srcBuffer))
+      var numFrames: UInt32 = 0
       
+      if (dstFormat.mBytesPerFrame > 0) {
+        numFrames = bufferByteSize / dstFormat.mBytesPerFrame
+      }
+      
+      error = ExtAudioFileRead(sourceFile!, &numFrames, &fillBufList)
+      
+      if (numFrames == 0) {
+        error = noErr
+        break
+      }
+      
+      sourceFrameOffset += numFrames
+      error = ExtAudioFileWrite(destinationFile!, numFrames, &fillBufList)
+    }
+    
+    error = ExtAudioFileDispose(destinationFile!)
+    error = ExtAudioFileDispose(sourceFile!)
+    
+    var pathString = url.absoluteString
+    if pathString.contains("file://") {
+      pathString.removeSubrange(Range(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7)))
+    }
+    
+    if FileManager.default.fileExists(atPath: pathString) {
       do {
-        try FileManager.default.removeItem(at: audioPath)
-      } catch {
-        failure(error)
-      }
-      
-      sourceAsset.writeAudioTrackToURL(URL: audioPath, completion: { (extracted, error) in
-        if extracted {
-          success(audioPath)
-        }
-        
-        if error != nil {
-          failure(error!)
-        }
-      })
+        try FileManager.default.removeItem(at: url)
+      } catch { }
+    }
+    
+    if error == noErr {
+      success(url)
     } else {
-      failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+      print(error)
     }
   }
   
-  // MARK: --------------------------------------------------------------- Initialize/Livecycle methods -----------------------------------------------------
-  
-  public override init() {
-    super.init()
-  }
-  
-  /**
-   setup method of the class
-   
-   - parameter _images:     The images from which a video will be generated
-   - parameter _duration: The duration of the movie which will be generated
-   */
-  fileprivate func setup(withImages _images: [UIImage], andAudios _audios: [URL], andType _type: VideoGeneratorType) {
-    images = []
-    audioURLs = []
-    audioDurations = []
-    duration = 0.0
-    
-    /// guard against missing images or audio
-    guard !_images.isEmpty else {
-      return
-    }
-    
-    guard !_audios.isEmpty else {
-      return
-    }
-    
-    type = _type
-    audioURLs = _audios
-    
-    /// populate the image array
-    if type == .single {
-      if let _image = _images.first {
-        if let resizedImage = shouldOptimiseImageForVideo ? _image.resizeImageToVideoSize() : _image {
-          images = [UIImage].init(repeating: resizedImage, count: 2)
-        }
-      }
-    } else {
-      for _image in _images {
-        if let resizedImage = shouldOptimiseImageForVideo ? _image.resizeImageToVideoSize() : _image {
-          images.append(resizedImage.scaleImageToSize(newSize: CGSize(width: 800, height: 800)))
-        }
-      }
-    }
-    
-    switch type! {
-    case .single, .singleAudioMultipleImage:
-      /// guard against multiple audios in single mode
-      if _audios.count != 1 {
-        if let _audio = _audios.first {
-          audioURLs = [_audio]
-        }
-      }
-    case .multiple:
-      /// guard agains more then equal audio and images for multiple
-      if _audios.count != _images.count {
-        let count = min(_audios.count, _images.count)
-        audioURLs = Array(_audios[...(count - 1)])
-        images = Array(_images[...(count - 1)])
-      }
-    }
-    
-    var _duration: Double = 0
-    
-    var audioAssets: [AVURLAsset] = []
-    for url in _audios {
-      audioAssets.append(AVURLAsset(url: url, options: nil))
-    }
-    
-    /// calculate the full video duration
-    for audio in audioAssets {
-      if let _maxLength = maxVideoLengthInSeconds {
-        _duration += round(Double(CMTimeGetSeconds(audio.duration)))
-        
-        if _duration < _maxLength {
-          audioDurations.append(round(Double(CMTimeGetSeconds(audio.duration))))
-        } else {
-          _duration -= round(Double(CMTimeGetSeconds(audio.duration)))
-          let diff = _maxLength - _duration
-          _duration = _maxLength
-          audioDurations.append(diff)
-        }
-      } else {
-        audioDurations.append(round(Double(CMTimeGetSeconds(audio.duration))))
-        _duration += round(Double(CMTimeGetSeconds(audio.duration)))
-      }
-    }
-    
-    duration = max(_duration, Double(CMTime(seconds: minSingleVideoDuration, preferredTimescale: 1).seconds))
-    
-    if let _scaleWidth = scaleWidth {
-      images = images.map({ $0.scaleImageToSize(newSize: CGSize(width: _scaleWidth, height: _scaleWidth)) })
-    }
-  }
-  
-  // MARK: --------------------------------------------------------------- Override methods ---------------------------------------------------------------
-  
-  // MARK: --------------------------------------------------------------- Private properties ---------------------------------------------------------------
-  
-  /// private property to store the images from which a video will be generated
-  fileprivate var images: [UIImage] = []
-  
-  /// private property to store the different audio durations
-  fileprivate var audioDurations: [Double] = []
-  
-  /// private property to store the audio URLs
-  fileprivate var audioURLs: [URL] = []
-  
-  /// private property to store the duration of the generated video
-  fileprivate var duration: Double! = 1.0
-  
-  /// private property to store a video asset writer (optional because the generation might fail)
-  fileprivate var videoWriter: AVAssetWriter?
-  
-  /// private property video generation's type
-  fileprivate var type: VideoGeneratorType?
-  
-  /// private property to store the minimum size for the video
-  fileprivate var minSize = CGSize.zero
-  
-  /// private property to store the minimum duration for a single video
-  fileprivate var minSingleVideoDuration: Double = 3.0
-  
-  // MARK: --------------------------------------------------------------- Private methods ---------------------------------------------------------------
-  
-  /// Private method to generate a movie with the selected frame and the given audio
+  /// Private method to reverse an audio file
   ///
-  /// - parameter audioUrl: the audio url
-  /// - parameter videoUrl: the video url
-  private func mergeAudio(withVideoURL videoUrl: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
-    /// create a mutable composition
-    let mixComposition = AVMutableComposition()
+  /// - Parameters:
+  ///   - inputUrl: source audio file url
+  ///   - outputUrl: output reverced audio file url
+  private func reverseAudio(inputUrl: URL, outputUrl: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+    var originalAudioFile: AudioFileID?
+    AudioFileOpenURL(inputUrl as CFURL, .readPermission, 0, &originalAudioFile)
     
-    /// create a video asset from the url and get the video time range
-    let videoAsset = AVURLAsset(url: videoUrl, options: nil)
-    let videoTimeRange = CMTimeRange(start: kCMTimeZero, duration: videoAsset.duration)
+    var outAudioFile:AudioFileID?
+    var pcm = AudioStreamBasicDescription(mSampleRate: 44100.0,
+                                          mFormatID: kAudioFormatLinearPCM,
+                                          mFormatFlags: kAudioFormatFlagIsBigEndian | kAudioFormatFlagIsSignedInteger,
+                                          mBytesPerPacket: 2,
+                                          mFramesPerPacket: 1,
+                                          mBytesPerFrame: 2,
+                                          mChannelsPerFrame: 1,
+                                          mBitsPerChannel: 16,
+                                          mReserved: 0)
     
-    /// add a video track to the composition
-    let videoComposition = mixComposition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
+    var theErr = AudioFileCreateWithURL(outputUrl as CFURL, kAudioFileAIFFType, &pcm, .eraseFile, &outAudioFile)
     
-    if let videoTrack = videoAsset.tracks(withMediaType: .video).first {
-      do {
-        /// try to insert the video time range into the composition
-        try videoComposition?.insertTimeRange(videoTimeRange, of: videoTrack, at: kCMTimeZero)
-      } catch {
-        failure(error)
-      }
+    if noErr == theErr, let outAudioFile = outAudioFile {
+      var inAudioFile:AudioFileID?
       
-      var duration = CMTime(seconds: 0, preferredTimescale: 1)
+      theErr = AudioFileOpenURL(inputUrl as CFURL, .readPermission, 0, &inAudioFile)
       
-      /// add an audio track to the composition
-      let audioCompositon = mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
-      
-      /// for all audio files add the audio track and duration to the existing audio composition
-      for (index, audioUrl) in audioURLs.enumerated() {
-        let audioDuration = CMTime(seconds: audioDurations[index], preferredTimescale: 1)
+      if noErr == theErr, let inAudioFile = inAudioFile {
         
-        let audioAsset = AVURLAsset(url: audioUrl)
-        let audioTimeRange = CMTimeRange(start: kCMTimeZero, duration: maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
+        var fileDataSize:UInt64 = 0
+        var thePropertySize:UInt32 = UInt32(MemoryLayout<UInt64>.stride)
+        theErr = AudioFileGetProperty(inAudioFile, kAudioFilePropertyAudioDataByteCount, &thePropertySize, &fileDataSize)
         
-        let shouldAddAudioTrack = maxVideoLengthInSeconds != nil ? audioDuration.seconds > 0 : true
-        
-        if shouldAddAudioTrack {
-          if let audioTrack = audioAsset.tracks(withMediaType: .audio).first {
+        if (noErr == theErr) {
+          let dataSize:Int64 = Int64(fileDataSize)
+          let theData = UnsafeMutableRawPointer.allocate(bytes: Int(dataSize), alignedTo: MemoryLayout<UInt8>.alignment)
+          
+          var readPoint:Int64 = Int64(dataSize)
+          var writePoint:Int64 = 0
+          
+          while readPoint > 0 {
+            var bytesToRead = UInt32(2)
+            
+            AudioFileReadBytes(inAudioFile, false, readPoint, &bytesToRead, theData)
+            AudioFileWriteBytes(outAudioFile, false, writePoint, &bytesToRead, theData)
+            
+            writePoint += 16
+            readPoint -= 16
+            
+            print(1.0 - (CGFloat(readPoint) / CGFloat(dataSize)))
+          }
+          
+          theData.deallocate(bytes: Int(dataSize), alignedTo: MemoryLayout<UInt8>.alignment)
+          
+          AudioFileClose(inAudioFile)
+          AudioFileClose(outAudioFile)
+          
+          var pathString = inputUrl.absoluteString
+          if pathString.contains("file://") {
+            pathString.removeSubrange(Range(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7)))
+          }
+          
+          if FileManager.default.fileExists(atPath: pathString) {
             do {
-              try audioCompositon?.insertTimeRange(audioTimeRange, of: audioTrack, at: duration)
+              try FileManager.default.removeItem(at: inputUrl)
             } catch {
               failure(error)
             }
           }
-        }
-        
-        duration = duration + (maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
-      }
-      
-      /// check if the documents folder is available
-      if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-        
-        /// create a path to the video file
-        let videoOutputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(fileName).m4v")
-        
-        do {
-          /// delete an old duplicate file
-          try FileManager.default.removeItem(at: videoOutputURL)
-        } catch { }
-        
-        /// try to start an export session and set the path and file type
-        if let exportSession = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) {
-          exportSession.outputURL = videoOutputURL
-          exportSession.outputFileType = AVFileType.mp4
-          exportSession.shouldOptimizeForNetworkUse = true
           
-          /// try to export the file and handle the status cases
-          exportSession.exportAsynchronously(completionHandler: {
-            switch exportSession.status {
-            case .failed:
-              if let _error = exportSession.error {
-                failure(_error)
-              }
-              
-            case .cancelled:
-              if let _error = exportSession.error {
-                failure(_error)
-              }
-              
-            default:
-              let testMovieOutPutPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("test.m4v")
-              
-              do {
-                try FileManager.default.removeItem(at: testMovieOutPutPath)
-              } catch { }
-              
-              success(videoOutputURL)
-            }
-          })
-        } else {
-          failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
+          success(outputUrl)
         }
-      } else {
-        failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
       }
-    } else {
-      failure(VideoGeneratorError(error: .kFailedToReadVideoTrack))
     }
   }
   

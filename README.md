@@ -187,17 +187,22 @@ As of right now the merged video keeps all of the **preferredTransformations** (
 #### Reversing a video clip
 
 ```Swift
-if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
-  VideoGenerator.current.reverseClip(videoURL: videoURL, andFileName: "reversedMovie", success: { (videoURL) in
-    print(videoURL)
-  }) { (error) in
-    print(error)
-  }
+if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov") {
+    LoadingView.lockView()
+    VideoGenerator.current.reverseVideo(fromVideo: videoURL1, andFileName: "reversedMovie", withSound: false, success: { (videoURL) in
+      LoadingView.unlockView()
+      self.createAlertView(message: "Finished reversing video")
+      print(videoURL)
+    }, failure: { (error) in
+      LoadingView.unlockView()
+      print(error)
+      self.createAlertView(message: error.localizedDescription)
+    })
+  } else {
+    self.createAlertView(message: "Missing video file")
 }
 ```
-You need to provide the file's URL and optionally a new name for the reversed video file.
-
-**NB!** As of right now the reverse happens only on the video, not on the sound so the finished video is without sound. I will add this in the future, maybe with the option of choosing whether to reverse or keep the audio as is.
+You need to provide the file's URL and optionally a new name for the reversed video file. The **withSound** property controls the audio behaviour: if **true** the audio is kept and reversed as well.
 
 [Exmaple video - reversed video](https://drive.google.com/open?id=1QXTxEMGJezuPVeuB_fqH8nHVKSG7vH_r)
 

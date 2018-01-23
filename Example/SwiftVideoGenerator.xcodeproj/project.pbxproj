@@ -256,10 +256,12 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = TV74DGM35Q;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = TV74DGM35Q;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -569,6 +571,7 @@
 			baseConfigurationReference = 6A38A48E48502BFAEF858BA9 /* Pods-SwiftVideoGenerator_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = TV74DGM35Q;
 				INFOPLIST_FILE = SwiftVideoGenerator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MODULE_NAME = ExampleApp;
@@ -584,6 +587,7 @@
 			baseConfigurationReference = 6D419418EC27459F0A3A554D /* Pods-SwiftVideoGenerator_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = TV74DGM35Q;
 				INFOPLIST_FILE = SwiftVideoGenerator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MODULE_NAME = ExampleApp;
@@ -598,6 +602,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 776ECB97DB1B65EA6280A8B5 /* Pods-SwiftVideoGenerator_Tests.debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = TV74DGM35Q;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -616,6 +621,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 87E20D5363AFF84DDA7FFCCA /* Pods-SwiftVideoGenerator_Tests.release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = TV74DGM35Q;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
