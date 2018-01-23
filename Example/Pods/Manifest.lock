@@ -1,5 +1,5 @@
 PODS:
-  - SwiftVideoGenerator (1.0.10)
+  - SwiftVideoGenerator (1.1.0)
 
 DEPENDENCIES:
   - SwiftVideoGenerator (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  SwiftVideoGenerator: 6fb7cf151de6c188a61d08b62fcef08fb80c3dc3
+  SwiftVideoGenerator: 3c385ce4abd515aadd67aeaaa115fa96995de2c5
 
 PODFILE CHECKSUM: 50d258d34e874f7c3410e4743ad4fbaa17fda35d
 
