@@ -12,8 +12,10 @@ This library provides an easy way to combine images and audio into a video or me
 
 - merge **multiple** videos into one
 - **reverse** a video clip - also reversing the audio
-*New in version 1.0.10* (thanks to [SteliyanH](https://github.com/SteliyanH))
+*New in version 1.1.0* (thanks to [SteliyanH](https://github.com/SteliyanH))
 
+- **split** video in time range
+*New in version 1.1.1*
 ---
 ## Supported video formats
 - mov (only when merging videos)
@@ -208,6 +210,27 @@ if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov") 
 You need to provide the file's URL and optionally a new name for the reversed video file. The **withSound** property controls the audio behaviour: if **true** the audio is kept and reversed as well.
 
 [Exmaple video - reversed video](https://drive.google.com/open?id=1QXTxEMGJezuPVeuB_fqH8nHVKSG7vH_r)
+
+#### Splitting a video clip
+
+```Swift
+if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov") {
+    LoadingView.lockView()
+    VideoGenerator.current.fileName = "splitMovie"
+    VideoGenerator.current.splitVideo(withURL: videoURL1, atStartTime: 10, andEndTime: 40, success: { (url) in
+      LoadingView.unlockView()
+      print(url)
+      self.createAlertView(message: "Finished splitting video")
+    }, failure: { (error) in
+      LoadingView.unlockView()
+      print(error)
+      self.createAlertView(message: error.localizedDescription)
+    })
+}
+```
+You need to provide the file's URL and optionally a new name for the split video file. The **atStartTime** and **andEndTime** properties mark the start and end of the time range in seconds.
+
+[Exmaple video - split video](https://drive.google.com/open?id=1X26SmtYJk8B9ZKOwU8mXDvcDhLuizDkO)
 
 ## Already in use in the following apps:
 

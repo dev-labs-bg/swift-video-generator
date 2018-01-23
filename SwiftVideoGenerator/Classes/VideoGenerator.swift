@@ -427,7 +427,6 @@ public class VideoGenerator: NSObject {
   ///   - success: completion block on success - returns the audio URL
   ///   - failure: completion block on failure - returns the error that caused the failure
   open func splitVideo(withURL videoURL: URL, atStartTime start: Double? = nil, andEndTime end: Double? = nil, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
-    
     if start != nil {
       guard start! >= 0.0 else {
         failure(VideoGeneratorError(error: .kFailedToReadStartTime))
@@ -436,7 +435,7 @@ public class VideoGenerator: NSObject {
     }
     
     if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("split.m4v")
+      let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(fileName).m4v")
       let sourceAsset = AVURLAsset(url: videoURL, options: nil)
       let length =  CMTime(seconds: sourceAsset.duration.seconds, preferredTimescale: sourceAsset.duration.timescale)
       

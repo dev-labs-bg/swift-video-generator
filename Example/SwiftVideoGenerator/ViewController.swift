@@ -188,6 +188,8 @@ class ViewController: UIViewController {
   @IBAction func splitVideoButtonClickHandler(_ sender: UIButton) {
     if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov") {
       LoadingView.lockView()
+      
+      VideoGenerator.current.fileName = "splitMovie"
       VideoGenerator.current.splitVideo(withURL: videoURL1, atStartTime: 10, andEndTime: 40, success: { (url) in
         LoadingView.unlockView()
         print(url)
