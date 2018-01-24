@@ -32,6 +32,7 @@ class ViewController: UIViewController {
   /// public property to represent a button on the UI
   @IBOutlet weak var reverseVideoButton: UIButton!
   
+  /// public peoperty to represent a button on the UI
   @IBOutlet weak var splitVideoButton: UIButton!
   
   // MARK: - Public methods
