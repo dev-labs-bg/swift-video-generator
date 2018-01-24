@@ -765,21 +765,9 @@ public class VideoGenerator: NSObject {
             }
           }
           
-          /// create the basic video settings
-          let videoSettings: [String : AnyObject] = [
-            AVVideoCodecKey  : AVVideoCodecH264 as AnyObject,
-            AVVideoWidthKey  : videoSize.width as AnyObject,
-            AVVideoHeightKey : videoSize.height as AnyObject,
-            ]
-          
           /// create setting for the pixel buffer
-          let sourceBufferAttributes: [String : AnyObject] = [
-            (kCVPixelBufferPixelFormatTypeKey as String): Int(kCVPixelFormatType_32ARGB) as AnyObject,
-            (kCVPixelBufferWidthKey as String): Float(videoSize.width) as AnyObject,
-            (kCVPixelBufferHeightKey as String):  Float(videoSize.height) as AnyObject,
-            (kCVPixelBufferCGImageCompatibilityKey as String): NSNumber(value: true),
-            (kCVPixelBufferCGBitmapContextCompatibilityKey as String): NSNumber(value: true)
-          ]
+          
+          let sourceBufferAttributes: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
           
           var writer: AVAssetWriter!
           
@@ -787,6 +775,15 @@ public class VideoGenerator: NSObject {
             let reader = try AVAssetReader(asset: videoAsset)
             
             if let assetVideoTrack = videoAsset.tracks(withMediaType: .video).first {
+              
+              let videoCompositionProps = [AVVideoAverageBitRateKey: assetVideoTrack.estimatedDataRate]
+              /// create the basic video settings
+              let videoSettings: [String : Any] = [
+                AVVideoCodecKey  : AVVideoCodecH264,
+                AVVideoWidthKey  : videoSize.width,
+                AVVideoHeightKey : videoSize.height,
+                AVVideoCompressionPropertiesKey: videoCompositionProps
+              ]
               
               let readerOutput = AVAssetReaderTrackOutput(track: assetVideoTrack, outputSettings: sourceBufferAttributes)
               
