@@ -58,11 +58,11 @@ end
 
 If you don't want to use a dependency manager, you can integrate SwiftVideoGenerator manually.
 
-Download the following .swift files:
+Download the following files:
 
-[VideoGenerator](https://github.com/dev-labs-bg/swift-video-generator/blob/master/SwiftVideoGenerator/Classes/VideoGenerator.swift)
+[Video Generator Classes](https://github.com/dev-labs-bg/swift-video-generator/tree/master/SwiftVideoGenerator/Classes)
 
-[ImageExtension](https://github.com/dev-labs-bg/swift-video-generator/blob/master/SwiftVideoGenerator/Classes/ImageExtension.swift)
+You need the VideoGenerator.swift and the files in the Error and Extensions folders.
 
 ###### Add files to project:
 - Open your project in Xcode
