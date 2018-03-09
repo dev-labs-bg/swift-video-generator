@@ -86,7 +86,7 @@ class ViewController: UIViewController {
         print(error)
         self.createAlertView(message: error.localizedDescription)
       })
-    }  else {
+    } else {
       self.createAlertView(message: MissingAudioFiles)
     }
   }
@@ -112,7 +112,7 @@ class ViewController: UIViewController {
         print(error)
         self.createAlertView(message: error.localizedDescription)
       })
-    }  else {
+    } else {
       self.createAlertView(message: MissingAudioFiles)
     }
   }
@@ -144,7 +144,6 @@ class ViewController: UIViewController {
         self.createAlertView(message: error.localizedDescription)
       }
     } else {
-      LoadingView.unlockView()
       self.createAlertView(message: MissingVideoFiles)
     }
   }
@@ -184,7 +183,6 @@ class ViewController: UIViewController {
         self.createAlertView(message: error.localizedDescription)
       })
     } else {
-      LoadingView.unlockView()
       self.createAlertView(message: self.MissingVideoFiles)
     }
   }

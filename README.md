@@ -51,7 +51,7 @@ To use Swift Video Generator in your Xcode project using CocoaPods, add it in th
 platform :ios, '10.0'
 use_frameworks!
 target '<Your Target Name>' do
-    pod 'SwiftVideoGenerator'
+pod 'SwiftVideoGenerator'
 end
 ```
 ### Manually
@@ -81,20 +81,26 @@ For both the **.single** and **.multiple** types of video generation the output 
 #### Create a video from a single audio and image file
 
 ```Swift
-if let audioURL = Bundle.main.url(forResource: "audio", withExtension: "mp3"), let _image = UIImage(named: "image") {
-  VideoGenerator.current.fileName = "singleMovie"
+if let audioURL4 = Bundle.main.url(forResource: Audio4 , withExtension: Mp3Extension) {
+  LoadingView.lockView()
+
+  VideoGenerator.current.fileName = SingleMovieFileName
   VideoGenerator.current.maxVideoLengthInSeconds = 8
   VideoGenerator.current.shouldOptimiseImageForVideo = true
 
-  VideoGenerator.current.generate(withImages: [_image], andAudios: [audioURL], andType: .single, { (progress) in
+  VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image4")], andAudios: [audioURL4], andType: .single, { (progress) in
     print(progress)
   }, success: { (url) in
+    LoadingView.unlockView()
     print(url)
-    self.createAlertView(message: "Finished single type video generation")
+    self.createAlertView(message: self.FinishedSingleTypeVideoGeneration)
   }, failure: { (error) in
+    LoadingView.unlockView()
     print(error)
     self.createAlertView(message: error.localizedDescription)
   })
+} else {
+  self.createAlertView(message: MissingResourceFiles)
 }
 ```
 With the generator type **.single** you can create a video from a single pair of audio and an image.
@@ -114,24 +120,26 @@ The **shouldOptimiseImageForVideo** property is used to optimize the images fed 
 #### Create a video from multiple image/audio pairs
 
 ```Swift
-if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3"), let audioURL2 = Bundle.main.url(forResource: "audio2", withExtension: "mp3"), let audioURL3 =  Bundle.main.url(forResource: "audio3", withExtension: "mp3") {
-  if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3") {
-  
-  VideoGenerator.current.fileName = "multipleVideo"
-  VideoGenerator.current.videoBackgroundColor = .red
-  VideoGenerator.current.maxVideoLengthInSeconds = 20
-  VideoGenerator.current.shouldOptimiseImageForVideo = true
+if let audioURL1 = Bundle.main.url(forResource: Audio1, withExtension: Mp3Extension), let audioURL2 = Bundle.main.url(forResource: Audio2, withExtension: Mp3Extension), let audioURL3 = Bundle.main.url(forResource: Audio3, withExtension: Mp3Extension) {
+  LoadingView.lockView()
 
-  VideoGenerator.current.generate(withImages: [_image1, _image2, _image3], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
+  VideoGenerator.current.fileName = MultipleMovieFileName
+  VideoGenerator.current.videoBackgroundColor = .red
+  VideoGenerator.current.videoImageWidthForMultipleVideoGeneration = 2000
+
+  VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image1"), #imageLiteral(resourceName: "image2"), #imageLiteral(resourceName: "image3")], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
     print(progress)
   }, success: { (url) in
+    LoadingView.unlockView()
     print(url)
-    self.createAlertView(message: "Finished single type video generation")
+    self.createAlertView(message: self.FnishedMultipleVideoGeneration)
   }, failure: { (error) in
+    LoadingView.unlockView()
     print(error)
     self.createAlertView(message: error.localizedDescription)
   })
- }
+} else {
+  self.createAlertView(message: MissingAudioFiles)
 }
 ```
 With the type **.multiple** you can create a video that combines multiple image/audio pairs. The finished video will queue up multiple videos created by taking one image from the array and it's corresponding index element from the audio array, creating a video from it and then appending it to the finished video.
@@ -139,33 +147,32 @@ Then the next pair of audio and image will be made into a video and appended aft
 
 The **fileName** and **videoBackgroundColor** properties are used in the same way as in the **.single** type.
 
+The **videoImageWidthForMultipleVideoGeneration** property is used to set a custom width to which the images will be scaled before they are merged with the audio files and generated as a video. The default value is 800.
+
 [Exmaple video - multiple type generation video](https://drive.google.com/open?id=0B_VCX_bQMRqPbTdNWlQ3X3E0YUU)
 
 #### Create a video from multiple images and a single audio
 
 ```Swift
-if let audioURL1 = Bundle.main.url(forResource: "audio1", withExtension: "mp3") {
-  if let _image1 = UIImage(named: "image1"), let _image2 = UIImage(named: "image2"), let _image3 = UIImage(named: "image3"), let _image4 = UIImage(named: "image4") {
+if let audioURL1 = Bundle.main.url(forResource: Audio1, withExtension: Mp3Extension) {
+  LoadingView.lockView()
 
-    VideoGenerator.current.fileName = "newVideo"
-    VideoGenerator.current.shouldOptimiseImageForVideo = true
+  VideoGenerator.current.fileName = MultipleSingleMovieFileName
+  VideoGenerator.current.shouldOptimiseImageForVideo = true
 
-    VideoGenerator.current.generate(withImages: [_image1, _image2, _image3, _image4], andAudios: [audioURL1], andType: .singleAudioMultipleImage, { (progress) in
-      print(progress)
-    }, success: { (url) in
-      LoadingView.unlockView()
-      print(url)
-      self.createAlertView(message: "Finished multiple type video generation")
-    }, failure: { (error) in
-      LoadingView.unlockView()
-      print(error)
-      self.createAlertView(message: error.localizedDescription)
-    })
-  } else {
-      self.createAlertView(message: "Missing image files")
-    }
+  VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image1"), #imageLiteral(resourceName: "image2"), #imageLiteral(resourceName: "image3"), #imageLiteral(resourceName: "image4")], andAudios: [audioURL1], andType: .singleAudioMultipleImage, { (progress) in
+    print(progress)
+  }, success: { (url) in
+    LoadingView.unlockView()
+    print(url)
+    self.createAlertView(message: self.FnishedMultipleVideoGeneration)
+  }, failure: { (error) in
+    LoadingView.unlockView()
+    print(error)
+    self.createAlertView(message: error.localizedDescription)
+  })
 } else {
-  self.createAlertView(message: "Missing audio files")
+  self.createAlertView(message: MissingAudioFiles)
 }
 ```
 With the type **.singleAudioMultipleImage** you can create a video that combines multiple images and a single audio. The finished video will space out the multiple images along the timeline of the single audio.
@@ -175,12 +182,19 @@ With the type **.singleAudioMultipleImage** you can create a video that combines
 #### Merging multiple videos into one
 
 ```Swift
-if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "video2", withExtension: "mov") {
-  VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
+if let videoURL1 = Bundle.main.url(forResource: Video1, withExtension: MOVExtension), let videoURL2 = Bundle.main.url(forResource: PortraitVideo, withExtension: Mp4Extension) {
+  LoadingView.lockView()
+  VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: MergedMovieFileName, success: { (videoURL) in
+    LoadingView.unlockView()
+    self.createAlertView(message: self.FinishedMergingVideos)
     print(videoURL)
   }) { (error) in
+    LoadingView.unlockView()
     print(error)
+    self.createAlertView(message: error.localizedDescription)
   }
+} else {
+  self.createAlertView(message: MissingVideoFiles)
 }
 ```
 You can provide URLs both for local resource files as well as those stored on the device (i.e. in the Documents folder).
@@ -192,19 +206,19 @@ As of right now the merged video keeps all of the **preferredTransformations** (
 #### Reversing a video clip
 
 ```Swift
-if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov") {
-    LoadingView.lockView()
-    VideoGenerator.current.reverseVideo(fromVideo: videoURL1, andFileName: "reversedMovie", withSound: false, success: { (videoURL) in
-      LoadingView.unlockView()
-      self.createAlertView(message: "Finished reversing video")
-      print(videoURL)
-    }, failure: { (error) in
-      LoadingView.unlockView()
-      print(error)
-      self.createAlertView(message: error.localizedDescription)
-    })
-  } else {
-    self.createAlertView(message: "Missing video file")
+if let videoURL1 = Bundle.main.url(forResource: Video2, withExtension: MovExtension) {
+  LoadingView.lockView()
+  VideoGenerator.current.reverseVideo(fromVideo: videoURL1, andFileName: ReversedMovieFileName, withSound: false, success: { (videoURL) in
+    LoadingView.unlockView()
+    self.createAlertView(message: self.FinishReversingVideo)
+    print(videoURL)
+  }, failure: { (error) in
+    LoadingView.unlockView()
+    print(error)
+    self.createAlertView(message: error.localizedDescription)
+  })
+} else {
+  self.createAlertView(message: self.MissingVideoFiles)
 }
 ```
 You need to provide the file's URL and optionally a new name for the reversed video file. The **withSound** property controls the audio behaviour: if **true** the audio is kept and reversed as well.
@@ -214,18 +228,21 @@ You need to provide the file's URL and optionally a new name for the reversed vi
 #### Splitting a video clip
 
 ```Swift
-if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov") {
-    LoadingView.lockView()
-    VideoGenerator.current.fileName = "splitMovie"
-    VideoGenerator.current.splitVideo(withURL: videoURL1, atStartTime: 10, andEndTime: 40, success: { (url) in
-      LoadingView.unlockView()
-      print(url)
-      self.createAlertView(message: "Finished splitting video")
-    }, failure: { (error) in
-      LoadingView.unlockView()
-      print(error)
-      self.createAlertView(message: error.localizedDescription)
-    })
+if let videoURL1 = Bundle.main.url(forResource: Video1, withExtension: MOVExtension) {
+  LoadingView.lockView()
+
+  VideoGenerator.current.fileName = SplitMovieFileName
+  VideoGenerator.current.splitVideo(withURL: videoURL1, atStartTime: 10, andEndTime: 40, success: { (url) in
+    LoadingView.unlockView()
+    print(url)
+    self.createAlertView(message: self.FinishSplittingVideo)
+  }, failure: { (error) in
+    LoadingView.unlockView()
+    print(error)
+    self.createAlertView(message: error.localizedDescription)
+  })
+} else {
+  self.createAlertView(message: self.MissingVideoFiles)
 }
 ```
 You need to provide the file's URL and optionally a new name for the split video file. The **atStartTime** and **andEndTime** properties mark the start and end of the time range in seconds.
