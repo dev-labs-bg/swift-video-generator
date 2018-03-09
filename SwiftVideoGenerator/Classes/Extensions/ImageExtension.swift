@@ -24,6 +24,7 @@ extension UIImage {
     
     scaledImageRect.size.width = size.width * aspectRatio
     scaledImageRect.size.height = size.height * aspectRatio
+    
     scaledImageRect.origin.x = (newSize.width - scaledImageRect.size.width) / 2.0
     scaledImageRect.origin.y = (newSize.height - scaledImageRect.size.height) / 2.0
     

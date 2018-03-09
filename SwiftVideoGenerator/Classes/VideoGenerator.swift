@@ -52,6 +52,9 @@ public class VideoGenerator: NSObject {
   /// public property to set the maximum length of a video
   open var maxVideoLengthInSeconds: Double?
   
+  /// public property to set a width to which to resize the images for multiple video generation. Default value is 800
+  open var videoImageWidthForMultipleVideoGeneration = 800
+    
   // MARK: - Public methods
   
   // MARK: --------------------------------------------------------------- Generate video ------------------------------------------------------------------
@@ -188,7 +191,6 @@ public class VideoGenerator: NSObject {
               
               /// append the image to the pixel buffer at the right start time
               if !VideoGenerator.current.appendPixelBufferForImage(imageForVideo, pixelBufferAdaptor: pixelBufferAdaptor, presentationTime: nextStartTimeForFrame) {
-                
                 failure(VideoGeneratorError(error: .kFailedToAppendPixelBufferError))
               }
               
@@ -516,18 +518,13 @@ public class VideoGenerator: NSObject {
     type = _type
     audioURLs = _audios
     
-    /// populate the image array
-    if type == .single {
-      if let _image = _images.first {
-        if let resizedImage = shouldOptimiseImageForVideo ? _image.resizeImageToVideoSize() : _image {
-          images = [UIImage].init(repeating: resizedImage, count: 2)
-        }
+    if self.type == .single {
+      if let _image = self.shouldOptimiseImageForVideo ? _images.first?.resizeImageToVideoSize() : _images.first {
+        self.images = [UIImage].init(repeating: _image, count: 2)
       }
     } else {
       for _image in _images {
-        if let resizedImage = shouldOptimiseImageForVideo ? _image.resizeImageToVideoSize() : _image {
-          images.append(resizedImage.scaleImageToSize(newSize: CGSize(width: 800, height: 800)))
-        }
+        self.images.append(_image.scaleImageToSize(newSize: CGSize(width: videoImageWidthForMultipleVideoGeneration, height: videoImageWidthForMultipleVideoGeneration)))
       }
     }
     
