@@ -20,7 +20,7 @@
 		FF67395F1FA31B5E003872E7 /* audio4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FF6739581FA31B5E003872E7 /* audio4.mp3 */; };
 		FF6739601FA31B5E003872E7 /* swift-video-generator-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FF6739591FA31B5E003872E7 /* swift-video-generator-logo.png */; };
 		FF6739611FA31B5E003872E7 /* audio3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FF67395A1FA31B5E003872E7 /* audio3.mp3 */; };
-		FF6739621FA31B5E003872E7 /* video1.mov in Resources */ = {isa = PBXBuildFile; fileRef = FF67395B1FA31B5E003872E7 /* video1.mov */; };
+		FF6739621FA31B5E003872E7 /* video1.MOV in Resources */ = {isa = PBXBuildFile; fileRef = FF67395B1FA31B5E003872E7 /* video1.MOV */; };
 		FF6739631FA31B5E003872E7 /* audio1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FF67395C1FA31B5E003872E7 /* audio1.mp3 */; };
 		FF6739641FA31B5E003872E7 /* audio2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FF67395D1FA31B5E003872E7 /* audio2.mp3 */; };
 		FF7164D11FB4308000CEE2AE /* video3.mov in Resources */ = {isa = PBXBuildFile; fileRef = FF7164CF1FB4308000CEE2AE /* video3.mov */; };
@@ -63,7 +63,7 @@
 		FF6739581FA31B5E003872E7 /* audio4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = audio4.mp3; path = Resources/audio4.mp3; sourceTree = "<group>"; };
 		FF6739591FA31B5E003872E7 /* swift-video-generator-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "swift-video-generator-logo.png"; path = "Resources/swift-video-generator-logo.png"; sourceTree = "<group>"; };
 		FF67395A1FA31B5E003872E7 /* audio3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = audio3.mp3; path = Resources/audio3.mp3; sourceTree = "<group>"; };
-		FF67395B1FA31B5E003872E7 /* video1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = video1.mov; path = Resources/video1.mov; sourceTree = "<group>"; };
+		FF67395B1FA31B5E003872E7 /* video1.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = video1.MOV; path = Resources/video1.MOV; sourceTree = "<group>"; };
 		FF67395C1FA31B5E003872E7 /* audio1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = audio1.mp3; path = Resources/audio1.mp3; sourceTree = "<group>"; };
 		FF67395D1FA31B5E003872E7 /* audio2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = audio2.mp3; path = Resources/audio2.mp3; sourceTree = "<group>"; };
 		FF7164CF1FB4308000CEE2AE /* video3.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = video3.mov; path = Resources/video3.mov; sourceTree = "<group>"; };
@@ -194,7 +194,7 @@
 				FF67395A1FA31B5E003872E7 /* audio3.mp3 */,
 				FF6739581FA31B5E003872E7 /* audio4.mp3 */,
 				FF6739591FA31B5E003872E7 /* swift-video-generator-logo.png */,
-				FF67395B1FA31B5E003872E7 /* video1.mov */,
+				FF67395B1FA31B5E003872E7 /* video1.MOV */,
 				FF6739571FA31B5E003872E7 /* video2.mov */,
 			);
 			name = Resources;
@@ -297,7 +297,7 @@
 				FF7164D11FB4308000CEE2AE /* video3.mov in Resources */,
 				FF6739631FA31B5E003872E7 /* audio1.mp3 in Resources */,
 				FF7164D21FB4308000CEE2AE /* video4.mov in Resources */,
-				FF6739621FA31B5E003872E7 /* video1.mov in Resources */,
+				FF6739621FA31B5E003872E7 /* video1.MOV in Resources */,
 				FF67395F1FA31B5E003872E7 /* audio4.mp3 in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 				FF6739611FA31B5E003872E7 /* audio3.mp3 in Resources */,

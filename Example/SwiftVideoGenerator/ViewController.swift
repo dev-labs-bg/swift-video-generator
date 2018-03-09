@@ -149,7 +149,7 @@ class ViewController: UIViewController {
     //      }
     //    }
     
-    if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "mov"), let videoURL2 = Bundle.main.url(forResource: "portraitVideo", withExtension: "mp4") {
+    if let videoURL1 = Bundle.main.url(forResource: "video1", withExtension: "MOV"), let videoURL2 = Bundle.main.url(forResource: "portraitVideo", withExtension: "mp4") {
       LoadingView.lockView()
       VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: "mergedMovie", success: { (videoURL) in
         LoadingView.unlockView()

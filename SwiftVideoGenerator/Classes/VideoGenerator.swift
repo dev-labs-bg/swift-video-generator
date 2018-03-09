@@ -243,7 +243,7 @@ public class VideoGenerator: NSObject {
   ///   - failure: failure block - returns the error that caused the failure
   open class func mergeMovies(videoURLs: [URL], andFileName fileName: String, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
     let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
-    let _videoURLs = videoURLs.filter({ !$0.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains($0.pathExtension) })
+    let _videoURLs = videoURLs.filter({ !$0.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains($0.pathExtension.lowercased()) })
     let _fileName = fileName == "" ? "mergedMovie" : fileName
     
     /// guard against missing URLs
