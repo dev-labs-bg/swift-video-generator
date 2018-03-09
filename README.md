@@ -66,8 +66,7 @@ You need the VideoGenerator.swift and the files in the Error and Extensions fold
 
 ###### Add files to project:
 - Open your project in Xcode
-- Select your project target, right-click and create two New Groups: VideoGenerator and ImageExtension (you can also create a group Extensions and add a subgroup Image)
-- Now add the files you downloaded to their respective groups
+- Add the files you downloaded to the Project Navigator. You can create your own folders or keep the files as they are.
 - And you're done. You're now ready to make some video magic.
 ---
 ## Usage
