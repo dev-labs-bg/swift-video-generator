@@ -975,7 +975,7 @@ public class VideoGenerator: NSObject {
         
         if (noErr == theErr) {
           let dataSize:Int64 = Int64(fileDataSize)
-          let theData = UnsafeMutableRawPointer.allocate(bytes: Int(dataSize), alignedTo: MemoryLayout<UInt8>.alignment)
+          let theData = UnsafeMutableRawPointer.allocate(byteCount: Int(dataSize), alignment: MemoryLayout<UInt8>.alignment)
           
           var readPoint:Int64 = Int64(dataSize)
           var writePoint:Int64 = 0
@@ -992,7 +992,7 @@ public class VideoGenerator: NSObject {
             print(1.0 - (CGFloat(readPoint) / CGFloat(dataSize)))
           }
           
-          theData.deallocate(bytes: Int(dataSize), alignedTo: MemoryLayout<UInt8>.alignment)
+          theData.deallocate()
           
           AudioFileClose(inAudioFile)
           AudioFileClose(outAudioFile)
@@ -1060,7 +1060,7 @@ public class VideoGenerator: NSObject {
           /**
            *  Destroy the pixel buffer contains
            */
-          pixelBufferPointer.deinitialize()
+          pixelBufferPointer.deinitialize(count: 1)
         } else {
           NSLog("error: Failed to allocate pixel buffer from pool")
         }
@@ -1068,7 +1068,7 @@ public class VideoGenerator: NSObject {
         /**
          Destroy the pixel buffer pointer from the memory
          */
-        pixelBufferPointer.deallocate(capacity: 1)
+        pixelBufferPointer.deallocate()
       }
     }
     
