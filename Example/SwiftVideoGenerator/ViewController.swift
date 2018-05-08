@@ -45,10 +45,9 @@ class ViewController: UIViewController {
       LoadingView.lockView()
       
       VideoGenerator.current.fileName = SingleMovieFileName
-      VideoGenerator.current.maxVideoLengthInSeconds = 8
       VideoGenerator.current.shouldOptimiseImageForVideo = true
       
-      VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image4")], andAudios: [audioURL4], andType: .single, { (progress) in
+      VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image1")], andAudios: [audioURL4], andType: .single, { (progress) in
         print(progress)
       }, success: { (url) in
         LoadingView.unlockView()

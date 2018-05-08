@@ -54,7 +54,14 @@ public class VideoGenerator: NSObject {
   
   /// public property to set a width to which to resize the images for multiple video generation. Default value is 800
   open var videoImageWidthForMultipleVideoGeneration = 800
-    
+  
+  /// public property to set the video duration when there is no audio
+  open var videoDurationInSeconds: Double = 0 {
+    didSet {
+      videoDurationInSeconds = Double(CMTime(seconds: videoDurationInSeconds, preferredTimescale: 1).seconds)
+    }
+  }
+  
   // MARK: - Public methods
   
   // MARK: --------------------------------------------------------------- Generate video ------------------------------------------------------------------
@@ -212,13 +219,35 @@ public class VideoGenerator: NSObject {
             
             // the completion is made with a completion handler which will return the url of the generated video or an error
             videoWriter.finishWriting { () -> Void in
-              /// if the writing is successfull, go on to merge the video with the audio files
-              VideoGenerator.current.mergeAudio(withVideoURL: videoOutputURL, success: { (videoURL) in
-                print("finished")
-                success(videoURL)
-              }, failure: { (error) in
-                failure(error)
-              })
+              if self.audioURLs.isEmpty {
+                if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+                  let documentDirectory = URL(fileURLWithPath: path)
+                  let newPath = documentDirectory.appendingPathComponent("\(self.fileName).m4v")
+                  
+                  do {
+                    let fileURLs = try FileManager.default.contentsOfDirectory(at: documentDirectory, includingPropertiesForKeys: nil)
+                    
+                    if fileURLs.contains(newPath) {
+                      try FileManager.default.removeItem(at: newPath)
+                    }
+                    
+                    try FileManager.default.moveItem(at: videoOutputURL, to: newPath)
+                  } catch let error {
+                    failure(error)
+                  }
+                  
+                  print("finished")
+                  success(newPath)
+                }
+              } else {
+                /// if the writing is successfull, go on to merge the video with the audio files
+                VideoGenerator.current.mergeAudio(withVideoURL: videoOutputURL, success: { (videoURL) in
+                  print("finished")
+                  success(videoURL)
+                }, failure: { (error) in
+                  failure(error)
+                })
+              }
               
               VideoGenerator.current.videoWriter = nil
             }
@@ -511,10 +540,6 @@ public class VideoGenerator: NSObject {
       return
     }
     
-    guard !_audios.isEmpty else {
-      return
-    }
-    
     type = _type
     audioURLs = _audios
     
@@ -571,7 +596,8 @@ public class VideoGenerator: NSObject {
       }
     }
     
-    duration = max(_duration, Double(CMTime(seconds: minSingleVideoDuration, preferredTimescale: 1).seconds))
+    let minVideoDuration = Double(CMTime(seconds: minSingleVideoDuration, preferredTimescale: 1).seconds)
+    duration = max((audioURLs.isEmpty ? videoDurationInSeconds : _duration), minVideoDuration)
     
     if let _scaleWidth = scaleWidth {
       images = images.map({ $0.scaleImageToSize(newSize: CGSize(width: _scaleWidth, height: _scaleWidth)) })
@@ -695,7 +721,9 @@ public class VideoGenerator: NSObject {
               let testMovieOutPutPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("test.m4v")
               
               do {
-                try FileManager.default.removeItem(at: testMovieOutPutPath)
+                if FileManager.default.fileExists(atPath: testMovieOutPutPath.absoluteString) {
+                  try FileManager.default.removeItem(at: testMovieOutPutPath)
+                }
               } catch { }
               
               success(videoOutputURL)
