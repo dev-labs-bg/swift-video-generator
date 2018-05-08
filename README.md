@@ -116,6 +116,8 @@ The **maxVideoLengthInSeconds** property is used to set the video's maximum leng
 
 The **shouldOptimiseImageForVideo** property is used to optimize the images fed into the generators to a scale best fitted for video based on their orientation.
 
+Set the **videoDurationInSeconds** for generated video without audio.
+
 #### Create a video from multiple image/audio pairs
 
 ```Swift
