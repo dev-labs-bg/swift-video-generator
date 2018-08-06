@@ -16,6 +16,9 @@ This library provides an easy way to combine images and audio into a video or me
 
 - **split** video in time range
 *New in version 1.1.1*
+
+- create a video from a **single** image (no audio) *New in version 1.1.7*
+- create a video from **multiple** images (no audio) *New in version 1.1.7* 
 ---
 ## Supported video formats
 - mov (only when merging videos)
@@ -102,7 +105,9 @@ if let audioURL4 = Bundle.main.url(forResource: Audio4 , withExtension: Mp3Exten
   self.createAlertView(message: MissingResourceFiles)
 }
 ```
-With the generator type **.single** you can create a video from a single pair of audio and an image.
+With the generator type **.single** you can create a video from a single pair of audio and an image. 
+
+If you leave the **audio** array empty and implement **videoDurationInSeconds**, the generated video contains only the image without audio.
 
 [Exmaple video - single type generation](https://drive.google.com/open?id=0B_VCX_bQMRqPYVprSnQzdERLTkk)
 
@@ -144,6 +149,9 @@ if let audioURL1 = Bundle.main.url(forResource: Audio1, withExtension: Mp3Extens
 }
 ```
 With the type **.multiple** you can create a video that combines multiple image/audio pairs. The finished video will queue up multiple videos created by taking one image from the array and it's corresponding index element from the audio array, creating a video from it and then appending it to the finished video.
+
+If you leave the **audio** array empty and implement **videoDurationInSeconds**, the generated video contains only the images without audio.
+
 Then the next pair of audio and image will be made into a video and appended after the first one. This will continue untill all image/audio pairs have been appended. If the image/audio pairs are not the same count, the extra audio(s)/image(s) is not used.
 
 The **fileName** and **videoBackgroundColor** properties are used in the same way as in the **.single** type.
