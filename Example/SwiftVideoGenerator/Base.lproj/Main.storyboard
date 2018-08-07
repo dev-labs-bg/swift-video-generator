@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="HelveticaNeue.ttc">
-            <string>HelveticaNeue-Medium</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -27,121 +22,132 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-t7-5YT">
-                                <rect key="frame" x="24" y="20" width="366" height="79.666666666666671"/>
-                                <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="750" constant="80" id="qac-bX-zvh"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
-                                <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Generate single type video">
-                                    <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="generateSingleVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bc5-Wd-CLA"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pwq-O3-bOB">
-                                <rect key="frame" x="24" y="507.66666666666674" width="366" height="80"/>
-                                <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
-                                <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Reverse video">
-                                    <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="reverseVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HAx-xI-dHz"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Wfj-tT-fA2">
-                                <rect key="frame" x="24" y="264" width="366" height="79.666666666666686"/>
-                                <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
-                                <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
-                                <inset key="titleEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
-                                <state key="normal" title="Generate multiple images and one audio video">
-                                    <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="generateMultipleImageSingleAudioVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BgF-YE-dZq"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8bX-4m-05W">
-                                <rect key="frame" x="24" y="628.66666666666663" width="366" height="80.333333333333371"/>
-                                <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
-                                <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Split video">
-                                    <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="splitVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KVq-zA-3GQ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tMs-ZD-bq8">
-                                <rect key="frame" x="24" y="385.66666666666669" width="366" height="80"/>
-                                <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
-                                <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Merge videos">
-                                    <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="mergeVideosButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bEn-8l-sxc"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="gkb-bH-fwc">
-                                <rect key="frame" x="24" y="142.66666666666666" width="366" height="79.333333333333343"/>
-                                <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
-                                <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Generate multiple images/audios video">
-                                    <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="generateMultipleVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SGn-Vd-OEM"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="60v-QG-0fj">
+                                <rect key="frame" x="20" y="40" width="374" height="676"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="dEz-t7-5YT">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="60"/>
+                                        <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="vZN-0g-8x3"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                        <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Generate single type video">
+                                            <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="generateSingleVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bc5-Wd-CLA"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="gkb-bH-fwc">
+                                        <rect key="frame" x="0.0" y="102.66666666666666" width="374" height="60"/>
+                                        <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="gpQ-SL-Ptg"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                        <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Generate multiple images/audios video">
+                                            <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="generateMultipleVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SGn-Vd-OEM"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Wfj-tT-fA2">
+                                        <rect key="frame" x="0.0" y="205.33333333333334" width="374" height="60.000000000000028"/>
+                                        <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="jYC-n4-aCF"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                        <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                        <inset key="titleEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                        <state key="normal" title="Generate multiple images and one audio video">
+                                            <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="generateMultipleImageSingleAudioVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BgF-YE-dZq"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tMs-ZD-bq8">
+                                        <rect key="frame" x="0.0" y="308" width="374" height="60"/>
+                                        <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="wsR-qF-fh8"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                        <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Merge videos">
+                                            <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="mergeVideosButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bEn-8l-sxc"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8bX-4m-05W">
+                                        <rect key="frame" x="0.0" y="410.66666666666669" width="374" height="60"/>
+                                        <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="1n9-u3-9jR"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                        <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Split video">
+                                            <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="splitVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KVq-zA-3GQ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pwq-O3-bOB">
+                                        <rect key="frame" x="0.0" y="513.33333333333337" width="374" height="60"/>
+                                        <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="PAe-PA-5TU"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                        <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Reverse video">
+                                            <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="reverseVideoButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HAx-xI-dHz"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="BYl-3V-hh6">
+                                        <rect key="frame" x="0.0" y="616" width="374" height="60"/>
+                                        <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="DP0-Vx-hpL"/>
+                                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="60" id="LjX-rw-fgd"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
+                                        <color key="tintColor" red="0.92941176469999998" green="0.33333333329999998" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Merge video with audio">
+                                            <color key="titleColor" red="0.85490196080000003" green="0.2666666667" blue="0.32549019610000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="mergeVideoAndAudioButtonClickHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Sfm-bE-3PO"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="264" id="0D3-se-08g"/>
-                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="width" secondItem="gkb-bH-fwc" secondAttribute="width" id="0d4-ke-OPc"/>
-                            <constraint firstItem="gkb-bH-fwc" firstAttribute="height" secondItem="dEz-t7-5YT" secondAttribute="height" id="1Hs-7b-GIv"/>
-                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8pP-27-cW4"/>
-                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="height" secondItem="gkb-bH-fwc" secondAttribute="height" id="9cs-kG-KNm"/>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Aec-zU-arP"/>
-                            <constraint firstItem="pwq-O3-bOB" firstAttribute="height" secondItem="tMs-ZD-bq8" secondAttribute="height" id="DGc-mk-Qto"/>
-                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="top" secondItem="gkb-bH-fwc" secondAttribute="bottom" constant="42" id="Dev-Lf-wkU"/>
-                            <constraint firstItem="gkb-bH-fwc" firstAttribute="top" relation="greaterThanOrEqual" secondItem="dEz-t7-5YT" secondAttribute="bottom" constant="42" id="EZg-dh-tJ4"/>
-                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="width" secondItem="Wfj-tT-fA2" secondAttribute="width" id="G1M-Qr-oa7"/>
-                            <constraint firstItem="8bX-4m-05W" firstAttribute="top" relation="greaterThanOrEqual" secondItem="pwq-O3-bOB" secondAttribute="bottom" constant="41" id="HBz-Zc-jsC"/>
-                            <constraint firstItem="gkb-bH-fwc" firstAttribute="width" secondItem="dEz-t7-5YT" secondAttribute="width" id="KMO-fY-btf"/>
-                            <constraint firstItem="pwq-O3-bOB" firstAttribute="top" relation="greaterThanOrEqual" secondItem="tMs-ZD-bq8" secondAttribute="bottom" constant="42" id="LX2-aN-n4F"/>
-                            <constraint firstItem="Wfj-tT-fA2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="N7t-xO-gNW"/>
-                            <constraint firstItem="pwq-O3-bOB" firstAttribute="top" relation="greaterThanOrEqual" secondItem="tMs-ZD-bq8" secondAttribute="bottom" constant="42" id="PkE-8x-Ggb"/>
-                            <constraint firstItem="pwq-O3-bOB" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="SSL-AG-RVk"/>
-                            <constraint firstItem="8bX-4m-05W" firstAttribute="top" relation="greaterThanOrEqual" secondItem="pwq-O3-bOB" secondAttribute="bottom" constant="41" id="UwW-IO-tks"/>
-                            <constraint firstAttribute="trailingMargin" relation="lessThanOrEqual" secondItem="dEz-t7-5YT" secondAttribute="trailing" constant="12" id="Vlw-dY-Qh8"/>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="leading" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="12" id="W5y-85-004"/>
-                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="height" secondItem="Wfj-tT-fA2" secondAttribute="height" id="blR-Zh-WGW"/>
-                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="8bX-4m-05W" secondAttribute="bottom" constant="27" id="fDu-Xy-tap"/>
-                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Wfj-tT-fA2" secondAttribute="bottom" constant="42" id="ij5-85-Gtn"/>
-                            <constraint firstItem="pwq-O3-bOB" firstAttribute="width" secondItem="tMs-ZD-bq8" secondAttribute="width" id="kBX-SJ-Ty0"/>
-                            <constraint firstItem="gkb-bH-fwc" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="le4-pU-PRv"/>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="n44-vJ-MwN"/>
-                            <constraint firstItem="tMs-ZD-bq8" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Wfj-tT-fA2" secondAttribute="bottom" constant="42" id="pTz-Pn-X6v"/>
-                            <constraint firstItem="dEz-t7-5YT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="top" id="vLK-lc-meP"/>
-                            <constraint firstItem="8bX-4m-05W" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xUP-Eu-mVd"/>
-                            <constraint firstItem="8bX-4m-05W" firstAttribute="height" secondItem="pwq-O3-bOB" secondAttribute="height" id="z7X-5s-VbF"/>
-                            <constraint firstItem="8bX-4m-05W" firstAttribute="width" secondItem="pwq-O3-bOB" secondAttribute="width" id="zTP-MK-vMg"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="60v-QG-0fj" secondAttribute="trailing" id="185-aX-3uM"/>
+                            <constraint firstItem="60v-QG-0fj" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="F3y-fY-KSy"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="60v-QG-0fj" secondAttribute="bottom" constant="20" id="pOS-hn-3sI"/>
+                            <constraint firstItem="60v-QG-0fj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="ycg-tD-FDT"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="generateMultipleVideoButton" destination="gkb-bH-fwc" id="2av-4J-9OW"/>
                         <outlet property="generateSingleAudioMultipleImageButton" destination="Wfj-tT-fA2" id="yXf-Bb-jzn"/>
                         <outlet property="generateSingleVideoButton" destination="dEz-t7-5YT" id="7ee-wi-qsP"/>
+                        <outlet property="mergeVideoWithAudioButton" destination="BYl-3V-hh6" id="db7-Vs-Rjh"/>
                         <outlet property="mergeVideosButton" destination="tMs-ZD-bq8" id="WRI-zt-EO3"/>
                         <outlet property="reverseVideoButton" destination="pwq-O3-bOB" id="n49-Cz-rtx"/>
                         <outlet property="splitVideoButton" destination="8bX-4m-05W" id="BZU-Fv-u0G"/>

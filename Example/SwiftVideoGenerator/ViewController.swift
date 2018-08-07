@@ -35,6 +35,9 @@ class ViewController: UIViewController {
   /// public peoperty to represent a button on the UI
   @IBOutlet weak var splitVideoButton: UIButton!
   
+  /// public peoperty to represent a button on the UI
+  @IBOutlet weak var mergeVideoWithAudioButton: UIButton!
+  
   // MARK: - Public methods
   
   /// Public method to handle the click in the generateSingleVideoButton
@@ -167,6 +170,7 @@ class ViewController: UIViewController {
     }
   }
   
+  /// Method to start an example of spliting videos
   @IBAction func splitVideoButtonClickHandler(_ sender: UIButton) {
     if let videoURL1 = Bundle.main.url(forResource: Video1, withExtension: MOVExtension) {
       LoadingView.lockView()
@@ -181,6 +185,26 @@ class ViewController: UIViewController {
         print(error)
         self.createAlertView(message: error.localizedDescription)
       })
+    } else {
+      self.createAlertView(message: self.MissingVideoFiles)
+    }
+  }
+  
+  /// Method to start an example of merging video with audio videos
+  @IBAction func mergeVideoAndAudioButtonClickHandler(_ sender: UIButton) {
+    if let videoURL2 = Bundle.main.url(forResource: Video2, withExtension: MOVExtension), let audioURL2 = Bundle.main.url(forResource: Audio2, withExtension: Mp3Extension) {
+      LoadingView.lockView()
+      
+      VideoGenerator.current.fileName = NewAudioMovieFileName
+      VideoGenerator.current.mergeVideoWithAudio(videoUrl: videoURL2, audioUrl: audioURL2, success: { (url) in
+        LoadingView.unlockView()
+        print(url)
+        self.createAlertView(message: self.FinishMergingVideoWithAudio)
+      }) { (error) in
+        LoadingView.unlockView()
+        print(error)
+        self.createAlertView(message: error.localizedDescription)
+      }
     } else {
       self.createAlertView(message: self.MissingVideoFiles)
     }
@@ -203,6 +227,7 @@ class ViewController: UIViewController {
     mergeVideosButton.layer.cornerRadius = mergeVideosButton.frame.height / 2
     reverseVideoButton.layer.cornerRadius = reverseVideoButton.frame.height / 2
     splitVideoButton.layer.cornerRadius = splitVideoButton.frame.height / 2
+    mergeVideoWithAudioButton.layer.cornerRadius = mergeVideoWithAudioButton.frame.height / 2
   }
   
   override func didReceiveMemoryWarning() {
@@ -222,6 +247,7 @@ class ViewController: UIViewController {
   private let FinishedMergingVideos = "Finished merging videos"
   private let FinishReversingVideo = "Finished reversing video"
   private let FinishSplittingVideo = "Finished splitting video"
+  private let FinishMergingVideoWithAudio = "Finished merging video with audio"
   
   private let SingleMovieFileName = "singleMovie"
   private let MultipleMovieFileName = "multipleVideo"
@@ -229,11 +255,12 @@ class ViewController: UIViewController {
   private let MergedMovieFileName = "mergedMovie"
   private let ReversedMovieFileName = "reversedMovie"
   private let SplitMovieFileName = "splitMovie"
+  private let NewAudioMovieFileName = "newAudioMovie"
   
   /// Resource extensions
   private let MovExtension = "mov"
   private let Mp3Extension = "mp3"
-  private let MOVExtension = "MOV"
+  private let MOVExtension = "mov"
   private let Mp4Extension = "mp4"
   
   /// Resource file names

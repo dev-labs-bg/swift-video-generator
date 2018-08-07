@@ -7,18 +7,13 @@ This library provides an easy way to combine images and audio into a video or me
 ## Features
 - create a video from a **single** image and audio file
 - create a video from **multiple** image/audio pairs
-- create a video from a **singleAudioMultipleImage**
-*New in version 1.0.8* (thanks to [ibhavin](https://github.com/ibhavin))
-
+- create a video from a **single** audio and **multiple** images
+- create a video from a **single** image (no audio) 
+- create a video from **multiple** images (no audio)
 - merge **multiple** videos into one
-- **reverse** a video clip - also reversing the audio
-*New in version 1.1.0* (thanks to [SteliyanH](https://github.com/SteliyanH))
-
-- **split** video in time range
-*New in version 1.1.1*
-
-- create a video from a **single** image (no audio) *New in version 1.1.7*
-- create a video from **multiple** images (no audio) *New in version 1.1.7* 
+- **reverse** a video clip
+- **split** video in time range 
+- merge **single** video with **single** audio
 ---
 ## Supported video formats
 - mov (only when merging videos)
@@ -37,7 +32,12 @@ This library provides an easy way to combine images and audio into a video or me
 -  If you found a bug, open an issue
 -  If you have a feature request, open an issue
 -  If you want to contribute, submit a pull request
+---
 
+## Contributers
+
+- [ibhavin](https://github.com/ibhavin) - version 1.0.8 creating a video form a single audio and multiple images
+- [SteliyanH](https://github.com/SteliyanH) - version 1.1.0 reversing the audio in a video clip
 ---
 ## Installation
 
@@ -257,6 +257,30 @@ if let videoURL1 = Bundle.main.url(forResource: Video1, withExtension: MOVExtens
 You need to provide the file's URL and optionally a new name for the split video file. The **atStartTime** and **andEndTime** properties mark the start and end of the time range in seconds.
 
 [Exmaple video - split video](https://drive.google.com/open?id=1X26SmtYJk8B9ZKOwU8mXDvcDhLuizDkO)
+
+#### Merging a video clip with custom audio
+
+```Swift
+if let videoURL2 = Bundle.main.url(forResource: Video2, withExtension: MOVExtension), let audioURL2 = Bundle.main.url(forResource: Audio2, withExtension: Mp3Extension) {
+  LoadingView.lockView()
+
+  VideoGenerator.current.fileName = NewAudioMovieFileName
+  VideoGenerator.current.mergeVideoWithAudio(videoUrl: videoURL2, audioUrl: audioURL2, success: { (url) in
+    LoadingView.unlockView()
+    print(url)
+    self.createAlertView(message: self.FinishMergingVideoWithAudio)
+  }) { (error) in
+    LoadingView.unlockView()
+    print(error)
+    self.createAlertView(message: error.localizedDescription)
+  }
+} else {
+  self.createAlertView(message: self.MissingVideoFiles)
+}
+```
+You need to provide the video and audio URLs and optionally a new name for the generated video file.
+
+[Exmaple video - merge video with new audio](https://drive.google.com/open?id=1VgvhZXFczViqZ_jcU4DsvXNTjiPJahEU)
 
 ## Already in use in the following apps:
 
