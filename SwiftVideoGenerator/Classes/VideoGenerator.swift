@@ -142,7 +142,7 @@ public class VideoGenerator: NSObject {
         if videoWriter.startWriting() {
           
           /// if it is possible set the start time of the session (current at the begining)
-          videoWriter.startSession(atSourceTime: kCMTimeZero)
+          videoWriter.startSession(atSourceTime: CMTime.zero)
           
           /// check that the pixel buffer pool has been created
           assert(pixelBufferAdaptor.pixelBufferPool != nil)
@@ -407,7 +407,7 @@ public class VideoGenerator: NSObject {
                     
                     var pathString = reversedAudioPath.absoluteString
                     if pathString.contains("file://") {
-                      pathString.removeSubrange(Range(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7)))
+                      pathString.removeSubrange(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7))
                     }
                     
                     if FileManager.default.fileExists(atPath: pathString) {
@@ -536,18 +536,18 @@ public class VideoGenerator: NSObject {
     
     if let aVideoAssetTrack: AVAssetTrack = aVideoAsset.tracks(withMediaType: .video).first, let aAudioAssetTrack: AVAssetTrack = aAudioAsset.tracks(withMediaType: .audio).first {
       do {
-        try mutableCompositionVideoTrack.first?.insertTimeRange(CMTimeRangeMake(kCMTimeZero, aVideoAssetTrack.timeRange.duration), of: aVideoAssetTrack, at: kCMTimeZero)
-        try mutableCompositionAudioTrack.first?.insertTimeRange(CMTimeRangeMake(kCMTimeZero, aVideoAssetTrack.timeRange.duration), of: aAudioAssetTrack, at: kCMTimeZero)
+        try mutableCompositionVideoTrack.first?.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: aVideoAssetTrack.timeRange.duration), of: aVideoAssetTrack, at: CMTime.zero)
+        try mutableCompositionAudioTrack.first?.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: aVideoAssetTrack.timeRange.duration), of: aAudioAssetTrack, at: CMTime.zero)
         
       } catch{
         print(error)
       }
       
-      totalVideoCompositionInstruction.timeRange = CMTimeRangeMake(kCMTimeZero,aVideoAssetTrack.timeRange.duration)
+      totalVideoCompositionInstruction.timeRange = CMTimeRangeMake(start: CMTime.zero,duration: aVideoAssetTrack.timeRange.duration)
     }
     
     let mutableVideoComposition: AVMutableVideoComposition = AVMutableVideoComposition()
-    mutableVideoComposition.frameDuration = CMTimeMake(1, 30)
+    mutableVideoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
     mutableVideoComposition.renderSize = CGSize(width: 1280, height: 720)
     
     if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
@@ -726,7 +726,7 @@ public class VideoGenerator: NSObject {
     
     /// create a video asset from the url and get the video time range
     let videoAsset = AVURLAsset(url: videoUrl, options: nil)
-    let videoTimeRange = CMTimeRange(start: kCMTimeZero, duration: videoAsset.duration)
+    let videoTimeRange = CMTimeRange(start: CMTime.zero, duration: videoAsset.duration)
     
     /// add a video track to the composition
     let videoComposition = mixComposition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)
@@ -734,7 +734,7 @@ public class VideoGenerator: NSObject {
     if let videoTrack = videoAsset.tracks(withMediaType: .video).first {
       do {
         /// try to insert the video time range into the composition
-        try videoComposition?.insertTimeRange(videoTimeRange, of: videoTrack, at: kCMTimeZero)
+        try videoComposition?.insertTimeRange(videoTimeRange, of: videoTrack, at: CMTime.zero)
       } catch {
         failure(error)
       }
@@ -749,7 +749,7 @@ public class VideoGenerator: NSObject {
         let audioDuration = CMTime(seconds: audioDurations[index], preferredTimescale: 1)
         
         let audioAsset = AVURLAsset(url: audioUrl)
-        let audioTimeRange = CMTimeRange(start: kCMTimeZero, duration: maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
+        let audioTimeRange = CMTimeRange(start: CMTime.zero, duration: maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
         
         let shouldAddAudioTrack = maxVideoLengthInSeconds != nil ? audioDuration.seconds > 0 : true
         
@@ -1031,7 +1031,7 @@ public class VideoGenerator: NSObject {
     
     var pathString = url.absoluteString
     if pathString.contains("file://") {
-      pathString.removeSubrange(Range(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7)))
+      pathString.removeSubrange(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7))
     }
     
     if FileManager.default.fileExists(atPath: pathString) {
@@ -1106,7 +1106,7 @@ public class VideoGenerator: NSObject {
           
           var pathString = inputUrl.absoluteString
           if pathString.contains("file://") {
-            pathString.removeSubrange(Range(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7)))
+            pathString.removeSubrange(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7))
           }
           
           if FileManager.default.fileExists(atPath: pathString) {
