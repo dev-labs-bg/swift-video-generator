@@ -829,34 +829,37 @@ public class VideoGenerator: NSObject {
   private func reverseVideoClip(videoURL: URL, andFileName fileName: String?, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
     let media_queue = DispatchQueue(label: "mediaInputQueue", attributes: [])
     
-    media_queue.async {
-      let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
+    let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
+    
+    // An interger property to store the maximum samples in a pass (100 is the optimal number)
+    let numberOfSamplesInPass = 100
+    
+    if !videoURL.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains(videoURL.pathExtension) {
+      let _fileName = fileName == nil ? "reversedClip" : fileName!
       
-      if !videoURL.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains(videoURL.pathExtension) {
-        let _fileName = fileName == nil ? "reversedClip" : fileName!
+      var completeMoviePath: URL?
+      let videoAsset = AVURLAsset(url: videoURL)
+      var videoSize = CGSize.zero
+      
+      if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+        /// create a path to the video file
+        completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(String(describing: _fileName)).m4v")
         
-        var completeMoviePath: URL?
-        let videoAsset: AVAsset! = AVURLAsset(url: videoURL)
-        var videoSize = CGSize.zero
-        
-        if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-          /// create a path to the video file
-          completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(String(describing: _fileName)).m4v")
-          
-          if let completeMoviePath = completeMoviePath {
-            if FileManager.default.fileExists(atPath: completeMoviePath.path) {
-              do {
-                /// delete an old duplicate file
-                try FileManager.default.removeItem(at: completeMoviePath)
-              } catch {
-                failure(error)
-              }
+        if let completeMoviePath = completeMoviePath {
+          if FileManager.default.fileExists(atPath: completeMoviePath.path) {
+            do {
+              /// delete an old duplicate file
+              try FileManager.default.removeItem(at: completeMoviePath)
+            } catch {
+              failure(error)
             }
           }
-        } else {
-          failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
         }
-        
+      } else {
+        failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+      }
+      
+      media_queue.async {
         if let completeMoviePath = completeMoviePath {
           
           if let firstAssetTrack = videoAsset.tracks(withMediaType: .video).first {
@@ -890,27 +893,69 @@ public class VideoGenerator: NSObject {
               ]
               
               let readerOutput = AVAssetReaderTrackOutput(track: assetVideoTrack, outputSettings: sourceBufferAttributes)
+              readerOutput.supportsRandomAccess = true
               
               assert(reader.canAdd(readerOutput))
               reader.add(readerOutput)
               
               if reader.startReading() {
                 
-                var samples: [CMSampleBuffer] = []
+                var timesSamples = [CMTime]()
                 
                 while let sample = readerOutput.copyNextSampleBuffer() {
-                  samples.append(sample)
+                  let presentationTime = CMSampleBufferGetPresentationTimeStamp(sample)
+                  
+                  timesSamples.append(presentationTime)
                 }
                 
-                reader.cancelReading()
-                
-                if samples.count > 1 {
+                if timesSamples.count > 1 {
+                  
+                  let totalPasses = Int(ceil(Double(timesSamples.count) / Double(numberOfSamplesInPass)))
+                  
+                  var passDictionaries = [[String: Any]]()
+                  var passStartTime = timesSamples.first!
+                  var passTimeEnd = timesSamples.first!
+                  let initEventTime = passStartTime
+                  
+                  var initNewPass = false
+                  
+                  for (index, time) in timesSamples.enumerated() {
+                    
+                    passTimeEnd = time
+                    
+                    if index % numberOfSamplesInPass == 0 {
+                      if index > 0 {
+                        let dictionary = [
+                          "passStartTime": passStartTime,
+                          "passEndTime": passTimeEnd
+                        ]
+                        
+                        passDictionaries.append(dictionary)
+                      }
+                      
+                      initNewPass = true
+                    }
+                    
+                    if initNewPass {
+                      passStartTime = passTimeEnd
+                      initNewPass = false
+                    }
+                  }
+                  
+                  if passDictionaries.count < totalPasses || timesSamples.count % numberOfSamplesInPass == 0 {
+                    let dictionary = [
+                      "passStartTime": passStartTime,
+                      "passEndTime": passTimeEnd
+                    ]
+                    
+                    passDictionaries.append(dictionary)
+                  }
                   
                   writer = try AVAssetWriter(outputURL: completeMoviePath, fileType: .m4v)
                   let writerInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
                   writerInput.expectsMediaDataInRealTime = false
                   
-                  let pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: nil)
+                  let pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: nil)
                   
                   assert(writer.canAdd(writerInput))
                   
@@ -918,19 +963,42 @@ public class VideoGenerator: NSObject {
                   
                   if writer.startWriting() {
                     
-                    writer.startSession(atSourceTime: CMSampleBufferGetPresentationTimeStamp(samples[0]))
+                    writer.startSession(atSourceTime: initEventTime)
                     
                     assert(pixelBufferAdaptor.pixelBufferPool != nil)
                     
-                    for (index, sample) in samples.enumerated() {
-                      let presentationTime = CMSampleBufferGetPresentationTimeStamp(sample)
-                      let imageBufferRef: CVPixelBuffer = CMSampleBufferGetImageBuffer(samples[samples.count - index - 1])!
-                      
-                      while (!writerInput.isReadyForMoreMediaData) {
-                        Thread.sleep(forTimeInterval: 0.05)
+                    var frameCount = 0
+                    
+                    for dictionary in passDictionaries.reversed() {
+                      if let passStartTime = dictionary["passStartTime"] as? CMTime, let passEndTime = dictionary["passEndTime"] as? CMTime {
+                        let passDuration = CMTimeSubtract(passEndTime, passStartTime)
+                        let timeRange = CMTimeRangeMake(start: passStartTime, duration: passDuration)
+                        
+                        while readerOutput.copyNextSampleBuffer() != nil { }
+                        
+                        readerOutput.reset(forReadingTimeRanges: [NSValue(timeRange: timeRange)])
+                        
+                        var samples = [CMSampleBuffer]()
+                        
+                        while let sample = readerOutput.copyNextSampleBuffer() {
+                          samples.append(sample)
+                        }
+                        
+                        for (index, _) in samples.enumerated() {
+                          let presentationTime = timesSamples[frameCount]
+                          let imageBufferRef = CMSampleBufferGetImageBuffer(samples[samples.count - index - 1])!
+                          
+                          while (!writerInput.isReadyForMoreMediaData) {
+                            Thread.sleep(forTimeInterval: 0.05)
+                          }
+                          
+                          pixelBufferAdaptor.append(imageBufferRef, withPresentationTime: presentationTime)
+                          
+                          frameCount += 1
+                        }
+                        
+                        samples.removeAll()
                       }
-                      
-                      pixelBufferAdaptor.append(imageBufferRef, withPresentationTime: presentationTime)
                     }
                     
                     writerInput.markAsFinished()
@@ -962,10 +1030,10 @@ public class VideoGenerator: NSObject {
             failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
           }
         }
-      } else {
-        DispatchQueue.main.async {
-          failure(VideoGeneratorError(error: .kUnsupportedVideoType))
-        }
+      }
+    } else {
+      DispatchQueue.main.async {
+        failure(VideoGeneratorError(error: .kUnsupportedVideoType))
       }
     }
   }
