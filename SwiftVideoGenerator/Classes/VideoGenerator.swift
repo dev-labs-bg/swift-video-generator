@@ -606,6 +606,7 @@ public class VideoGenerator: NSObject {
     audioURLs = []
     audioDurations = []
     duration = 0.0
+    var datasImages = [Data?]()
     
     /// guard against missing images or audio
     guard !_images.isEmpty else {
@@ -617,12 +618,25 @@ public class VideoGenerator: NSObject {
     
     if self.type == .single {
       if let _image = self.shouldOptimiseImageForVideo ? _images.first?.resizeImageToVideoSize() : _images.first {
-        self.images = [UIImage].init(repeating: _image, count: 2)
+        self.images = [UIImage](repeating: _image, count: 2)
       }
     } else {
+      
       for _image in _images {
-        self.images.append(_image.scaleImageToSize(newSize: CGSize(width: videoImageWidthForMultipleVideoGeneration, height: videoImageWidthForMultipleVideoGeneration)))
+        autoreleasepool {
+          if let imageData = _image.scaleImageToSize(newSize: CGSize(width: videoImageWidthForMultipleVideoGeneration, height: videoImageWidthForMultipleVideoGeneration))?.pngData() {
+            datasImages.append(imageData)
+          }
+        }
       }
+      
+      datasImages.forEach {
+        if let imageData = $0, let image = UIImage(data: imageData, scale: UIScreen.main.scale) {
+          self.images.append(image)
+        }
+      }
+      
+      datasImages.removeAll()
     }
     
     switch type! {
@@ -679,7 +693,7 @@ public class VideoGenerator: NSObject {
     }
     
     if let _scaleWidth = scaleWidth {
-      images = images.map({ $0.scaleImageToSize(newSize: CGSize(width: _scaleWidth, height: _scaleWidth)) })
+      images = images.compactMap({ $0.scaleImageToSize(newSize: CGSize(width: _scaleWidth, height: _scaleWidth)) })
     }
   }
   
@@ -1213,7 +1227,7 @@ public class VideoGenerator: NSObject {
       // check posibilitty of creating a pixel buffer pool
       if let pixelBufferPool = pixelBufferAdaptor.pixelBufferPool {
         
-        let pixelBufferPointer = UnsafeMutablePointer<CVPixelBuffer?>.allocate(capacity: 1)
+        let pixelBufferPointer = UnsafeMutablePointer<CVPixelBuffer?>.allocate(capacity: MemoryLayout<CVPixelBuffer?>.size)
         let status: CVReturn = CVPixelBufferPoolCreatePixelBuffer(
           kCFAllocatorDefault,
           pixelBufferPool,
@@ -1289,7 +1303,7 @@ public class VideoGenerator: NSObject {
       context.setFillColor(type == .single ? UIColor.black.cgColor : videoBackgroundColor.cgColor)
       context.fill(CGRect(x: 0.0, y: 0.0, width: CGFloat(context.width), height: CGFloat(context.height)))
       
-      context.concatenate(CGAffineTransform.identity)
+      context.concatenate(.identity)
       
       // draw the image in the context
       

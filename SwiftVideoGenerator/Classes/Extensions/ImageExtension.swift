@@ -14,7 +14,7 @@ extension UIImage {
   ///
   /// - Parameter newSize: the new size for the image
   /// - Returns: the resized image
-  func scaleImageToSize(newSize: CGSize) -> UIImage {
+  func scaleImageToSize(newSize: CGSize) -> UIImage? {
     
     var scaledImageRect: CGRect = CGRect.zero
     
@@ -29,11 +29,14 @@ extension UIImage {
     scaledImageRect.origin.y = (newSize.height - scaledImageRect.size.height) / 2.0
     
     UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
-    draw(in: scaledImageRect)
-    let scaledImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-    UIGraphicsEndImageContext()
+    if UIGraphicsGetCurrentContext() != nil {
+      let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+      UIGraphicsEndImageContext()
+      
+      return scaledImage
+    }
     
-    return scaledImage
+    return nil
   }
   
   /// Method to get a size for the image appropriate for video (dividing by 16 without overlapping 1200)
