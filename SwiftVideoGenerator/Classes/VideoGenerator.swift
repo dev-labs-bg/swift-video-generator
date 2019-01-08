@@ -377,74 +377,14 @@ public class VideoGenerator: NSObject {
   ///   - sound: indicates if the sound should be kept and reversed as well
   ///   - success: completion block on success - returns the audio URL
   ///   - failure: completion block on failure - returns the error that caused the failure
-  open func reverseVideo(fromVideo videoURL: URL, andFileName fileName: String, withSound sound: Bool, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
-    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      let extractedAudioPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("audio.m4a")
-      let sourceAsset = AVURLAsset(url: videoURL, options: nil)
-      self.fileName = fileName
-      
-      if FileManager.default.fileExists(atPath: extractedAudioPath.absoluteString) {
-        do {
-          try FileManager.default.removeItem(at: extractedAudioPath)
-        } catch {
-          failure(error)
-        }
-      }
-      
-      self.reverseVideoClip(videoURL: videoURL, andFileName: fileName, success: { (reversedVideo) in
-        if sound {
-          sourceAsset.writeAudioTrackToURL(URL: extractedAudioPath, completion: { (extracted, error) in
-            if extracted {
-              let convertedAudioPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("converted.aiff")
-              let reversedAudioPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("reversedAudio.mp3")
-              self.audioURLs = [reversedAudioPath]
-              let audioAsset = AVURLAsset(url: reversedAudioPath)
-              self.audioDurations = [audioAsset.duration.seconds]
-              
-              self.convertAudio(extractedAudioPath, to: convertedAudioPath, success: { (convertedAudio) in
-                self.reverseAudio(inputUrl: convertedAudioPath, outputUrl: reversedAudioPath, success: { (reversedAudio) in
-                  self.mergeAudio(withVideoURL: reversedVideo, success: { (completeMoviePath) in
-                    
-                    var pathString = reversedAudioPath.absoluteString
-                    if pathString.contains("file://") {
-                      pathString.removeSubrange(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7))
-                    }
-                    
-                    if FileManager.default.fileExists(atPath: pathString) {
-                      do {
-                        try FileManager.default.removeItem(at: reversedAudioPath)
-                      } catch {
-                        failure(error)
-                      }
-                    }
-                    
-                    success(completeMoviePath)
-                  }, failure: { (error) in
-                    failure(error)
-                  })
-                  
-                }, failure: { (error) in
-                  failure(error)
-                })
-                
-              }, failure: { (error) in
-                failure(error)
-              })
-            }
-            
-            if error != nil {
-              failure(error!)
-            }
-          })
-        } else {
-          success(reversedVideo)
-        }
-      }, failure: { (error) in
-        failure(error)
-      })
-    } else {
-      failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
-    }
+  open func reverseVideo(fromVideo videoURL: URL, andFileName fileName: String, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+    self.fileName = fileName
+    
+    self.reverseVideoClip(videoURL: videoURL, andFileName: fileName, success: { (reversedVideo) in
+      success(reversedVideo)
+    }, failure: { (error) in
+      failure(error)
+    })
   }
   
   // MARK: --------------------------------------------------------------- Split video -----------------------------------------------------------------------

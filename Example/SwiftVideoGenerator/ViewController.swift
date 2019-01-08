@@ -156,7 +156,7 @@ class ViewController: UIViewController {
   @IBAction func reverseVideoButtonClickHandler(_ sender: UIButton) {
     if let videoURL1 = Bundle.main.url(forResource: Video2, withExtension: MovExtension) {
       LoadingView.lockView()
-      VideoGenerator.current.reverseVideo(fromVideo: videoURL1, andFileName: ReversedMovieFileName, withSound: false, success: { (videoURL) in
+      VideoGenerator.current.reverseVideo(fromVideo: videoURL1, andFileName: ReversedMovieFileName, success: { (videoURL) in
         LoadingView.unlockView()
         self.createAlertView(message: self.FinishReversingVideo)
         print(videoURL)
