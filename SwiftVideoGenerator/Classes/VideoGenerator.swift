@@ -815,29 +815,23 @@ public class VideoGenerator: NSObject {
       
       media_queue.async {
         if let completeMoviePath = completeMoviePath {
+          let videoTrack = videoAsset.tracks(withMediaType: .video).first
           
-          if let firstAssetTrack = videoAsset.tracks(withMediaType: .video).first {
-            let orientation = videoAsset.videoOrientation()
-            
-            if orientation.orientation == .portrait {
-              videoSize = CGSize(width: firstAssetTrack.naturalSize.height, height: firstAssetTrack.naturalSize.width)
-            } else {
-              videoSize = firstAssetTrack.naturalSize
-            }
+          if let firstAssetTrack = videoTrack {
+            videoSize = firstAssetTrack.naturalSize
           }
           
           /// create setting for the pixel buffer
           
           let sourceBufferAttributes: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
-          
           var writer: AVAssetWriter!
           
           do {
             let reader = try AVAssetReader(asset: videoAsset)
             
             if let assetVideoTrack = videoAsset.tracks(withMediaType: .video).first {
-              
               let videoCompositionProps = [AVVideoAverageBitRateKey: assetVideoTrack.estimatedDataRate]
+              
               /// create the basic video settings
               let videoSettings: [String : Any] = [
                 AVVideoCodecKey  : AVVideoCodecH264,
@@ -853,7 +847,6 @@ public class VideoGenerator: NSObject {
               reader.add(readerOutput)
               
               if reader.startReading() {
-                
                 var timesSamples = [CMTime]()
                 
                 while let sample = readerOutput.copyNextSampleBuffer() {
@@ -863,18 +856,15 @@ public class VideoGenerator: NSObject {
                 }
                 
                 if timesSamples.count > 1 {
-                  
                   let totalPasses = Int(ceil(Double(timesSamples.count) / Double(numberOfSamplesInPass)))
                   
                   var passDictionaries = [[String: Any]]()
                   var passStartTime = timesSamples.first!
                   var passTimeEnd = timesSamples.first!
                   let initEventTime = passStartTime
-                  
                   var initNewPass = false
                   
                   for (index, time) in timesSamples.enumerated() {
-                    
                     passTimeEnd = time
                     
                     if index % numberOfSamplesInPass == 0 {
@@ -908,6 +898,7 @@ public class VideoGenerator: NSObject {
                   writer = try AVAssetWriter(outputURL: completeMoviePath, fileType: .m4v)
                   let writerInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
                   writerInput.expectsMediaDataInRealTime = false
+                  writerInput.transform = videoTrack?.preferredTransform ?? CGAffineTransform.identity
                   
                   let pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: nil)
                   

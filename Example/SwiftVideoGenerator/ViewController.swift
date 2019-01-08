@@ -288,6 +288,8 @@ class ViewController: UIViewController {
     messageAlertController.addAction(UIAlertAction(title: OK, style: .default, handler: { (action: UIAlertAction!) in
       messageAlertController.dismiss(animated: true, completion: nil)
     }))
-    present(messageAlertController, animated: true, completion: nil)
+    DispatchQueue.main.async { [weak self] in
+      self?.present(messageAlertController, animated: true, completion: nil)
+    }
   }
 }
