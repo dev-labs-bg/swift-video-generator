@@ -109,7 +109,7 @@ With the generator type **.single** you can create a video from a single pair of
 
 If you leave the **audio** array empty and implement **videoDurationInSeconds**, the generated video contains only the image without audio.
 
-[Exmaple video - single type generation](https://drive.google.com/open?id=0B_VCX_bQMRqPYVprSnQzdERLTkk)
+[Exmaple video - single type generation](https://drive.google.com/open?id=1vr19Zm2NjpeFbvGQLqJB7ew2lq4ExrOP)
 
 The **scaleWidth** property scales the image to a desired size. Only used in a **.single** type of video.
 
@@ -158,7 +158,7 @@ The **fileName** and **videoBackgroundColor** properties are used in the same wa
 
 The **videoImageWidthForMultipleVideoGeneration** property is used to set a custom width to which the images will be scaled before they are merged with the audio files and generated as a video. The default value is 800.
 
-[Exmaple video - multiple type generation video](https://drive.google.com/open?id=0B_VCX_bQMRqPbTdNWlQ3X3E0YUU)
+[Exmaple video - multiple type generation video](https://drive.google.com/open?id=1bCoGe2LF6n5Jn9jSgNvj_UbZHv4g9GvG)
 
 #### Create a video from multiple images and a single audio
 
@@ -210,7 +210,7 @@ You can provide URLs both for local resource files as well as those stored on th
 
 As of right now the merged video keeps all of the **preferredTransformations** (like mirroring or orientation) of the last provided video asset. More to come in future feature implementations.
 
-[Exmaple video - merged video](https://drive.google.com/open?id=0B_VCX_bQMRqPRWJrMEt2NDA1Mms)
+[Exmaple video - merged video](https://drive.google.com/open?id=1QuwG15ksop8en_RlPgwwMKE-Nv6r7cic)
 
 #### Reversing a video clip
 
@@ -230,9 +230,9 @@ if let videoURL1 = Bundle.main.url(forResource: Video2, withExtension: MovExtens
   self.createAlertView(message: self.MissingVideoFiles)
 }
 ```
-You need to provide the file's URL and optionally a new name for the reversed video file. The **withSound** property controls the audio behaviour: if **true** the audio is kept and reversed as well.
+You need to provide the file's URL and optionally a new name for the reversed video file. The finished reverse video is without audio.
 
-[Exmaple video - reversed video](https://drive.google.com/open?id=1QXTxEMGJezuPVeuB_fqH8nHVKSG7vH_r)
+[Exmaple video - reversed video](https://drive.google.com/open?id=1vz5wzXyBti0FYEhJQqgbP4OQL-_xzuvX)
 
 #### Splitting a video clip
 
