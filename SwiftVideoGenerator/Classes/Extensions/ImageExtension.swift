@@ -30,6 +30,7 @@ extension UIImage {
     
     UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
     if UIGraphicsGetCurrentContext() != nil {
+      draw(in: scaledImageRect)
       let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
       UIGraphicsEndImageContext()
       
