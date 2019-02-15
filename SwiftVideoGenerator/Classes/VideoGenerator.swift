@@ -85,20 +85,7 @@ public class VideoGenerator: NSObject {
     let inputSize = VideoGenerator.current.minSize
     let outputSize = VideoGenerator.current.minSize
     
-    /// check if the documents directory can be accessed
-    if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      
-      /// generate a video output url
-      let videoOutputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("test.m4v")
-      
-      do {
-        if FileManager.default.fileExists(atPath: videoOutputURL.path) {
-          
-          /// try to delete the old generated video
-          try FileManager.default.removeItem(at: videoOutputURL)
-        }
-      } catch { }
-      
+    getTempVideoFileUrl { (videoOutputURL) in
       do {
         /// try to create an asset writer for videos pointing to the video url
         try VideoGenerator.current.videoWriter = AVAssetWriter(outputURL: videoOutputURL, fileType: AVFileType.mp4)
@@ -232,7 +219,7 @@ public class VideoGenerator: NSObject {
                     }
                     
                     try FileManager.default.moveItem(at: videoOutputURL, to: newPath)
-                  } catch let error {
+                  } catch {
                     failure(error)
                   }
                   
@@ -258,8 +245,6 @@ public class VideoGenerator: NSObject {
       } else {
         failure(VideoGeneratorError(error: .kFailedToStartAssetWriterError))
       }
-    } else {
-      failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
     }
   }
   
@@ -415,7 +400,9 @@ public class VideoGenerator: NSObject {
           
           try FileManager.default.removeItem(at: outputURL)
         }
-      } catch { }
+      } catch {
+        print(error.localizedDescription)
+      }
       
       if let exportSession = AVAssetExportSession(asset: sourceAsset, presetName: AVAssetExportPresetHighestQuality) {
         exportSession.outputURL = outputURL
@@ -498,7 +485,9 @@ public class VideoGenerator: NSObject {
           
           try FileManager.default.removeItem(at: outputURL)
         }
-      } catch { }
+      } catch {
+        print(error.localizedDescription)
+      }
       
       if let exportSession = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) {
         exportSession.outputURL = outputURL
@@ -722,48 +711,29 @@ public class VideoGenerator: NSObject {
       
       /// check if the documents folder is available
       if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+        getTempVideoFileUrl { (_) in }
         
         /// create a path to the video file
         let videoOutputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(fileName).m4v")
-        
-        do {
-          /// delete an old duplicate file
-          try FileManager.default.removeItem(at: videoOutputURL)
-        } catch { }
-        
-        /// try to start an export session and set the path and file type
-        if let exportSession = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) {
-          exportSession.outputURL = videoOutputURL
-          exportSession.outputFileType = AVFileType.mp4
-          exportSession.shouldOptimizeForNetworkUse = true
-          
-          /// try to export the file and handle the status cases
-          exportSession.exportAsynchronously(completionHandler: {
-            switch exportSession.status {
-            case .failed:
-              if let _error = exportSession.error {
-                failure(_error)
-              }
-              
-            case .cancelled:
-              if let _error = exportSession.error {
-                failure(_error)
-              }
-              
-            default:
-              let testMovieOutPutPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("test.m4v")
-              
-              do {
-                if FileManager.default.fileExists(atPath: testMovieOutPutPath.absoluteString) {
-                  try FileManager.default.removeItem(at: testMovieOutPutPath)
+        deleteFile(pathURL: videoOutputURL) {
+          if let exportSession = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) {
+            exportSession.outputURL = videoOutputURL
+            exportSession.outputFileType = AVFileType.mp4
+            exportSession.shouldOptimizeForNetworkUse = true
+            
+            /// try to export the file and handle the status cases
+            exportSession.exportAsynchronously(completionHandler: {
+              if exportSession.status == .failed || exportSession.status == .cancelled {
+                if let _error = exportSession.error {
+                  failure(_error)
                 }
-              } catch { }
-              
-              success(videoOutputURL)
-            }
-          })
-        } else {
-          failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
+              } else {
+                success(videoOutputURL)
+              }
+            })
+          } else {
+            failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
+          }
         }
       } else {
         failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
@@ -1042,7 +1012,7 @@ public class VideoGenerator: NSObject {
     error = ExtAudioFileDispose(destinationFile!)
     error = ExtAudioFileDispose(sourceFile!)
     
-    var pathString = url.absoluteString
+    var pathString = url.path
     if pathString.contains("file://") {
       pathString.removeSubrange(pathString.startIndex..<pathString.index(pathString.startIndex, offsetBy: 7))
     }
@@ -1050,7 +1020,9 @@ public class VideoGenerator: NSObject {
     if FileManager.default.fileExists(atPath: pathString) {
       do {
         try FileManager.default.removeItem(at: url)
-      } catch { }
+      } catch {
+        print(error.localizedDescription)
+      }
     }
     
     if error == noErr {
@@ -1244,6 +1216,45 @@ public class VideoGenerator: NSObject {
       
       // unlock the buffer memory
       CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
+    }
+  }
+  
+  /// Private method to delete the temp video file
+  ///
+  /// - Returns: the temp file url
+  private func getTempVideoFileUrl(completion: @escaping (URL) -> ()) {
+    DispatchQueue.main.async {
+      if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+        let testOutputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("test.m4v")
+        do {
+          if FileManager.default.fileExists(atPath: testOutputURL.path) {
+            try FileManager.default.removeItem(at: testOutputURL)
+          }
+        } catch {
+          print(error.localizedDescription)
+        }
+        
+        completion(testOutputURL)
+      }
+    }
+  }
+  
+  /// Private method to delete a file
+  ///
+  /// - Parameters:
+  ///   - pathURL: the file's path
+  ///   - completion: a blick to handle completion
+  private func deleteFile(pathURL: URL, completion: @escaping () -> ()) {
+    DispatchQueue.main.async {
+      do {
+        if FileManager.default.fileExists(atPath: pathURL.path) {
+          try FileManager.default.removeItem(at: pathURL)
+        }
+      } catch {
+        print(error.localizedDescription)
+      }
+      
+      completion()
     }
   }
 }
