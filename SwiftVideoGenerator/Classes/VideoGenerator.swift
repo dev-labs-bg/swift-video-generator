@@ -213,8 +213,10 @@ public class VideoGenerator: NSObject {
                   
                   do {
                     let fileURLs = try FileManager.default.contentsOfDirectory(at: documentDirectory, includingPropertiesForKeys: nil)
+
+                    let newFileURLs = fileURLs.map { $0.standardizedFileURL }
                     
-                    if fileURLs.contains(newPath) {
+                    if newFileURLs.contains(newPath) {
                       try FileManager.default.removeItem(at: newPath)
                     }
                     
