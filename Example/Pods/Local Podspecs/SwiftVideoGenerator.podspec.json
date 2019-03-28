@@ -1,6 +1,6 @@
 {
   "name": "SwiftVideoGenerator",
-  "version": "1.1.0",
+  "version": "1.2.4",
   "summary": "Easy way to combine images and audio into a video or merge multiple videos into one",
   "homepage": "https://github.com/dev-labs-bg/swift-video-generator",
   "license": {
@@ -12,11 +12,11 @@
   },
   "source": {
     "git": "https://github.com/dev-labs-bg/swift-video-generator.git",
-    "tag": "1.1.0"
+    "tag": "1.2.4"
   },
   "social_media_url": "https://twitter.com/devlabsbg",
   "platforms": {
-    "ios": "9.0"
+    "ios": "10.0"
   },
   "source_files": "SwiftVideoGenerator/Classes/**/*"
 }

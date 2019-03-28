@@ -102,7 +102,7 @@ public class VideoGenerator: NSObject {
           AVVideoCodecKey  : AVVideoCodecH264 as AnyObject,
           AVVideoWidthKey  : outputSize.width as AnyObject,
           AVVideoHeightKey : outputSize.height as AnyObject,
-          ]
+        ]
         
         /// create a video writter input
         let videoWriterInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: videoSettings)
@@ -207,22 +207,11 @@ public class VideoGenerator: NSObject {
             // the completion is made with a completion handler which will return the url of the generated video or an error
             videoWriter.finishWriting { () -> Void in
               if self.audioURLs.isEmpty {
-                if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-                  let documentDirectory = URL(fileURLWithPath: path)
-                  let newPath = documentDirectory.appendingPathComponent("\(self.fileName).m4v")
-                  
-                  do {
-                    let fileURLs = try FileManager.default.contentsOfDirectory(at: documentDirectory, includingPropertiesForKeys: nil)
-                    
-                    if fileURLs.contains(newPath) {
-                      try FileManager.default.removeItem(at: newPath)
-                    }
-                    
+                if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+                  let newPath = URL(fileURLWithPath: documentsPath + "\(self.fileName).m4v")
+                  self.deleteFile(pathURL: newPath, completion: {
                     try FileManager.default.moveItem(at: videoOutputURL, to: newPath)
-                  } catch {
-                    failure(error)
-                  }
-                  
+                  })
                   print("finished")
                   success(newPath)
                 }
@@ -1244,7 +1233,7 @@ public class VideoGenerator: NSObject {
   /// - Parameters:
   ///   - pathURL: the file's path
   ///   - completion: a blick to handle completion
-  private func deleteFile(pathURL: URL, completion: @escaping () -> ()) {
+  private func deleteFile(pathURL: URL, completion: @escaping () throws -> ()) {
     DispatchQueue.main.async {
       do {
         if FileManager.default.fileExists(atPath: pathURL.path) {
@@ -1254,7 +1243,11 @@ public class VideoGenerator: NSObject {
         print(error.localizedDescription)
       }
       
-      completion()
+      do {
+        try completion()
+      } catch {
+        print(error.localizedDescription)
+      }
     }
   }
 }

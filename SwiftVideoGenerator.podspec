@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'SwiftVideoGenerator'
-  s.version          = '1.2.4'
+  s.version          = '1.2.5'
   s.summary          = 'Easy way to combine images and audio into a video or merge multiple videos into one'
   s.homepage         = 'https://github.com/dev-labs-bg/swift-video-generator'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
