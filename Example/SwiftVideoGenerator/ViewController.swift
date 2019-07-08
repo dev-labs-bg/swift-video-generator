@@ -176,7 +176,7 @@ class ViewController: UIViewController {
       LoadingView.lockView()
       
       VideoGenerator.current.fileName = SplitMovieFileName
-      VideoGenerator.current.splitVideo(withURL: videoURL1, atStartTime: 10, andEndTime: 40, success: { (url) in
+      VideoGenerator.current.splitVideo(withURL: videoURL1, atStartTime: 14, andEndTime: 24, success: { (url) in
         LoadingView.unlockView()
         print(url)
         self.createAlertView(message: self.FinishSplittingVideo)

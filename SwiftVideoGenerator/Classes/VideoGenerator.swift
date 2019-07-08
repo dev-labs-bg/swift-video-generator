@@ -213,7 +213,7 @@ public class VideoGenerator: NSObject {
               videoWriter.finishWriting { () -> Void in
                 if self?.audioURLs.isEmpty == true {
                   if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-                    let newPath = URL(fileURLWithPath: documentsPath + "\(self?.fileName ?? "").m4v")
+                    let newPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(self?.fileName ?? "").m4v")
                     self?.deleteFile(pathURL: newPath, completion: {
                       try FileManager.default.moveItem(at: videoOutputURL, to: newPath)
                     })
@@ -801,7 +801,7 @@ public class VideoGenerator: NSObject {
         
         if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
           /// create a path to the video file
-          completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(String(describing: _fileName)).m4v")
+          completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(_fileName).m4v")
           
           if let completeMoviePath = completeMoviePath {
             if FileManager.default.fileExists(atPath: completeMoviePath.path) {
