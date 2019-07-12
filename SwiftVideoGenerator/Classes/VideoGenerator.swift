@@ -331,7 +331,7 @@ public class VideoGenerator: NSObject {
         }
         
         /// try to start an export session and set the path and file type
-        if let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) {
+        if let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough) {
           exportSession.outputURL = completeMoviePath
           exportSession.outputFileType = AVFileType.mp4
           exportSession.shouldOptimizeForNetworkUse = true
