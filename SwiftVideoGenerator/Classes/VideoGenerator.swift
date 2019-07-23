@@ -38,25 +38,28 @@ public class VideoGenerator: NSObject {
   // MARK: --------------------------------------------------------------- Public properties ---------------------------------------------------------------
   
   /// public property to set the name of the finished video file
-  open var fileName = "movie"
+  public static var fileName = "movie"
   
   /// public property to set a multiple type video's background color
-  open var videoBackgroundColor: UIColor = UIColor.black
+  public static var videoBackgroundColor: UIColor = UIColor.black
+  
+  /// public property to set the AVAssetExportPreset 
+  public static var presetName: String?
   
   /// public property to set a width to scale the image to before generating a video (used only with .single type video generation; preferred scale: 800/1200)
-  open var scaleWidth: CGFloat?
+  public static var scaleWidth: CGFloat?
   
   /// public property to indicate if the images fed into the generator should be resized to appropriate video ratio 1200 x 1920
-  open var shouldOptimiseImageForVideo: Bool = true
+  public static var shouldOptimiseImageForVideo: Bool = true
   
   /// public property to set the maximum length of a video
-  open var maxVideoLengthInSeconds: Double?
+  public static var maxVideoLengthInSeconds: Double?
   
   /// public property to set a width to which to resize the images for multiple video generation. Default value is 800
-  open var videoImageWidthForMultipleVideoGeneration = 800
+  public static var videoImageWidthForMultipleVideoGeneration = 800
   
   /// public property to set the video duration when there is no audio
-  open var videoDurationInSeconds: Double = 0 {
+  public static var videoDurationInSeconds: Double = 0 {
     didSet {
       videoDurationInSeconds = Double(CMTime(seconds: videoDurationInSeconds, preferredTimescale: 1).seconds)
     }
@@ -205,7 +208,7 @@ public class VideoGenerator: NSObject {
               // after all images are appended the writting shoul be marked as finished
               videoWriterInput.markAsFinished()
               
-              if let _maxLength = self?.maxVideoLengthInSeconds {
+              if let _maxLength = VideoGenerator.maxVideoLengthInSeconds {
                 videoWriter.endSession(atSourceTime: CMTime(seconds: _maxLength, preferredTimescale: 1))
               }
               
@@ -213,7 +216,7 @@ public class VideoGenerator: NSObject {
               videoWriter.finishWriting { () -> Void in
                 if self?.audioURLs.isEmpty == true {
                   if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-                    let newPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(self?.fileName ?? "").m4v")
+                    let newPath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(VideoGenerator.fileName).m4v")
                     self?.deleteFile(pathURL: newPath, completion: {
                       try FileManager.default.moveItem(at: videoOutputURL, to: newPath)
                     })
@@ -258,10 +261,9 @@ public class VideoGenerator: NSObject {
   ///   - fileName: the name of the finished merged video file
   ///   - success: success block - returns the finished video url path
   ///   - failure: failure block - returns the error that caused the failure
-  open class func mergeMovies(videoURLs: [URL], andFileName fileName: String, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  open class func mergeMovies(videoURLs: [URL], success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
     let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
     let _videoURLs = videoURLs.filter({ !$0.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains($0.pathExtension.lowercased()) })
-    let _fileName = fileName == "" ? "mergedMovie" : fileName
     
     /// guard against missing URLs
     guard !_videoURLs.isEmpty else {
@@ -282,7 +284,7 @@ public class VideoGenerator: NSObject {
     
     if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
       /// create a path to the video file
-      completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(_fileName).m4v")
+      completeMoviePath = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(VideoGenerator.fileName).m4v")
       
       if let completeMoviePath = completeMoviePath {
         if FileManager.default.fileExists(atPath: completeMoviePath.path) {
@@ -331,7 +333,7 @@ public class VideoGenerator: NSObject {
         }
         
         /// try to start an export session and set the path and file type
-        if let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) {
+        if let exportSession = AVAssetExportSession(asset: composition, presetName: presetName ?? AVAssetExportPresetHighestQuality) {
           exportSession.outputURL = completeMoviePath
           exportSession.outputFileType = AVFileType.mp4
           exportSession.shouldOptimizeForNetworkUse = true
@@ -379,10 +381,8 @@ public class VideoGenerator: NSObject {
   ///   - sound: indicates if the sound should be kept and reversed as well
   ///   - success: completion block on success - returns the audio URL
   ///   - failure: completion block on failure - returns the error that caused the failure
-  open func reverseVideo(fromVideo videoURL: URL, andFileName fileName: String, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
-    self.fileName = fileName
-    
-    self.reverseVideoClip(videoURL: videoURL, andFileName: fileName, success: { (reversedVideo) in
+  open func reverseVideo(fromVideo videoURL: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+    self.reverseVideoClip(videoURL: videoURL, andFileName: VideoGenerator.fileName, success: { (reversedVideo) in
       success(reversedVideo)
     }, failure: { (error) in
       failure(error)
@@ -410,7 +410,7 @@ public class VideoGenerator: NSObject {
     }
     
     if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(fileName).m4v")
+      let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(VideoGenerator.fileName).m4v")
       let sourceAsset = AVURLAsset(url: videoURL, options: nil)
       let length =  CMTime(seconds: sourceAsset.duration.seconds, preferredTimescale: sourceAsset.duration.timescale)
       
@@ -422,7 +422,7 @@ public class VideoGenerator: NSObject {
         print(error.localizedDescription)
       }
       
-      if let exportSession = AVAssetExportSession(asset: sourceAsset, presetName: AVAssetExportPresetHighestQuality) {
+      if let exportSession = AVAssetExportSession(asset: sourceAsset, presetName: VideoGenerator.presetName ?? AVAssetExportPresetHighestQuality) {
         exportSession.outputURL = outputURL
         exportSession.outputFileType = AVFileType.mp4
         exportSession.shouldOptimizeForNetworkUse = true
@@ -498,7 +498,7 @@ public class VideoGenerator: NSObject {
     mutableVideoComposition.renderSize = CGSize(width: 1280, height: 720)
     
     if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(fileName).m4v")
+      let outputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(VideoGenerator.fileName).m4v")
       
       do {
         if FileManager.default.fileExists(atPath: outputURL.path) {
@@ -508,7 +508,7 @@ public class VideoGenerator: NSObject {
         print(error.localizedDescription)
       }
       
-      if let exportSession = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) {
+      if let exportSession = AVAssetExportSession(asset: mixComposition, presetName: VideoGenerator.presetName ?? AVAssetExportPresetHighestQuality) {
         exportSession.outputURL = outputURL
         exportSession.outputFileType = AVFileType.mp4
         exportSession.shouldOptimizeForNetworkUse = true
@@ -567,14 +567,14 @@ public class VideoGenerator: NSObject {
     audioURLs = _audios
     
     if self.type == .single {
-      if let _image = self.shouldOptimiseImageForVideo ? _images.first?.resizeImageToVideoSize() : _images.first {
+      if let _image = VideoGenerator.shouldOptimiseImageForVideo ? _images.first?.resizeImageToVideoSize() : _images.first {
         self.images = [UIImage](repeating: _image, count: 2)
       }
     } else {
       
       for _image in _images {
         autoreleasepool {
-          if let imageData = _image.scaleImageToSize(newSize: CGSize(width: videoImageWidthForMultipleVideoGeneration, height: videoImageWidthForMultipleVideoGeneration))?.pngData() {
+          if let imageData = _image.scaleImageToSize(newSize: CGSize(width: VideoGenerator.videoImageWidthForMultipleVideoGeneration, height: VideoGenerator.videoImageWidthForMultipleVideoGeneration))?.pngData() {
             datasImages.append(imageData)
           }
         }
@@ -618,7 +618,7 @@ public class VideoGenerator: NSObject {
     
     /// calculate the full video duration
     for audio in audioAssets {
-      if let _maxLength = maxVideoLengthInSeconds {
+      if let _maxLength = VideoGenerator.maxVideoLengthInSeconds {
         _duration += round(Double(CMTimeGetSeconds(audio.duration)))
         
         if _duration < _maxLength {
@@ -636,13 +636,13 @@ public class VideoGenerator: NSObject {
     }
     
     let minVideoDuration = Double(CMTime(seconds: minSingleVideoDuration, preferredTimescale: 1).seconds)
-    duration = max((audioURLs.isEmpty ? videoDurationInSeconds : _duration), minVideoDuration)
+    duration = max((audioURLs.isEmpty ? VideoGenerator.videoDurationInSeconds : _duration), minVideoDuration)
     
     if audioURLs.isEmpty {
       audioDurations = [Double](repeating: duration / Double(images.count), count: images.count)
     }
     
-    if let _scaleWidth = scaleWidth {
+    if let _scaleWidth = VideoGenerator.scaleWidth {
       images = images.compactMap({ $0.scaleImageToSize(newSize: CGSize(width: _scaleWidth, height: _scaleWidth)) })
     }
   }
@@ -715,9 +715,9 @@ public class VideoGenerator: NSObject {
           let audioDuration = CMTime(seconds: self?.audioDurations[index] ?? 0.0, preferredTimescale: 1)
           
           let audioAsset = AVURLAsset(url: audioUrl)
-          let audioTimeRange = CMTimeRange(start: CMTime.zero, duration: self?.maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
+          let audioTimeRange = CMTimeRange(start: CMTime.zero, duration: VideoGenerator.maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
           
-          let shouldAddAudioTrack = self?.maxVideoLengthInSeconds != nil ? audioDuration.seconds > 0 : true
+          let shouldAddAudioTrack = VideoGenerator.maxVideoLengthInSeconds != nil ? audioDuration.seconds > 0 : true
           
           if shouldAddAudioTrack {
             if let audioTrack = audioAsset.tracks(withMediaType: .audio).first {
@@ -729,7 +729,7 @@ public class VideoGenerator: NSObject {
             }
           }
           
-          duration = duration + (self?.maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
+          duration = duration + (VideoGenerator.maxVideoLengthInSeconds != nil ? audioDuration : audioAsset.duration)
         }
         
         /// check if the documents folder is available
@@ -737,9 +737,9 @@ public class VideoGenerator: NSObject {
           self?.getTempVideoFileUrl { (_) in }
           
           /// create a path to the video file
-          let videoOutputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(self?.fileName ?? "").m4v")
+          let videoOutputURL = URL(fileURLWithPath: documentsPath).appendingPathComponent("\(VideoGenerator.fileName).m4v")
           self?.deleteFile(pathURL: videoOutputURL) {
-            if let exportSession = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) {
+            if let exportSession = AVAssetExportSession(asset: mixComposition, presetName: VideoGenerator.presetName ?? AVAssetExportPresetHighestQuality) {
               exportSession.outputURL = videoOutputURL
               exportSession.outputFileType = AVFileType.mp4
               exportSession.shouldOptimizeForNetworkUse = true
@@ -1237,7 +1237,7 @@ public class VideoGenerator: NSObject {
       context.clear(CGRect(x: 0.0, y: 0.0, width: imageWidth, height: imageHeight))
       
       // set the context's background color
-      context.setFillColor(type == .single ? UIColor.black.cgColor : videoBackgroundColor.cgColor)
+      context.setFillColor(type == .single ? UIColor.black.cgColor : VideoGenerator.videoBackgroundColor.cgColor)
       context.fill(CGRect(x: 0.0, y: 0.0, width: CGFloat(context.width), height: CGFloat(context.height)))
       
       context.concatenate(.identity)

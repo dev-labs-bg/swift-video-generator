@@ -86,9 +86,8 @@ For both the **.single** and **.multiple** types of video generation the output 
 if let audioURL4 = Bundle.main.url(forResource: Audio4 , withExtension: Mp3Extension) {
   LoadingView.lockView()
 
-  VideoGenerator.current.fileName = SingleMovieFileName
-  VideoGenerator.current.maxVideoLengthInSeconds = 8
-  VideoGenerator.current.shouldOptimiseImageForVideo = true
+  VideoGenerator.fileName = SingleMovieFileName
+  VideoGenerator.shouldOptimiseImageForVideo = true
 
   VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image4")], andAudios: [audioURL4], andType: .single, { (progress) in
     print(progress)
@@ -129,9 +128,9 @@ Set the **videoDurationInSeconds** for generated video without audio.
 if let audioURL1 = Bundle.main.url(forResource: Audio1, withExtension: Mp3Extension), let audioURL2 = Bundle.main.url(forResource: Audio2, withExtension: Mp3Extension), let audioURL3 = Bundle.main.url(forResource: Audio3, withExtension: Mp3Extension) {
   LoadingView.lockView()
 
-  VideoGenerator.current.fileName = MultipleMovieFileName
-  VideoGenerator.current.videoBackgroundColor = .red
-  VideoGenerator.current.videoImageWidthForMultipleVideoGeneration = 2000
+  VideoGenerator.fileName = MultipleMovieFileName
+  VideoGenerator.videoBackgroundColor = .red
+  VideoGenerator.videoImageWidthForMultipleVideoGeneration = 2000
 
   VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image1"), #imageLiteral(resourceName: "image2"), #imageLiteral(resourceName: "image3")], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
     print(progress)
@@ -166,8 +165,8 @@ The **videoImageWidthForMultipleVideoGeneration** property is used to set a cust
 if let audioURL1 = Bundle.main.url(forResource: Audio1, withExtension: Mp3Extension) {
   LoadingView.lockView()
 
-  VideoGenerator.current.fileName = MultipleSingleMovieFileName
-  VideoGenerator.current.shouldOptimiseImageForVideo = true
+  VideoGenerator.fileName = MultipleSingleMovieFileName
+  VideoGenerator.shouldOptimiseImageForVideo = true
 
   VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image1"), #imageLiteral(resourceName: "image2"), #imageLiteral(resourceName: "image3"), #imageLiteral(resourceName: "image4")], andAudios: [audioURL1], andType: .singleAudioMultipleImage, { (progress) in
     print(progress)
@@ -193,7 +192,10 @@ With the type **.singleAudioMultipleImage** you can create a video that combines
 ```Swift
 if let videoURL1 = Bundle.main.url(forResource: Video1, withExtension: MOVExtension), let videoURL2 = Bundle.main.url(forResource: PortraitVideo, withExtension: Mp4Extension) {
   LoadingView.lockView()
-  VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: MergedMovieFileName, success: { (videoURL) in
+  VideoGenerator.presetName = AVAssetExportPresetPassthrough
+  VideoGenerator.fileName = MergedMovieFileName
+  
+  VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], success: { (videoURL) in
     LoadingView.unlockView()
     self.createAlertView(message: self.FinishedMergingVideos)
     print(videoURL)
@@ -217,7 +219,9 @@ As of right now the merged video keeps all of the **preferredTransformations** (
 ```Swift
 if let videoURL1 = Bundle.main.url(forResource: Video2, withExtension: MovExtension) {
   LoadingView.lockView()
-  VideoGenerator.current.reverseVideo(fromVideo: videoURL1, andFileName: ReversedMovieFileName, withSound: false, success: { (videoURL) in
+  VideoGenerator.fileName = ReversedMovieFileName
+  
+  VideoGenerator.current.reverseVideo(fromVideo: videoURL1, success: { (videoURL) in
     LoadingView.unlockView()
     self.createAlertView(message: self.FinishReversingVideo)
     print(videoURL)
@@ -240,7 +244,8 @@ You need to provide the file's URL and optionally a new name for the reversed vi
 if let videoURL1 = Bundle.main.url(forResource: Video1, withExtension: MOVExtension) {
   LoadingView.lockView()
 
-  VideoGenerator.current.fileName = SplitMovieFileName
+  VideoGenerator.fileName = SplitMovieFileName
+  
   VideoGenerator.current.splitVideo(withURL: videoURL1, atStartTime: 10, andEndTime: 40, success: { (url) in
     LoadingView.unlockView()
     print(url)
@@ -264,7 +269,8 @@ You need to provide the file's URL and optionally a new name for the split video
 if let videoURL2 = Bundle.main.url(forResource: Video2, withExtension: MOVExtension), let audioURL2 = Bundle.main.url(forResource: Audio2, withExtension: Mp3Extension) {
   LoadingView.lockView()
 
-  VideoGenerator.current.fileName = NewAudioMovieFileName
+  VideoGenerator.fileName = NewAudioMovieFileName
+  
   VideoGenerator.current.mergeVideoWithAudio(videoUrl: videoURL2, audioUrl: audioURL2, success: { (url) in
     LoadingView.unlockView()
     print(url)

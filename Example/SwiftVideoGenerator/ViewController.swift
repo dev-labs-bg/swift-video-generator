@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVKit
 import SwiftVideoGenerator
 
 class ViewController: UIViewController {
@@ -47,8 +48,8 @@ class ViewController: UIViewController {
     if let audioURL4 = Bundle.main.url(forResource: Audio4 , withExtension: Mp3Extension) {
       LoadingView.lockView()
       
-      VideoGenerator.current.fileName = SingleMovieFileName
-      VideoGenerator.current.shouldOptimiseImageForVideo = true
+      VideoGenerator.fileName = SingleMovieFileName
+      VideoGenerator.shouldOptimiseImageForVideo = true
       
       VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image1")], andAudios: [audioURL4], andType: .single, { (progress) in
         print(progress)
@@ -73,9 +74,9 @@ class ViewController: UIViewController {
     if let audioURL1 = Bundle.main.url(forResource: Audio1, withExtension: Mp3Extension), let audioURL2 = Bundle.main.url(forResource: Audio2, withExtension: Mp3Extension), let audioURL3 = Bundle.main.url(forResource: Audio3, withExtension: Mp3Extension) {
       LoadingView.lockView()
       
-      VideoGenerator.current.fileName = MultipleMovieFileName
-      VideoGenerator.current.videoBackgroundColor = .red
-      VideoGenerator.current.videoImageWidthForMultipleVideoGeneration = 2000
+      VideoGenerator.fileName = MultipleMovieFileName
+      VideoGenerator.videoBackgroundColor = .red
+      VideoGenerator.videoImageWidthForMultipleVideoGeneration = 2000
       
       VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image1"), #imageLiteral(resourceName: "image2"), #imageLiteral(resourceName: "image3")], andAudios: [audioURL1, audioURL2, audioURL3], andType: .multiple, { (progress) in
         print(progress)
@@ -100,8 +101,8 @@ class ViewController: UIViewController {
     if let audioURL1 = Bundle.main.url(forResource: Audio1, withExtension: Mp3Extension) {
       LoadingView.lockView()
       
-      VideoGenerator.current.fileName = MultipleSingleMovieFileName
-      VideoGenerator.current.shouldOptimiseImageForVideo = true
+      VideoGenerator.fileName = MultipleSingleMovieFileName
+      VideoGenerator.shouldOptimiseImageForVideo = true
       
       VideoGenerator.current.generate(withImages: [#imageLiteral(resourceName: "image1"), #imageLiteral(resourceName: "image2"), #imageLiteral(resourceName: "image3"), #imageLiteral(resourceName: "image4")], andAudios: [audioURL1], andType: .singleAudioMultipleImage, { (progress) in
         print(progress)
@@ -136,7 +137,10 @@ class ViewController: UIViewController {
     
     if let videoURL1 = Bundle.main.url(forResource: Video1, withExtension: MOVExtension), let videoURL2 = Bundle.main.url(forResource: PortraitVideo, withExtension: Mp4Extension) {
       LoadingView.lockView()
-      VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], andFileName: MergedMovieFileName, success: { (videoURL) in
+      VideoGenerator.presetName = AVAssetExportPresetPassthrough
+      VideoGenerator.fileName = MergedMovieFileName
+      
+      VideoGenerator.mergeMovies(videoURLs: [videoURL1, videoURL2], success: { (videoURL) in
         LoadingView.unlockView()
         self.createAlertView(message: self.FinishedMergingVideos)
         print(videoURL)
@@ -156,7 +160,9 @@ class ViewController: UIViewController {
   @IBAction func reverseVideoButtonClickHandler(_ sender: UIButton) {
     if let videoURL1 = Bundle.main.url(forResource: Video2, withExtension: MovExtension) {
       LoadingView.lockView()
-      VideoGenerator.current.reverseVideo(fromVideo: videoURL1, andFileName: ReversedMovieFileName, success: { (videoURL) in
+      VideoGenerator.fileName = ReversedMovieFileName
+      
+      VideoGenerator.current.reverseVideo(fromVideo: videoURL1, success: { (videoURL) in
         LoadingView.unlockView()
         self.createAlertView(message: self.FinishReversingVideo)
         print(videoURL)
@@ -175,7 +181,8 @@ class ViewController: UIViewController {
     if let videoURL1 = Bundle.main.url(forResource: Video1, withExtension: MOVExtension) {
       LoadingView.lockView()
       
-      VideoGenerator.current.fileName = SplitMovieFileName
+      VideoGenerator.fileName = SplitMovieFileName
+      
       VideoGenerator.current.splitVideo(withURL: videoURL1, atStartTime: 14, andEndTime: 24, success: { (url) in
         LoadingView.unlockView()
         print(url)
@@ -195,7 +202,8 @@ class ViewController: UIViewController {
     if let videoURL2 = Bundle.main.url(forResource: Video2, withExtension: MOVExtension), let audioURL2 = Bundle.main.url(forResource: Audio2, withExtension: Mp3Extension) {
       LoadingView.lockView()
       
-      VideoGenerator.current.fileName = NewAudioMovieFileName
+      VideoGenerator.fileName = NewAudioMovieFileName
+      
       VideoGenerator.current.mergeVideoWithAudio(videoUrl: videoURL2, audioUrl: audioURL2, success: { (url) in
         LoadingView.unlockView()
         print(url)
