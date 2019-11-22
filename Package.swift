@@ -20,8 +20,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "SwiftVideoGenerator",
-            dependencies: [],
-            path: "Sources/**/*"),
+            dependencies: []),
         .testTarget(
             name: "swift-video-generatorTests",
             dependencies: ["swift-video-generator"]),
