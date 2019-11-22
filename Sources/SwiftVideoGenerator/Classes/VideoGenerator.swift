@@ -76,7 +76,7 @@ public class VideoGenerator: NSObject {
    - parameter success:  A block which will be called after successful generation of video
    - parameter failure:  A blobk which will be called on a failure durring the generation of the video
    */
-  open func generate(withImages _images: [UIImage], andAudios _audios: [URL], andType _type: VideoGeneratorType, _ progress: @escaping ((Progress) -> Void), success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  open func generate(withImages _images: [UIImage], andAudios _audios: [URL], andType _type: VideoGeneratorType, _ progress: @escaping ((Progress) -> Void), outcome: @escaping (Result<URL, Error>) -> Void) {
     
     let dispatchQueueGenerate = DispatchQueue(label: "generate", qos: .background)
     
@@ -99,7 +99,7 @@ public class VideoGenerator: NSObject {
         } catch {
           VideoGenerator.current.videoWriter = nil
           DispatchQueue.main.async {
-            failure(error)
+            outcome(.failure(error))
           }
         }
         
@@ -196,7 +196,7 @@ public class VideoGenerator: NSObject {
                 if !VideoGenerator.current.appendPixelBufferForImage(imageForVideo, pixelBufferAdaptor: pixelBufferAdaptor, presentationTime: nextStartTimeForFrame) {
                   DispatchQueue.main.async {
                     VideoGenerator.current.videoWriter = nil
-                    failure(VideoGeneratorError(error: .kFailedToAppendPixelBufferError))
+                    outcome(.failure(VideoGeneratorError(error: .kFailedToAppendPixelBufferError)))
                   }
                 }
                 
@@ -226,17 +226,19 @@ public class VideoGenerator: NSObject {
                     })
                     print("finished")
                     DispatchQueue.main.async {
-                      success(newPath)
+                      outcome(.success(newPath))
                     }
                   }
                 } else {
                   /// if the writing is successfull, go on to merge the video with the audio files
-                  VideoGenerator.current.mergeAudio(withVideoURL: videoOutputURL, success: { (videoURL) in
-                    print("finished")
-                    success(videoURL)
-                  }, failure: { (error) in
-                    failure(error)
-                  })
+                  VideoGenerator.current.mergeAudio(withVideoURL: videoOutputURL) { result in
+                    switch result {
+                    case .success(let url):
+                      outcome(.success(url))
+                    case .failure(let error):
+                      outcome(.failure(error))
+                    }
+                  }
                 }
                 
                 VideoGenerator.current.videoWriter = nil
@@ -245,13 +247,13 @@ public class VideoGenerator: NSObject {
           } else {
             DispatchQueue.main.async {
               VideoGenerator.current.videoWriter = nil
-              failure(VideoGeneratorError(error: .kFailedToStartAssetWriterError))
+              outcome(.failure(VideoGeneratorError(error: .kFailedToStartAssetWriterError)))
             }
           }
         } else {
           DispatchQueue.main.async {
             VideoGenerator.current.videoWriter = nil
-            failure(VideoGeneratorError(error: .kFailedToStartAssetWriterError))
+            outcome(.failure(VideoGeneratorError(error: .kFailedToStartAssetWriterError)))
           }
         }
       }
@@ -267,14 +269,14 @@ public class VideoGenerator: NSObject {
   ///   - fileName: the name of the finished merged video file
   ///   - success: success block - returns the finished video url path
   ///   - failure: failure block - returns the error that caused the failure
-  open class func mergeMovies(videoURLs: [URL], success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  open class func mergeMovies(videoURLs: [URL], outcome: @escaping (Result<URL, Error>) -> Void) {
     let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
     let _videoURLs = videoURLs.filter({ !$0.absoluteString.contains(".DS_Store") && acceptableVideoExtensions.contains($0.pathExtension.lowercased()) })
     
     /// guard against missing URLs
     guard !_videoURLs.isEmpty else {
       DispatchQueue.main.async {
-        failure(VideoGeneratorError(error: .kMissingVideoURLs))
+        outcome(.failure(VideoGeneratorError(error: .kMissingVideoURLs)))
       }
       return
     }
@@ -299,14 +301,14 @@ public class VideoGenerator: NSObject {
             try FileManager.default.removeItem(at: completeMoviePath)
           } catch {
             DispatchQueue.main.async {
-              failure(error)
+              outcome(.failure(error))
             }
           }
         }
       }
     } else {
       DispatchQueue.main.async {
-        failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+        outcome(.failure(VideoGeneratorError(error: .kFailedToFetchDirectory)))
       }
     }
     
@@ -333,7 +335,7 @@ public class VideoGenerator: NSObject {
             insertTime = insertTime + sourceAsset.duration
           } catch {
             DispatchQueue.main.async {
-              failure(error)
+              outcome(.failure(error))
             }
           }
         }
@@ -350,27 +352,27 @@ public class VideoGenerator: NSObject {
             case .failed:
               if let _error = exportSession.error {
                 DispatchQueue.main.async {
-                  failure(_error)
+                  outcome(.failure(_error))
                 }
               }
               
             case .cancelled:
               if let _error = exportSession.error {
                 DispatchQueue.main.async {
-                  failure(_error)
+                  outcome(.failure(_error))
                 }
               }
               
             default:
               print("finished")
               DispatchQueue.main.async {
-                success(completeMoviePath)
+                outcome(.success(completeMoviePath))
               }
             }
           })
         } else {
           DispatchQueue.main.async {
-            failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
+            outcome(.failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession)))
           }
         }
       }
@@ -387,12 +389,15 @@ public class VideoGenerator: NSObject {
   ///   - sound: indicates if the sound should be kept and reversed as well
   ///   - success: completion block on success - returns the audio URL
   ///   - failure: completion block on failure - returns the error that caused the failure
-  open func reverseVideo(fromVideo videoURL: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
-    self.reverseVideoClip(videoURL: videoURL, andFileName: VideoGenerator.fileName, success: { (reversedVideo) in
-      success(reversedVideo)
-    }, failure: { (error) in
-      failure(error)
-    })
+  open func reverseVideo(fromVideo videoURL: URL, outcome: @escaping (Result<URL, Error>) -> Void) {
+    self.reverseVideoClip(videoURL: videoURL, andFileName: VideoGenerator.fileName) { (result) in
+      switch result {
+      case .success(let url):
+        outcome(.success(url))
+      case .failure(let error):
+        outcome(.failure(error))
+      }
+    }
   }
   
   // MARK: --------------------------------------------------------------- Split video -----------------------------------------------------------------------
@@ -405,11 +410,11 @@ public class VideoGenerator: NSObject {
   ///   - endTime: the end time of the new chunk of video (in seconds)
   ///   - success: completion block on success - returns the audio URL
   ///   - failure: completion block on failure - returns the error that caused the failure
-  open func splitVideo(withURL videoURL: URL, atStartTime start: Double? = nil, andEndTime end: Double? = nil, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  open func splitVideo(withURL videoURL: URL, atStartTime start: Double? = nil, andEndTime end: Double? = nil, outcome: @escaping (Result<URL, Error>) -> Void) {
     if start != nil {
       guard start! >= 0.0 else {
         DispatchQueue.main.async {
-          failure(VideoGeneratorError(error: .kFailedToReadStartTime))
+          outcome(.failure(VideoGeneratorError(error: .kFailedToReadStartTime)))
         }
         return
       }
@@ -450,23 +455,23 @@ public class VideoGenerator: NSObject {
             switch exportSession.status {
             case .failed:
               if let _error = exportSession.error {
-                failure(_error)
+                outcome(.failure(_error))
               }
               
             case .cancelled:
               if let _error = exportSession.error {
-                failure(_error)
+                outcome(.failure(_error))
               }
               
             default:
               print("finished")
-              success(outputURL)
+              outcome(.success(outputURL))
             }
           }
         })
       } else {
         DispatchQueue.main.async {
-          failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
+          outcome(.failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession)))
         }
       }
     }
@@ -474,7 +479,7 @@ public class VideoGenerator: NSObject {
   
   // MARK: --------------------------------------------------------------- Merge video and audio -----------------------------------------------------
   
-  open func mergeVideoWithAudio(videoUrl: URL, audioUrl: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  open func mergeVideoWithAudio(videoUrl: URL, audioUrl: URL, outcome: @escaping (Result<URL, Error>) -> Void) {
     let mixComposition: AVMutableComposition = AVMutableComposition()
     var mutableCompositionVideoTrack: [AVMutableCompositionTrack] = []
     var mutableCompositionAudioTrack: [AVMutableCompositionTrack] = []
@@ -525,22 +530,22 @@ public class VideoGenerator: NSObject {
             switch exportSession.status {
             case .failed:
               if let _error = exportSession.error {
-                failure(_error)
+                outcome(.failure(_error))
               }
               
             case .cancelled:
               if let _error = exportSession.error {
-                failure(_error)
+                outcome(.failure(_error))
               }
               
             default:
               print("finished")
-              success(outputURL)
+              outcome(.success(outputURL))
             }
           }
         })
       } else {
-        failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
+        outcome(.failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession)))
       }
     }
   }
@@ -696,7 +701,7 @@ public class VideoGenerator: NSObject {
   ///
   /// - parameter audioUrl: the audio url
   /// - parameter videoUrl: the video url
-  private func mergeAudio(withVideoURL videoUrl: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  private func mergeAudio(withVideoURL videoUrl: URL, outcome: @escaping (Result<URL, Error>) -> Void) {
     let dispatchQueueMerge = DispatchQueue(label: "merge audio", qos: .background)
     dispatchQueueMerge.async { [weak self] in
       /// create a mutable composition
@@ -714,7 +719,7 @@ public class VideoGenerator: NSObject {
           /// try to insert the video time range into the composition
           try videoComposition?.insertTimeRange(videoTimeRange, of: videoTrack, at: CMTime.zero)
         } catch {
-          failure(error)
+          outcome(.failure(error))
         }
         
         var duration = CMTime(seconds: 0, preferredTimescale: 1)
@@ -736,7 +741,7 @@ public class VideoGenerator: NSObject {
               do {
                 try audioCompositon?.insertTimeRange(audioTimeRange, of: audioTrack, at: duration)
               } catch {
-                failure(error)
+                outcome(.failure(error))
               }
             }
           }
@@ -761,29 +766,29 @@ public class VideoGenerator: NSObject {
                 if exportSession.status == .failed || exportSession.status == .cancelled {
                   if let _error = exportSession.error {
                     DispatchQueue.main.async {
-                      failure(_error)
+                      outcome(.failure(_error))
                     }
                   }
                 } else {
                   DispatchQueue.main.async {
-                    success(videoOutputURL)
+                    outcome(.success(videoOutputURL))
                   }
                 }
               })
             } else {
               DispatchQueue.main.async {
-                failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession))
+                outcome(.failure(VideoGeneratorError(error: .kFailedToStartAssetExportSession)))
               }
             }
           }
         } else {
           DispatchQueue.main.async {
-            failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+            outcome(.failure(VideoGeneratorError(error: .kFailedToFetchDirectory)))
           }
         }
       } else {
         DispatchQueue.main.async {
-          failure(VideoGeneratorError(error: .kFailedToReadVideoTrack))
+          outcome(.failure(VideoGeneratorError(error: .kFailedToReadVideoTrack)))
         }
       }
     }
@@ -796,7 +801,7 @@ public class VideoGenerator: NSObject {
   ///   - fileName: the name of the generated video
   ///   - success: completion block on success - returns the reversed video URL
   ///   - failure: completion block on failure - returns the error that caused the failure
-  private func reverseVideoClip(videoURL: URL, andFileName fileName: String?, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  private func reverseVideoClip(videoURL: URL, andFileName fileName: String?, outcome: @escaping (Result<URL, Error>) -> Void) {
     let media_queue = DispatchQueue(label: "mediaInputQueue", attributes: [])
     media_queue.async {
       let acceptableVideoExtensions = ["mov", "mp4", "m4v"]
@@ -822,14 +827,14 @@ public class VideoGenerator: NSObject {
                 try FileManager.default.removeItem(at: completeMoviePath)
               } catch {
                 DispatchQueue.main.async {
-                  failure(error)
+                  outcome(.failure(error))
                 }
               }
             }
           }
         } else {
           DispatchQueue.main.async {
-            failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+            outcome(.failure(VideoGeneratorError(error: .kFailedToFetchDirectory)))
           }
         }
         
@@ -960,35 +965,35 @@ public class VideoGenerator: NSObject {
                       
                       writer.finishWriting(completionHandler: {
                         DispatchQueue.main.async {
-                          success(completeMoviePath)
+                          outcome(.success(completeMoviePath))
                         }
                       })
                     }
                   } else {
                     DispatchQueue.main.async {
-                      failure(VideoGeneratorError(error: .kFailedToReadProvidedClip))
+                      outcome(.failure(VideoGeneratorError(error: .kFailedToReadProvidedClip)))
                     }
                   }
                 } else {
                   DispatchQueue.main.async {
-                    failure(VideoGeneratorError(error: .kFailedToStartReader))
+                    outcome(.failure(VideoGeneratorError(error: .kFailedToStartReader)))
                   }
                 }
               }
             } catch {
               DispatchQueue.main.async {
-                failure(error)
+                outcome(.failure(error))
               }
             }
           } else {
             DispatchQueue.main.async {
-              failure(VideoGeneratorError(error: .kFailedToFetchDirectory))
+              outcome(.failure(VideoGeneratorError(error: .kFailedToFetchDirectory)))
             }
           }
         }
       } else {
         DispatchQueue.main.async {
-          failure(VideoGeneratorError(error: .kUnsupportedVideoType))
+          outcome(.failure(VideoGeneratorError(error: .kUnsupportedVideoType)))
         }
       }
     }
@@ -999,7 +1004,7 @@ public class VideoGenerator: NSObject {
   /// - Parameters:
   ///   - url: The source audio url
   ///   - outputURL: Converted audio url
-  private func convertAudio(_ url: URL, to outputURL: URL, success: @escaping ((URL) -> Void), failure: @escaping ((Error) -> Void)) {
+  private func convertAudio(_ url: URL, to outputURL: URL, outcome: @escaping (Result<URL, Error>) -> Void) {
     let dispatchQueueConvertAudio = DispatchQueue(label: "convert audio", qos: .background)
     dispatchQueueConvertAudio.async {
       var error: OSStatus = noErr
@@ -1064,13 +1069,15 @@ public class VideoGenerator: NSObject {
         do {
           try FileManager.default.removeItem(at: url)
         } catch {
-          print(error.localizedDescription)
+          DispatchQueue.main.async {
+            outcome(.failure(error))
+          }
         }
       }
       
       if error == noErr {
         DispatchQueue.main.async {
-          success(url)
+          outcome(.success(url))
         }
       } else {
         print(error)
