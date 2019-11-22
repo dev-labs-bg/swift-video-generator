@@ -57,6 +57,11 @@ target '<Your Target Name>' do
 pod 'SwiftVideoGenerator'
 end
 ```
+
+### Swift Package Manager
+
+To add the library as package dependency to your Xcode project, select File > Swift Packages > Add Package Dependency and enter its repository URL `git@github.com:dev-labs-bg/swift-video-generator.git`
+
 ### Manually
 
 If you don't want to use a dependency manager, you can integrate SwiftVideoGenerator manually.

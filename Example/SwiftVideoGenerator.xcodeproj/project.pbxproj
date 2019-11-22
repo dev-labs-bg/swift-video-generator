@@ -40,7 +40,7 @@
 
 /* Begin PBXFileReference section */
 		0FEB56184AC6333F308CE355 /* Pods_SwiftVideoGenerator_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftVideoGenerator_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		401AF7E6B3A89CCFB579A9AD /* SwiftVideoGenerator.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SwiftVideoGenerator.podspec; path = ../SwiftVideoGenerator.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		401AF7E6B3A89CCFB579A9AD /* SwiftVideoGenerator.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SwiftVideoGenerator.podspec; path = ../SwiftVideoGenerator.podspec; sourceTree = "<group>"; };
 		49FE0AD305594D05716B8522 /* Pods-SwiftVideoGenerator_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftVideoGenerator_Tests.release.xcconfig"; path = "Target Support Files/Pods-SwiftVideoGenerator_Tests/Pods-SwiftVideoGenerator_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* SwiftVideoGenerator_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVideoGenerator_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -99,7 +99,6 @@
 				84D66580B75DC7505DD4D81D /* Pods-SwiftVideoGenerator_Tests.debug.xcconfig */,
 				49FE0AD305594D05716B8522 /* Pods-SwiftVideoGenerator_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
