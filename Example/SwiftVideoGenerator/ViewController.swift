@@ -194,6 +194,7 @@ class ViewController: UIViewController {
       VideoGenerator.fileName = SplitMovieFileName
       
       VideoGenerator.current.splitVideo(withURL: videoURL1, atStartTime: 14, andEndTime: 24) { (result) in
+        LoadingView.unlockView()
         switch result {
         case .success(let url):
           print(url)
