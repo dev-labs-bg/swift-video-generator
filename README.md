@@ -68,7 +68,7 @@ If you don't want to use a dependency manager, you can integrate SwiftVideoGener
 
 Download the following files:
 
-[Video Generator Classes](https://github.com/dev-labs-bg/swift-video-generator/tree/master/SwiftVideoGenerator/Classes)
+[Video Generator Classes](https://github.com/dev-labs-bg/swift-video-generator/tree/master/Sources/SwiftVideoGenerator/Classes)
 
 You need the VideoGenerator.swift and the files in the Error and Extensions folders.
 
