@@ -108,7 +108,7 @@ public class VideoGenerator: NSObject {
           
           /// create the basic video settings
           let videoSettings: [String : AnyObject] = [
-            AVVideoCodecKey  : AVVideoCodecH264 as AnyObject,
+            AVVideoCodecKey  : AVVideoCodecType.h264 as AnyObject,
             AVVideoWidthKey  : outputSize.width as AnyObject,
             AVVideoHeightKey : outputSize.height as AnyObject,
           ]
@@ -862,7 +862,7 @@ public class VideoGenerator: NSObject {
                 
                 /// create the basic video settings
                 let videoSettings: [String : Any] = [
-                  AVVideoCodecKey  : AVVideoCodecH264,
+                    AVVideoCodecKey  : AVVideoCodecType.h264,
                   AVVideoWidthKey  : videoSize.width,
                   AVVideoHeightKey : videoSize.height,
                   AVVideoCompressionPropertiesKey: videoCompositionProps
@@ -1039,11 +1039,17 @@ public class VideoGenerator: NSObject {
       error = ExtAudioFileSetProperty(destinationFile!, kExtAudioFileProperty_ClientDataFormat, thePropertySize, &dstFormat)
       
       let bufferByteSize: UInt32 = 32768
-      var srcBuffer = [UInt8](repeating: 0, count: Int(bufferByteSize))
+      let srcBuffer = [UInt8](repeating: 0, count: Int(bufferByteSize))
       var sourceFrameOffset: ULONG = 0
       
       while true {
-        var fillBufList = AudioBufferList(mNumberBuffers: 1, mBuffers: AudioBuffer(mNumberChannels: 2, mDataByteSize: UInt32(srcBuffer.count), mData: &srcBuffer))
+        var fillBufList = AudioBufferList()
+        var localVariable = srcBuffer
+        
+        localVariable.withUnsafeMutableBufferPointer { bufferPoiner in
+            fillBufList = AudioBufferList(mNumberBuffers: 1, mBuffers: AudioBuffer(mNumberChannels: 2, mDataByteSize: UInt32(srcBuffer.count), mData: bufferPoiner.baseAddress))
+        }
+        
         var numFrames: UInt32 = 0
         
         if (dstFormat.mBytesPerFrame > 0) {
