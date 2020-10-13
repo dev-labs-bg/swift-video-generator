@@ -8,6 +8,6 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/dev-labs-bg/swift-video-generator.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/devlabsbg'
   s.swift_version    = '4.2'
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '12.0'
   s.source_files     = 'Sources/**/*'
 end
