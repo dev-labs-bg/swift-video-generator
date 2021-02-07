@@ -9,6 +9,7 @@
 import UIKit
 import AVKit
 import SwiftVideoGenerator
+import Photos
 
 class ViewController: UIViewController {
   
@@ -314,4 +315,29 @@ class ViewController: UIViewController {
       self?.present(messageAlertController, animated: true, completion: nil)
     }
   }
+
+    private func saveVideoToAlbum(_ url: URL, _ completion: @escaping (Result<String, Error>) -> Void) {
+        PHPhotoLibrary.shared().performChanges {
+            let request = PHAssetCreationRequest.forAsset()
+            request.addResource(with: .video, fileURL: url, options: nil)
+        } completionHandler: { (result, error) in
+            DispatchQueue.main.async {
+                if let error = error { completion(.failure(error)) }
+                else {
+                    let message = "Saved successfully"
+                    print(message)
+                    completion(.success(message))
+                }
+            }
+        }
+    }
+
+    private func previewVideoFrom(url: URL) {
+        let player = AVPlayer(url: url)
+        let vc = AVPlayerViewController()
+        vc.player = player
+
+        present(vc, animated: true) { vc.player?.play() }
+    }
+
 }
