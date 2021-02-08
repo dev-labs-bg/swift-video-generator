@@ -340,4 +340,9 @@ class ViewController: UIViewController {
         present(vc, animated: true) { vc.player?.play() }
     }
 
+    private func shareVideo(url: URL) {
+        let activityController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        present(activityController, animated: true, completion: nil)
+    }
+
 }
