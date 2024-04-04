@@ -324,12 +324,13 @@ public class VideoGenerator: NSObject {
         /// for each URL add the video and audio tracks and their duration to the composition
         for sourceAsset in videoAssets {
           do {
-            if let assetVideoTrack = sourceAsset.tracks(withMediaType: .video).first, let assetAudioTrack = sourceAsset.tracks(withMediaType: .audio).first {
-              let frameRange = CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: sourceAsset.duration)
+            let frameRange = CMTimeRange(start: CMTime(seconds: 0, preferredTimescale: 1), duration: sourceAsset.duration)
+            if let assetVideoTrack = sourceAsset.tracks(withMediaType: .video).first {
               try videoTrack.insertTimeRange(frameRange, of: assetVideoTrack, at: insertTime)
-              try audioTrack.insertTimeRange(frameRange, of: assetAudioTrack, at: insertTime)
-              
               videoTrack.preferredTransform = assetVideoTrack.preferredTransform
+            }
+            if let assetAudioTrack = sourceAsset.tracks(withMediaType: .audio).first {
+              try audioTrack.insertTimeRange(frameRange, of: assetAudioTrack, at: insertTime)
             }
             
             insertTime = insertTime + sourceAsset.duration
